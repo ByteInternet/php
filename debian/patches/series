@@ -167,3 +167,4 @@ fix-autoloader-if-two-method-definitions-doesnt-match.patch
 0001-Bug-65228-FTPs-memory-leak-patch-by-marco-dot-beiere.patch
 0001-Fixed-bug-62987-Assigning-to-ArrayObject-null-someth.patch
 CVE-2014-3538.patch
+CVE-2014-3597.patch
