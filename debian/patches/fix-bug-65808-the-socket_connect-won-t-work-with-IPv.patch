@@ -4,9 +4,9 @@ Date:   Wed Oct 2 15:19:25 2013 +0200
 
     fix bug #65808 	the socket_connect() won't work with IPv6 address
 
---- a/ext/sockets/sockets.c
-+++ b/ext/sockets/sockets.c
-@@ -565,6 +565,8 @@
+--- php5.orig/ext/sockets/sockets.c
++++ php5/ext/sockets/sockets.c
+@@ -565,6 +565,8 @@ static char *php_strerror(int error TSRM
  /* }}} */
  
  #if HAVE_IPV6
@@ -15,7 +15,7 @@ Date:   Wed Oct 2 15:19:25 2013 +0200
  /* Sets addr by hostname, or by ip in string form (AF_INET6) */
  static int php_set_inet6_addr(struct sockaddr_in6 *sin6, char *string, php_socket *php_sock TSRMLS_DC) /* {{{ */
  {
-@@ -573,6 +575,7 @@
+@@ -573,6 +575,7 @@ static int php_set_inet6_addr(struct soc
  	struct addrinfo hints;
  	struct addrinfo *addrinfo = NULL;
  #endif
@@ -23,7 +23,7 @@ Date:   Wed Oct 2 15:19:25 2013 +0200
  
  	if (inet_pton(AF_INET6, string, &tmp)) {
  		memcpy(&(sin6->sin6_addr.s6_addr), &(tmp.s6_addr), sizeof(struct in6_addr));
-@@ -607,6 +610,22 @@
+@@ -607,6 +610,22 @@ static int php_set_inet6_addr(struct soc
  
  	}
  
@@ -46,7 +46,7 @@ Date:   Wed Oct 2 15:19:25 2013 +0200
  	return 1;
  }
  /* }}} */
-@@ -672,6 +691,28 @@
+@@ -672,6 +691,28 @@ static int php_set_inet46_addr(php_socka
  	return 0;
  }
  
@@ -75,7 +75,7 @@ Date:   Wed Oct 2 15:19:25 2013 +0200
  static int php_get_if_index_from_zval(zval *val, unsigned *out TSRMLS_DC)
  {
  	int ret;
-@@ -687,26 +728,10 @@
+@@ -687,26 +728,10 @@ static int php_get_if_index_from_zval(zv
  			ret = SUCCESS;
  		}
  	} else {

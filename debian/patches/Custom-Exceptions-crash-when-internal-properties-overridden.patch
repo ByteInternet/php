@@ -9,7 +9,7 @@ Date:   Sun May 12 14:00:32 2013 +0200
     to the appropriate data type, like Exception::__toString() does.
 
 --- /dev/null
-+++ b/Zend/tests/bug64821.1.phpt
++++ php5/Zend/tests/bug64821.1.phpt
 @@ -0,0 +1,22 @@
 +--TEST--
 +Bug #64821 Custom Exceptions crash when internal properties overridden (variation 1)
@@ -34,7 +34,7 @@ Date:   Sun May 12 14:00:32 2013 +0200
 +#0 {main}
 +  thrown in %s on line %d
 --- /dev/null
-+++ b/Zend/tests/bug64821.2.phpt
++++ php5/Zend/tests/bug64821.2.phpt
 @@ -0,0 +1,19 @@
 +--TEST--
 +Bug #64821 Custom Exceptions crash when internal properties overridden (variation 2)
@@ -56,7 +56,7 @@ Date:   Sun May 12 14:00:32 2013 +0200
 +#0 {main}
 +  thrown in %s on line %d
 --- /dev/null
-+++ b/Zend/tests/bug64821.3.phpt
++++ php5/Zend/tests/bug64821.3.phpt
 @@ -0,0 +1,20 @@
 +--TEST--
 +Bug #64821 Custom Exceptions crash when internal properties overridden (variation 3)
@@ -78,9 +78,9 @@ Date:   Sun May 12 14:00:32 2013 +0200
 +Stack trace:
 +#0 {main}
 +  thrown in Unknown on line %d
---- a/Zend/zend_exceptions.c
-+++ b/Zend/zend_exceptions.c
-@@ -793,6 +793,10 @@
+--- php5.orig/Zend/zend_exceptions.c
++++ php5/Zend/zend_exceptions.c
+@@ -793,6 +793,10 @@ ZEND_API void zend_exception_error(zval
  			if (instanceof_function(ce_exception, default_exception_ce TSRMLS_CC)) {
  				file = zend_read_property(default_exception_ce, EG(exception), "file", sizeof("file")-1, 1 TSRMLS_CC);
  				line = zend_read_property(default_exception_ce, EG(exception), "line", sizeof("line")-1, 1 TSRMLS_CC);
@@ -91,7 +91,7 @@ Date:   Sun May 12 14:00:32 2013 +0200
  			} else {
  				file = NULL;
  				line = NULL;
-@@ -804,7 +808,11 @@
+@@ -804,7 +808,11 @@ ZEND_API void zend_exception_error(zval
  		file = zend_read_property(default_exception_ce, exception, "file", sizeof("file")-1, 1 TSRMLS_CC);
  		line = zend_read_property(default_exception_ce, exception, "line", sizeof("line")-1, 1 TSRMLS_CC);
  

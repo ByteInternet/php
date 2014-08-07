@@ -29,7 +29,7 @@ Date:   Tue Apr 2 16:18:26 2013 +0200
     Seems hard to add a unit test, as this rely on a full filesystem.
 
 --- /dev/null
-+++ b/ext/standard/tests/streams/bug63240.phpt
++++ php5/ext/standard/tests/streams/bug63240.phpt
 @@ -0,0 +1,17 @@
 +--TEST--
 +Bug #63240: stream_get_line() return contains delimiter string
@@ -48,9 +48,9 @@ Date:   Tue Apr 2 16:18:26 2013 +0200
 +--EXPECT--
 +int(8191)
 +string(4) "rest"
---- a/main/streams/streams.c
-+++ b/main/streams/streams.c
-@@ -1059,9 +1059,17 @@
+--- php5.orig/main/streams/streams.c
++++ php5/main/streams/streams.c
+@@ -1059,9 +1059,17 @@ PHPAPI char *php_stream_get_record(php_s
  		if (has_delim) {
  			/* search for delimiter, but skip buffered_len (the number of bytes
  			 * buffered before this loop iteration), as they have already been
@@ -70,7 +70,7 @@ Date:   Tue Apr 2 16:18:26 2013 +0200
  			if (found_delim) {
  				break;
  			}
-@@ -1485,7 +1493,7 @@
+@@ -1485,7 +1493,7 @@ PHPAPI int _php_stream_copy_to_stream_ex
  	char buf[CHUNK_SIZE];
  	size_t readchunk;
  	size_t haveread = 0;
@@ -79,7 +79,7 @@ Date:   Tue Apr 2 16:18:26 2013 +0200
  	size_t dummy;
  	php_stream_statbuf ssbuf;
  
-@@ -1520,16 +1528,16 @@
+@@ -1520,16 +1528,16 @@ PHPAPI int _php_stream_copy_to_stream_ex
  		p = php_stream_mmap_range(src, php_stream_tell(src), maxlen, PHP_STREAM_MAP_MODE_SHARED_READONLY, &mapped);
  
  		if (p) {
@@ -99,7 +99,7 @@ Date:   Tue Apr 2 16:18:26 2013 +0200
  				return SUCCESS;
  			}
  			return FAILURE;
-@@ -1547,7 +1555,6 @@
+@@ -1547,7 +1555,6 @@ PHPAPI int _php_stream_copy_to_stream_ex
  
  		if (didread) {
  			/* extra paranoid */

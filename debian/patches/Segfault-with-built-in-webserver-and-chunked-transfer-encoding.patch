@@ -4,9 +4,9 @@ Date:   Sat Oct 5 12:52:55 2013 -0300
 
     - Fixed bug #65818 (Segfault with built-in webserver and chunked transfer encoding)
 
---- a/sapi/cli/php_cli_server.c
-+++ b/sapi/cli/php_cli_server.c
-@@ -1555,6 +1555,7 @@
+--- php5.orig/sapi/cli/php_cli_server.c
++++ php5/sapi/cli/php_cli_server.c
+@@ -1555,6 +1555,7 @@ static int php_cli_server_client_read_re
  		}
  		client->request.content_len = 0;
  	}

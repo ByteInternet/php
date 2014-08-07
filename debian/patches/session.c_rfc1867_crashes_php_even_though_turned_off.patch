@@ -1,5 +1,5 @@
---- a/ext/session/session.c
-+++ b/ext/session/session.c
+--- php5.orig/ext/session/session.c
++++ php5/ext/session/session.c
 @@ -2192,8 +2192,10 @@ static PHP_MINIT_FUNCTION(session) /* {{
  #ifdef HAVE_LIBMM
  	PHP_MINIT(ps_mm) (INIT_FUNC_ARGS_PASSTHRU);

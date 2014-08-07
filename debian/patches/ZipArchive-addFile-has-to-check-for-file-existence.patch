@@ -4,8 +4,8 @@ Date:   Wed Apr 10 20:39:17 2013 +0200
 
     Fixed bug #64342 ZipArchive::addFile() has to check for file existence
 
---- a/ext/zip/php_zip.c
-+++ b/ext/zip/php_zip.c
+--- php5.orig/ext/zip/php_zip.c
++++ php5/ext/zip/php_zip.c
 @@ -28,6 +28,7 @@
  #include "ext/standard/file.h"
  #include "ext/standard/php_string.h"
@@ -14,7 +14,7 @@ Date:   Wed Apr 10 20:39:17 2013 +0200
  #include "php_zip.h"
  #include "lib/zip.h"
  #include "lib/zipint.h"
-@@ -300,6 +301,7 @@
+@@ -300,6 +301,7 @@ static int php_zip_add_file(struct zip *
  	struct zip_source *zs;
  	int cur_idx;
  	char resolved_path[MAXPATHLEN];
@@ -22,7 +22,7 @@ Date:   Wed Apr 10 20:39:17 2013 +0200
  
  
  	if (ZIP_OPENBASEDIR_CHECKPATH(filename)) {
-@@ -310,6 +312,11 @@
+@@ -310,6 +312,11 @@ static int php_zip_add_file(struct zip *
  		return -1;
  	}
  
@@ -35,7 +35,7 @@ Date:   Wed Apr 10 20:39:17 2013 +0200
  	if (!zs) {
  		return -1;
 --- /dev/null
-+++ b/ext/zip/tests/bug64342_0.phpt
++++ php5/ext/zip/tests/bug64342_0.phpt
 @@ -0,0 +1,42 @@
 +--TEST--
 +Bug #64342 ZipArchive::addFile() has to check file existance (variation 1)
@@ -80,7 +80,7 @@ Date:   Wed Apr 10 20:39:17 2013 +0200
 +close ok
 +DONE
 --- /dev/null
-+++ b/ext/zip/tests/bug64342_1.phpt
++++ php5/ext/zip/tests/bug64342_1.phpt
 @@ -0,0 +1,37 @@
 +--TEST--
 +Bug #64342 ZipArchive::addFile() has to check file existance (variation 2)

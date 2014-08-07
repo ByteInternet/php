@@ -13,7 +13,7 @@ Date:   Tue Aug 6 15:37:20 2013 +0800
     Missed a zval_copy_ctor there
 
 --- /dev/null
-+++ b/Zend/tests/bug65372.phpt
++++ php5/Zend/tests/bug65372.phpt
 @@ -0,0 +1,40 @@
 +--TEST--
 +Bug #65372 (Segfault in gc_zval_possible_root when return reference fails)
@@ -55,9 +55,9 @@ Date:   Tue Aug 6 15:37:20 2013 +0800
 +?>
 +--EXPECTF--
 +Notice: Only variable references should be returned by reference in %sbug65372.php on line 30
---- a/Zend/zend_vm_def.h
-+++ b/Zend/zend_vm_def.h
-@@ -2910,9 +2910,12 @@
+--- php5.orig/Zend/zend_vm_def.h
++++ php5/Zend/zend_vm_def.h
+@@ -2910,9 +2910,12 @@ ZEND_VM_HANDLER(111, ZEND_RETURN_BY_REF,
  			} else if (EX_T(opline->op1.var).var.ptr_ptr == &EX_T(opline->op1.var).var.ptr) {
  				zend_error(E_NOTICE, "Only variable references should be returned by reference");
  				if (EG(return_value_ptr_ptr)) {
@@ -73,9 +73,9 @@ Date:   Tue Aug 6 15:37:20 2013 +0800
  				}
  				break;
  			}
---- a/Zend/zend_vm_execute.h
-+++ b/Zend/zend_vm_execute.h
-@@ -2310,9 +2310,12 @@
+--- php5.orig/Zend/zend_vm_execute.h
++++ php5/Zend/zend_vm_execute.h
+@@ -2310,9 +2310,12 @@ static int ZEND_FASTCALL  ZEND_RETURN_BY
  			} else if (EX_T(opline->op1.var).var.ptr_ptr == &EX_T(opline->op1.var).var.ptr) {
  				zend_error(E_NOTICE, "Only variable references should be returned by reference");
  				if (EG(return_value_ptr_ptr)) {
@@ -91,7 +91,7 @@ Date:   Tue Aug 6 15:37:20 2013 +0800
  				}
  				break;
  			}
-@@ -6723,9 +6726,12 @@
+@@ -6723,9 +6726,12 @@ static int ZEND_FASTCALL  ZEND_RETURN_BY
  			} else if (EX_T(opline->op1.var).var.ptr_ptr == &EX_T(opline->op1.var).var.ptr) {
  				zend_error(E_NOTICE, "Only variable references should be returned by reference");
  				if (EG(return_value_ptr_ptr)) {
@@ -107,7 +107,7 @@ Date:   Tue Aug 6 15:37:20 2013 +0800
  				}
  				break;
  			}
-@@ -11041,9 +11047,12 @@
+@@ -11041,9 +11047,12 @@ static int ZEND_FASTCALL  ZEND_RETURN_BY
  			} else if (EX_T(opline->op1.var).var.ptr_ptr == &EX_T(opline->op1.var).var.ptr) {
  				zend_error(E_NOTICE, "Only variable references should be returned by reference");
  				if (EG(return_value_ptr_ptr)) {
@@ -123,7 +123,7 @@ Date:   Tue Aug 6 15:37:20 2013 +0800
  				}
  				break;
  			}
-@@ -27006,9 +27015,12 @@
+@@ -27006,9 +27015,12 @@ static int ZEND_FASTCALL  ZEND_RETURN_BY
  			} else if (EX_T(opline->op1.var).var.ptr_ptr == &EX_T(opline->op1.var).var.ptr) {
  				zend_error(E_NOTICE, "Only variable references should be returned by reference");
  				if (EG(return_value_ptr_ptr)) {

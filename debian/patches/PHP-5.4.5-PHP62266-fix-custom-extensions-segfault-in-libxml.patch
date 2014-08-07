@@ -1,7 +1,5 @@
-diff --git a/ext/libxml/libxml.c b/ext/libxml/libxml.c
-index e42d845..a39c875 100644
---- a/ext/libxml/libxml.c
-+++ b/ext/libxml/libxml.c
+--- php5.orig/ext/libxml/libxml.c
++++ php5/ext/libxml/libxml.c
 @@ -677,9 +677,18 @@ is_string:
  static xmlParserInputPtr _php_libxml_pre_ext_ent_loader(const char *URL,
  		const char *ID, xmlParserCtxtPtr context)

@@ -6,9 +6,9 @@ Date:   Thu Apr 3 09:07:35 2014 +0200
     
     Unfortunately, a segv caused by exit cannot be tested reliably.
 
---- a/ext/standard/user_filters.c
-+++ b/ext/standard/user_filters.c
-@@ -180,6 +180,11 @@
+--- php5.orig/ext/standard/user_filters.c
++++ php5/ext/standard/user_filters.c
+@@ -180,6 +180,11 @@ php_stream_filter_status_t userfilter_fi
  	zval zpropname;
  	int call_result;
  

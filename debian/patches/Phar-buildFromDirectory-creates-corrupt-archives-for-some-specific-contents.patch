@@ -4,9 +4,9 @@ Date:   Mon Jul 22 00:56:45 2013 -0700
 
     fix bug #65028 	Phar::buildFromDirectory creates corrupt archives for some specific contents
 
---- a/ext/phar/phar.c
-+++ b/ext/phar/phar.c
-@@ -2579,6 +2579,7 @@
+--- php5.orig/ext/phar/phar.c
++++ php5/ext/phar/phar.c
+@@ -2579,6 +2579,7 @@ int phar_flush(phar_archive_data *phar,
  	php_serialize_data_t metadata_hash;
  	smart_str main_metadata_str = {0};
  	int free_user_stub, free_fp = 1, free_ufp = 1;
@@ -14,7 +14,7 @@ Date:   Mon Jul 22 00:56:45 2013 -0700
  
  	if (phar->is_persistent) {
  		if (error) {
-@@ -2933,6 +2934,12 @@
+@@ -2933,6 +2934,12 @@ int phar_flush(phar_archive_data *phar,
  
  	manifest_len = offset + phar->alias_len + sizeof(manifest) + main_metadata_str.len;
  	phar_set_32(manifest, manifest_len);
@@ -27,7 +27,7 @@ Date:   Mon Jul 22 00:56:45 2013 -0700
  	phar_set_32(manifest+4, new_manifest_count);
  	if (has_dirs) {
  		*(manifest + 8) = (unsigned char) (((PHAR_API_VERSION) >> 8) & 0xFF);
-@@ -3055,6 +3062,22 @@
+@@ -3055,6 +3062,22 @@ int phar_flush(phar_archive_data *phar,
  			}
  
  			return EOF;
@@ -51,7 +51,7 @@ Date:   Mon Jul 22 00:56:45 2013 -0700
  	}
  
 --- /dev/null
-+++ b/ext/phar/tests/bug65028.phpt
++++ php5/ext/phar/tests/bug65028.phpt
 @@ -0,0 +1,156 @@
 +--TEST--
 +Phar - test specific manifest length

@@ -6,10 +6,8 @@ Date:   Thu Dec 13 23:51:43 2012 +0000
     
     The parent handler is still open so the reset here was in error.
 
-diff --git a/ext/session/mod_user_class.c b/ext/session/mod_user_class.c
-index 70d2f40..4edac28 100644
---- a/ext/session/mod_user_class.c
-+++ b/ext/session/mod_user_class.c
+--- php5.orig/ext/session/mod_user_class.c
++++ php5/ext/session/mod_user_class.c
 @@ -121,7 +121,6 @@ PHP_METHOD(SessionHandler, destroy)
  		return;
  	}
@@ -18,11 +16,8 @@ index 70d2f40..4edac28 100644
  	RETVAL_BOOL(SUCCESS == PS(default_mod)->s_destroy(&PS(mod_data), key TSRMLS_CC));
  }
  /* }}} */
-diff --git a/ext/session/tests/bug63379.phpt b/ext/session/tests/bug63379.phpt
-new file mode 100644
-index 0000000..8094182
 --- /dev/null
-+++ b/ext/session/tests/bug63379.phpt
++++ php5/ext/session/tests/bug63379.phpt
 @@ -0,0 +1,57 @@
 +--TEST--
 +Bug #63379: Warning when using session_regenerate_id(TRUE) with a SessionHandler
@@ -81,11 +76,8 @@ index 0000000..8094182
 +  ["bar"]=>
 +  string(5) "world"
 +}
-diff --git a/ext/session/tests/bug63379_nodestroy.phpt b/ext/session/tests/bug63379_nodestroy.phpt
-new file mode 100644
-index 0000000..03a9ae7
 --- /dev/null
-+++ b/ext/session/tests/bug63379_nodestroy.phpt
++++ php5/ext/session/tests/bug63379_nodestroy.phpt
 @@ -0,0 +1,57 @@
 +--TEST--
 +Bug #63379: Warning when using session_regenerate_id(TRUE) with a SessionHandler

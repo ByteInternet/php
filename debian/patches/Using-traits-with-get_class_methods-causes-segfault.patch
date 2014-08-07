@@ -34,7 +34,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
     Avoid compiler warning
 
 --- /dev/null
-+++ b/Zend/tests/bug62343.phpt
++++ php5/Zend/tests/bug62343.phpt
 @@ -0,0 +1,13 @@
 +--TEST--
 +Bug #62343 (Show class_alias In get_declared_classes())
@@ -49,9 +49,9 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
 +--EXPECT--
 +string(1) "b"
 +string(1) "a"
---- a/Zend/zend_builtin_functions.c
-+++ b/Zend/zend_builtin_functions.c
-@@ -1025,6 +1025,13 @@
+--- php5.orig/Zend/zend_builtin_functions.c
++++ php5/Zend/zend_builtin_functions.c
+@@ -1025,6 +1025,13 @@ ZEND_FUNCTION(get_object_vars)
  }
  /* }}} */
  
@@ -65,7 +65,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
  
  /* {{{ proto array get_class_methods(mixed class)
     Returns an array of method names for class or class instance. */
-@@ -1072,14 +1079,26 @@
+@@ -1072,14 +1079,26 @@ ZEND_FUNCTION(get_class_methods)
  			uint len = strlen(mptr->common.function_name);
  
  			/* Do not display old-style inherited constructors */
@@ -97,7 +97,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
  			}
  		}
  		zend_hash_move_forward_ex(&ce->function_table, &pos);
-@@ -1640,7 +1659,6 @@
+@@ -1640,7 +1659,6 @@ ZEND_FUNCTION(restore_exception_handler)
  }
  /* }}} */
  
@@ -105,7 +105,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
  static int copy_class_or_interface_name(zend_class_entry **pce TSRMLS_DC, int num_args, va_list args, zend_hash_key *hash_key)
  {
  	zval *array = va_arg(args, zval *);
-@@ -1651,7 +1669,13 @@
+@@ -1651,7 +1669,13 @@ static int copy_class_or_interface_name(
  
  	if ((hash_key->nKeyLength==0 || hash_key->arKey[0]!=0)
  		&& (comply_mask == (ce->ce_flags & mask))) {
@@ -120,7 +120,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
  	}
  	return ZEND_HASH_APPLY_KEEP;
  }
-@@ -2094,7 +2118,14 @@
+@@ -2094,7 +2118,14 @@ ZEND_FUNCTION(debug_print_backtrace)
  			lineno = 0;
  		}
  
@@ -136,7 +136,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
  
  		if (function_name) {
  			if (ptr->object) {
-@@ -2275,7 +2306,14 @@
+@@ -2275,7 +2306,14 @@ ZEND_API void zend_fetch_debug_backtrace
  			filename = NULL;
  		}
  
@@ -153,7 +153,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
  		if (function_name) {
  			add_assoc_string_ex(stack_frame, "function", sizeof("function"), (char*)function_name, 1);
 --- /dev/null
-+++ b/Zend/tests/bug64239_1.phpt
++++ php5/Zend/tests/bug64239_1.phpt
 @@ -0,0 +1,28 @@
 +--TEST--
 +Bug #64239 (get_class_methods() changed behavior)
@@ -184,7 +184,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
 +    [1] => t2method
 +)
 --- /dev/null
-+++ b/Zend/tests/bug64239_2.phpt
++++ php5/Zend/tests/bug64239_2.phpt
 @@ -0,0 +1,58 @@
 +--TEST--
 +Bug #64239 (debug_backtrace() changed behavior)
@@ -245,7 +245,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
 +
 +)
 --- /dev/null
-+++ b/Zend/tests/bug64239_3.phpt
++++ php5/Zend/tests/bug64239_3.phpt
 @@ -0,0 +1,33 @@
 +--TEST--
 +Bug #64239 (debug_print_backtrace() changed behavior)
@@ -281,7 +281,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
 +#0  C->Bmethod() called at [%sbug64239_3.php:%d]
 +#0  A->t2method() called at [%sbug64239_3.php:%d]
 --- /dev/null
-+++ b/Zend/tests/bug64239_4.phpt
++++ php5/Zend/tests/bug64239_4.phpt
 @@ -0,0 +1,31 @@
 +--TEST--
 +Bug #64239 (debug_print_backtrace() changed behavior)
@@ -314,9 +314,9 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
 +#0  A::t2method() called at [%sbug64239_4.php:%d]
 +#0  C::Bmethod() called at [%sbug64239_4.php:%d]
 +#0  A::t2method() called at [%sbug64239_4.php:%d]
---- a/Zend/zend_API.c
-+++ b/Zend/zend_API.c
-@@ -3876,6 +3876,63 @@
+--- php5.orig/Zend/zend_API.c
++++ php5/Zend/zend_API.c
+@@ -3876,6 +3876,63 @@ ZEND_API void zend_restore_error_handlin
  }
  /* }}} */
  
@@ -380,9 +380,9 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
  /*
   * Local variables:
   * tab-width: 4
---- a/Zend/zend_API.h
-+++ b/Zend/zend_API.h
-@@ -512,6 +512,9 @@
+--- php5.orig/Zend/zend_API.h
++++ php5/Zend/zend_API.h
+@@ -512,6 +512,9 @@ ZEND_API void zend_reset_all_cv(HashTabl
  
  ZEND_API void zend_rebuild_symbol_table(TSRMLS_D);
  
@@ -393,7 +393,7 @@ Date:   Thu Aug 29 14:02:15 2013 +0800
  
  ZEND_API ZEND_FUNCTION(display_disabled_function);
 --- /dev/null
-+++ b/Zend/tests/bug65579.phpt
++++ php5/Zend/tests/bug65579.phpt
 @@ -0,0 +1,29 @@
 +--TEST--
 +Bug #65579 (Using traits with get_class_methods causes segfault)

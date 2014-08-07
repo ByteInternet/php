@@ -10,9 +10,9 @@ Date:   Wed Jun 26 19:15:19 2013 -0300
 
     - Fixed bug #64467 (Segmentation fault after imap_reopen failure) patch by: askalski at gmail dot com
 
---- a/ext/imap/php_imap.c
-+++ b/ext/imap/php_imap.c
-@@ -1191,7 +1191,7 @@
+--- php5.orig/ext/imap/php_imap.c
++++ php5/ext/imap/php_imap.c
+@@ -1191,7 +1191,7 @@ static void php_imap_do_open(INTERNAL_FU
  							if (zend_hash_index_find(Z_ARRVAL_PP(disabled_auth_method), i, (void **) &z_auth_method) == SUCCESS) {
  								if (Z_TYPE_PP(z_auth_method) == IS_STRING) {
  									if (Z_STRLEN_PP(z_auth_method) > 1) {
@@ -21,7 +21,7 @@ Date:   Wed Jun 26 19:15:19 2013 -0300
  									}
  								} else {
  									php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid argument, expect string or array of strings");
-@@ -1270,7 +1270,6 @@
+@@ -1270,7 +1270,6 @@ PHP_FUNCTION(imap_reopen)
  	int mailbox_len;
  	long options = 0, retries = 0;
  	pils *imap_le_struct;
@@ -29,7 +29,7 @@ Date:   Wed Jun 26 19:15:19 2013 -0300
  	long flags=NIL;
  	long cl_flags=NIL;
  
-@@ -1298,12 +1297,12 @@
+@@ -1298,12 +1297,12 @@ PHP_FUNCTION(imap_reopen)
  		RETURN_FALSE;
  	}
  

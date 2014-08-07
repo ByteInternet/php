@@ -1,5 +1,5 @@
---- a/ext/iconv/iconv.c
-+++ b/ext/iconv/iconv.c
+--- php5.orig/ext/iconv/iconv.c
++++ php5/ext/iconv/iconv.c
 @@ -513,7 +513,11 @@ PHP_ICONV_API php_iconv_err_t php_iconv_
  	}
  

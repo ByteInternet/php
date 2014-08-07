@@ -4,9 +4,9 @@ Date:   Tue Jun 25 18:00:33 2013 -0300
 
     - Fixed bug #62964 (Possible XSS on "Registered stream filters" info) patch by: david at nnucomputerwhiz dot com
 
---- a/ext/standard/info.c
-+++ b/ext/standard/info.c
-@@ -125,7 +125,11 @@
+--- php5.orig/ext/standard/info.c
++++ php5/ext/standard/info.c
+@@ -125,7 +125,11 @@ static void php_info_print_stream_hash(c
  			zend_hash_internal_pointer_reset_ex(ht, &pos);
  			while (zend_hash_get_current_key_ex(ht, &key, &len, NULL, 0, &pos) == HASH_KEY_IS_STRING)
  			{

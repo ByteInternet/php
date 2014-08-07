@@ -1,7 +1,5 @@
-diff --git a/ext/fileinfo/libmagic/apprentice.c b/ext/fileinfo/libmagic/apprentice.c
-index 4a54849..98bde27 100644
---- a/ext/fileinfo/libmagic/apprentice.c
-+++ b/ext/fileinfo/libmagic/apprentice.c
+--- php5.orig/ext/fileinfo/libmagic/apprentice.c
++++ php5/ext/fileinfo/libmagic/apprentice.c
 @@ -753,7 +753,7 @@ private int
  apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
      const char *fn, int action)
@@ -11,7 +9,7 @@ index 4a54849..98bde27 100644
  	struct magic_entry *marray;
  	uint32_t marraycount, i, mentrycount = 0, starttest;
  	size_t files = 0, maxfiles = 0;
-@@ -782,7 +782,7 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
+@@ -782,7 +782,7 @@ apprentice_load(struct magic_set *ms, st
  			goto out;
  		}
  		while ((d = readdir(dir)) != NULL) {
@@ -20,7 +18,7 @@ index 4a54849..98bde27 100644
  				file_oomem(ms,
  				    strlen(fn) + strlen(d->d_name) + 2);
  				errs++;
-@@ -804,14 +804,14 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
+@@ -804,14 +804,14 @@ apprentice_load(struct magic_set *ms, st
  					goto out;
  				}
  			}
@@ -37,7 +35,7 @@ index 4a54849..98bde27 100644
  		}
  		free(filearr);
  	} else
-@@ -886,9 +886,14 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
+@@ -886,9 +886,14 @@ apprentice_load(struct magic_set *ms, st
  		mentrycount += marray[i].cont_count;
  	}
  out:
@@ -55,7 +53,7 @@ index 4a54849..98bde27 100644
  	if (errs) {
  		*magicp = NULL;
  		*nmagicp = 0;
-@@ -1165,6 +1170,9 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
+@@ -1165,6 +1170,9 @@ parse(struct magic_set *ms, struct magic
  			return -1;
  		}
  		me = &(*mentryp)[*nmentryp - 1];
@@ -65,7 +63,7 @@ index 4a54849..98bde27 100644
  		if (me->cont_count == me->max_count) {
  			struct magic *nm;
  			size_t cnt = me->max_count + ALLOC_CHUNK;
-@@ -1329,6 +1337,10 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
+@@ -1329,6 +1337,10 @@ parse(struct magic_set *ms, struct magic
  	if (m->type == FILE_INVALID) {
  		if (ms->flags & MAGIC_CHECK)
  			file_magwarn(ms, "type `%s' invalid", l);
@@ -76,7 +74,7 @@ index 4a54849..98bde27 100644
  		return -1;
  	}
  
-@@ -2219,6 +2231,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
+@@ -2219,6 +2231,7 @@ apprentice_map(struct magic_set *ms, str
  	mm = emalloc((size_t)st.sb.st_size);
  	if (php_stream_read(stream, mm, (size_t)st.sb.st_size) != (size_t)st.sb.st_size) {
  		file_badread(ms);
@@ -84,11 +82,8 @@ index 4a54849..98bde27 100644
  		goto error1;
  	}
  	ret = 1;
-diff --git a/ext/fileinfo/tests/bug61964.phpt b/ext/fileinfo/tests/bug61964.phpt
-new file mode 100644
-index 0000000..99c8fd2
 --- /dev/null
-+++ b/ext/fileinfo/tests/bug61964.phpt
++++ php5/ext/fileinfo/tests/bug61964.phpt
 @@ -0,0 +1,69 @@
 +--TEST--
 +Bug #61964 (finfo_open with directory cause invalid free)

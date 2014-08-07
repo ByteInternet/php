@@ -10,11 +10,9 @@ Date:   Wed Nov 28 10:28:18 2012 +0100
     This issues where found from by static code analysis tool and,
     so, I can't provide any reproducer.
 
-diff --git a/sapi/fpm/fpm/fpm_events.c b/sapi/fpm/fpm/fpm_events.c
-index d5f7483..d5835f0 100644
---- a/sapi/fpm/fpm/fpm_events.c
-+++ b/sapi/fpm/fpm/fpm_events.c
-@@ -188,7 +188,9 @@ static int fpm_event_queue_del(struct fpm_event_queue_s **queue, struct fpm_even
+--- php5.orig/sapi/fpm/fpm/fpm_events.c
++++ php5/sapi/fpm/fpm/fpm_events.c
+@@ -188,7 +188,9 @@ static int fpm_event_queue_del(struct fp
  			}
  			if (q == *queue) {
  				*queue = q->next;

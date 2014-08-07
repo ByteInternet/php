@@ -1,5 +1,5 @@
---- a/sapi/fpm/fpm/fpm_main.c
-+++ b/sapi/fpm/fpm/fpm_main.c
+--- php5.orig/sapi/fpm/fpm/fpm_main.c
++++ php5/sapi/fpm/fpm/fpm_main.c
 @@ -646,12 +646,38 @@ static void sapi_cgi_register_variables(
  	}
  }
@@ -52,8 +52,8 @@
  	/* make php call us to get _ENV vars */
  	php_php_import_environment_variables = php_import_environment_variables;
  	php_import_environment_variables = cgi_php_import_environment_variables;
---- a/sapi/fpm/fpm/zlog.c
-+++ b/sapi/fpm/fpm/zlog.c
+--- php5.orig/sapi/fpm/fpm/zlog.c
++++ php5/sapi/fpm/fpm/zlog.c
 @@ -22,6 +22,7 @@
  static int zlog_fd = -1;
  static int zlog_level = ZLOG_NOTICE;
@@ -95,8 +95,8 @@
  	if ((flags & ZLOG_LEVEL_MASK) < zlog_level) {
  		return;
  	}
---- a/sapi/fpm/fpm/zlog.h
-+++ b/sapi/fpm/fpm/zlog.h
+--- php5.orig/sapi/fpm/fpm/zlog.h
++++ php5/sapi/fpm/fpm/zlog.h
 @@ -9,6 +9,7 @@
  
  struct timeval;

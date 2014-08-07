@@ -5,7 +5,7 @@ Date:   Mon May 20 00:52:38 2013 -0700
     fix bug #64660 - yyparse can return 2, not only 1
 
 --- /dev/null
-+++ b/Zend/tests/bug64660.phpt
++++ php5/Zend/tests/bug64660.phpt
 @@ -0,0 +1,11 @@
 +--TEST--
 +Bug #64660 (Segfault on memory exhaustion within function definition)
@@ -18,9 +18,9 @@ Date:   Mon May 20 00:52:38 2013 -0700
 +--EXPECTF--
 +
 +Parse error: memory exhausted in %s on line %d 
---- a/Zend/zend_language_scanner.c
-+++ b/Zend/zend_language_scanner.c
-@@ -584,7 +584,7 @@
+--- php5.orig/Zend/zend_language_scanner.c
++++ php5/Zend/zend_language_scanner.c
+@@ -584,7 +584,7 @@ ZEND_API zend_op_array *compile_file(zen
  		compiler_result = zendparse(TSRMLS_C);
  		zend_do_return(&retval_znode, 0 TSRMLS_CC);
  		CG(in_compilation) = original_in_compilation;
@@ -29,7 +29,7 @@ Date:   Mon May 20 00:52:38 2013 -0700
  			zend_bailout();
  		}
  		compilation_successful=1;
-@@ -758,7 +758,7 @@
+@@ -758,7 +758,7 @@ zend_op_array *compile_string(zval *sour
  			SCNG(script_filtered) = NULL;
  		}
  
@@ -38,9 +38,9 @@ Date:   Mon May 20 00:52:38 2013 -0700
  			CG(active_op_array) = original_active_op_array;
  			CG(unclean_shutdown)=1;
  			destroy_op_array(op_array TSRMLS_CC);
---- a/Zend/zend_language_scanner.l
-+++ b/Zend/zend_language_scanner.l
-@@ -582,7 +582,7 @@
+--- php5.orig/Zend/zend_language_scanner.l
++++ php5/Zend/zend_language_scanner.l
+@@ -582,7 +582,7 @@ ZEND_API zend_op_array *compile_file(zen
  		compiler_result = zendparse(TSRMLS_C);
  		zend_do_return(&retval_znode, 0 TSRMLS_CC);
  		CG(in_compilation) = original_in_compilation;
@@ -49,7 +49,7 @@ Date:   Mon May 20 00:52:38 2013 -0700
  			zend_bailout();
  		}
  		compilation_successful=1;
-@@ -756,7 +756,7 @@
+@@ -756,7 +756,7 @@ zend_op_array *compile_string(zval *sour
  			SCNG(script_filtered) = NULL;
  		}
  

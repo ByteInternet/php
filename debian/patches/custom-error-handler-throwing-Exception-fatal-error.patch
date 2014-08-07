@@ -5,9 +5,9 @@ Date:   Thu Sep 6 11:26:40 2012 +0400
     - Fixed bug #61767 (Shutdown functions not called in certain error situation)
     - Fixed bug #60909 (custom error handler throwing Exception + fatal error = no shutdown function)
 
---- a/Zend/tests/bug51394.phpt
-+++ b/Zend/tests/bug51394.phpt
-@@ -13,4 +13,10 @@
+--- php5.orig/Zend/tests/bug51394.phpt
++++ php5/Zend/tests/bug51394.phpt
+@@ -13,4 +13,10 @@ function eh()
  set_error_handler("eh");
  $a = $empty($b);
  --EXPECTF--
@@ -20,7 +20,7 @@ Date:   Thu Sep 6 11:26:40 2012 +0400
  Fatal error: Function name must be a string in %sbug51394.php on line 9
 \ No newline at end of file
 --- /dev/null
-+++ b/Zend/tests/bug60909_1.phpt
++++ php5/Zend/tests/bug60909_1.phpt
 @@ -0,0 +1,24 @@
 +--TEST--
 +Bug #60909 (custom error handler throwing Exception + fatal error = no shutdown function).
@@ -47,7 +47,7 @@ Date:   Thu Sep 6 11:26:40 2012 +0400
 +
 +!!!shutdown!!!
 --- /dev/null
-+++ b/Zend/tests/bug60909_2.phpt
++++ php5/Zend/tests/bug60909_2.phpt
 @@ -0,0 +1,20 @@
 +--TEST--
 +Bug #60909 (custom error handler throwing Exception + fatal error = no shutdown function).
@@ -70,7 +70,7 @@ Date:   Thu Sep 6 11:26:40 2012 +0400
 +
 +!!!shutdown!!!
 --- /dev/null
-+++ b/Zend/tests/bug61767.phpt
++++ php5/Zend/tests/bug61767.phpt
 @@ -0,0 +1,34 @@
 +--TEST--
 +Bug #61767 (Shutdown functions not called in certain error situation)
@@ -106,9 +106,9 @@ Date:   Thu Sep 6 11:26:40 2012 +0400
 +    [file] => %sbug61767.php
 +    [line] => 13
 +)
---- a/Zend/zend.c
-+++ b/Zend/zend.c
-@@ -1031,6 +1031,29 @@
+--- php5.orig/Zend/zend.c
++++ php5/Zend/zend.c
+@@ -1031,6 +1031,29 @@ ZEND_API void zend_error(int type, const
  	zend_stack context_stack;
  	TSRMLS_FETCH();
  
@@ -138,9 +138,9 @@ Date:   Thu Sep 6 11:26:40 2012 +0400
  	/* Obtain relevant filename and lineno */
  	switch (type) {
  		case E_CORE_ERROR:
---- a/Zend/zend_object_handlers.c
-+++ b/Zend/zend_object_handlers.c
-@@ -1526,6 +1526,7 @@
+--- php5.orig/Zend/zend_object_handlers.c
++++ php5/Zend/zend_object_handlers.c
+@@ -1526,6 +1526,7 @@ ZEND_API int zend_std_cast_object_tostri
  					if (retval) {
  						zval_ptr_dtor(&retval);
  					}

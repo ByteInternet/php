@@ -1,5 +1,5 @@
---- a/Zend/zend_gc.c
-+++ b/Zend/zend_gc.c
+--- php5.orig/Zend/zend_gc.c
++++ php5/Zend/zend_gc.c
 @@ -644,7 +644,8 @@ tail_call:
  			struct _store_object *obj = &EG(objects_store).object_buckets[Z_OBJ_HANDLE_P(pz)].bucket.obj;
  
@@ -20,8 +20,8 @@
  
  			if (EXPECTED(EG(objects_store).object_buckets[Z_OBJ_HANDLE_P(pz)].valid &&
  			             (get_gc = Z_OBJ_HANDLER_P(pz, get_gc)) != NULL)) {
---- a/ext/pcre/php_pcre.c
-+++ b/ext/pcre/php_pcre.c
+--- php5.orig/ext/pcre/php_pcre.c
++++ php5/ext/pcre/php_pcre.c
 @@ -547,8 +547,9 @@ PHPAPI void php_pcre_match_impl(pcre_cac
  
  	/* Overwrite the passed-in value for subpatterns with an empty array. */

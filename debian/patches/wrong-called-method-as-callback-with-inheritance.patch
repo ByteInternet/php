@@ -5,7 +5,7 @@ Date:   Tue Nov 20 12:51:55 2012 +0400
     Fixed bug #63468 (wrong called method as callback with inheritance)
 
 --- /dev/null
-+++ b/Zend/tests/bug63468.phpt
++++ php5/Zend/tests/bug63468.phpt
 @@ -0,0 +1,30 @@
 +--TEST--
 +Bug #63468 (wrong called method as callback with inheritance)
@@ -37,9 +37,9 @@ Date:   Tue Nov 20 12:51:55 2012 +0400
 +--EXPECT--
 +string(3) "Bar"
 +
---- a/Zend/zend_API.c
-+++ b/Zend/zend_API.c
-@@ -2730,7 +2730,7 @@
+--- php5.orig/Zend/zend_API.c
++++ php5/Zend/zend_API.c
+@@ -2730,7 +2730,7 @@ static int zend_is_callable_check_func(i
  	} else if (zend_hash_find(ftable, lmname, mlen+1, (void**)&fcc->function_handler) == SUCCESS) {
  		retval = 1;
  		if ((fcc->function_handler->op_array.fn_flags & ZEND_ACC_CHANGED) &&

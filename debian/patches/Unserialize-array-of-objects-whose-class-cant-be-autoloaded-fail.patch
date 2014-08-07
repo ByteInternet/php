@@ -8,7 +8,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
     so,,only check exception at the very begining
 
 --- /dev/null
-+++ b/ext/standard/tests/serialize/bug64354_1.phpt
++++ php5/ext/standard/tests/serialize/bug64354_1.phpt
 @@ -0,0 +1,25 @@
 +--TEST--
 +Bug #64354 (Unserialize array of objects whose class can't be autoloaded fail)
@@ -36,7 +36,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
 +string(6) "Failed"
 +string(6) "Failed"
 --- /dev/null
-+++ b/ext/standard/tests/serialize/bug64354_2.phpt
++++ php5/ext/standard/tests/serialize/bug64354_2.phpt
 @@ -0,0 +1,24 @@
 +--TEST--
 +Bug #64354 (Unserialize array of objects whose class can't be autoloaded fail)
@@ -63,7 +63,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
 +--EXPECTF--
 +string(6) "Failed"
 --- /dev/null
-+++ b/ext/standard/tests/serialize/bug64354_3.phpt
++++ php5/ext/standard/tests/serialize/bug64354_3.phpt
 @@ -0,0 +1,29 @@
 +--TEST--
 +Bug #64354 (Unserialize array of objects whose class can't be autoloaded fail)
@@ -94,9 +94,9 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
 +?>
 +--EXPECTF--
 +string(6) "Failed"
---- a/ext/standard/var.c
-+++ b/ext/standard/var.c
-@@ -702,6 +702,10 @@
+--- php5.orig/ext/standard/var.c
++++ php5/ext/standard/var.c
+@@ -702,6 +702,10 @@ static void php_var_serialize_intern(sma
  	ulong *var_already;
  	HashTable *myht;
  
@@ -107,7 +107,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  	if (var_hash && php_add_var_hash(var_hash, struc, (void *) &var_already TSRMLS_CC) == FAILURE) {
  		if (Z_ISREF_P(struc)) {
  			smart_str_appendl(buf, "R:", 2);
-@@ -788,8 +792,15 @@
+@@ -788,8 +792,15 @@ static void php_var_serialize_intern(sma
  					BG(serialize_lock)++;
  					res = call_user_function_ex(CG(function_table), &struc, &fname, &retval_ptr, 0, 0, 1, NULL TSRMLS_CC);
  					BG(serialize_lock)--;
@@ -124,7 +124,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  						if (retval_ptr) {
  							if (HASH_OF(retval_ptr)) {
  								php_var_serialize_class(buf, struc, retval_ptr, var_hash TSRMLS_CC);
-@@ -909,6 +920,11 @@
+@@ -909,6 +920,11 @@ PHP_FUNCTION(serialize)
  	php_var_serialize(&buf, struc, &var_hash TSRMLS_CC);
  	PHP_VAR_SERIALIZE_DESTROY(var_hash);
  
@@ -136,7 +136,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  	if (buf.c) {
  		RETURN_STRINGL(buf.c, buf.len, 0);
  	} else {
-@@ -939,7 +955,9 @@
+@@ -939,7 +955,9 @@ PHP_FUNCTION(unserialize)
  	if (!php_var_unserialize(&return_value, &p, p + buf_len, &var_hash TSRMLS_CC)) {
  		PHP_VAR_UNSERIALIZE_DESTROY(var_hash);
  		zval_dtor(return_value);
@@ -147,9 +147,9 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  		RETURN_FALSE;
  	}
  	PHP_VAR_UNSERIALIZE_DESTROY(var_hash);
---- a/ext/standard/var_unserializer.c
-+++ b/ext/standard/var_unserializer.c
-@@ -394,8 +394,13 @@
+--- php5.orig/ext/standard/var_unserializer.c
++++ php5/ext/standard/var_unserializer.c
+@@ -394,8 +394,13 @@ static inline int object_common2(UNSERIA
  		BG(serialize_lock)--;
  	}
  
@@ -164,7 +164,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  
  	return finish_nested_data(UNSERIALIZE_PASSTHRU);
  
-@@ -615,10 +620,19 @@
+@@ -615,10 +620,19 @@ yy20:
  		BG(serialize_lock) = 1;
  		if (zend_lookup_class(class_name, len2, &pce TSRMLS_CC) == SUCCESS) {
  			BG(serialize_lock) = 0;
@@ -184,7 +184,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  		
  		/* Check for unserialize callback */
  		if ((PG(unserialize_callback_func) == NULL) || (PG(unserialize_callback_func)[0] == '\0')) {
-@@ -636,6 +650,12 @@
+@@ -636,6 +650,12 @@ yy20:
  		BG(serialize_lock) = 1;
  		if (call_user_function_ex(CG(function_table), NULL, user_func, &retval_ptr, 1, args, 0, NULL TSRMLS_CC) != SUCCESS) {
  			BG(serialize_lock) = 0;
@@ -197,7 +197,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  			php_error_docref(NULL TSRMLS_CC, E_WARNING, "defined (%s) but not found", user_func->value.str.val);
  			incomplete_class = 1;
  			ce = PHP_IC_ENTRY;
-@@ -647,6 +667,12 @@
+@@ -647,6 +667,12 @@ yy20:
  		if (retval_ptr) {
  			zval_ptr_dtor(&retval_ptr);
  		}
@@ -210,9 +210,9 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  		
  		/* The callback function may have defined the class */
  		if (zend_lookup_class(class_name, len2, &pce TSRMLS_CC) == SUCCESS) {
---- a/ext/standard/var_unserializer.re
-+++ b/ext/standard/var_unserializer.re
-@@ -400,8 +400,13 @@
+--- php5.orig/ext/standard/var_unserializer.re
++++ php5/ext/standard/var_unserializer.re
+@@ -400,8 +400,13 @@ static inline int object_common2(UNSERIA
  		BG(serialize_lock)--;
  	}
  
@@ -227,7 +227,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  
  	return finish_nested_data(UNSERIALIZE_PASSTHRU);
  
-@@ -681,10 +686,19 @@
+@@ -681,10 +686,19 @@ object ":" uiv ":" ["]	{
  		BG(serialize_lock) = 1;
  		if (zend_lookup_class(class_name, len2, &pce TSRMLS_CC) == SUCCESS) {
  			BG(serialize_lock) = 0;
@@ -247,7 +247,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  		
  		/* Check for unserialize callback */
  		if ((PG(unserialize_callback_func) == NULL) || (PG(unserialize_callback_func)[0] == '\0')) {
-@@ -702,6 +716,12 @@
+@@ -702,6 +716,12 @@ object ":" uiv ":" ["]	{
  		BG(serialize_lock) = 1;
  		if (call_user_function_ex(CG(function_table), NULL, user_func, &retval_ptr, 1, args, 0, NULL TSRMLS_CC) != SUCCESS) {
  			BG(serialize_lock) = 0;
@@ -260,7 +260,7 @@ Date:   Sat Mar 9 23:00:58 2013 +0800
  			php_error_docref(NULL TSRMLS_CC, E_WARNING, "defined (%s) but not found", user_func->value.str.val);
  			incomplete_class = 1;
  			ce = PHP_IC_ENTRY;
-@@ -713,6 +733,12 @@
+@@ -713,6 +733,12 @@ object ":" uiv ":" ["]	{
  		if (retval_ptr) {
  			zval_ptr_dtor(&retval_ptr);
  		}

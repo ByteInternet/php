@@ -4,9 +4,9 @@ Date:   Tue Jun 25 21:18:09 2013 -0300
 
     - Fixed bug #62672 (Error on serialize of ArrayObject) patch by: lior dot k at zend dot com
 
---- a/ext/spl/spl_array.c
-+++ b/ext/spl/spl_array.c
-@@ -1781,7 +1781,7 @@
+--- php5.orig/ext/spl/spl_array.c
++++ php5/ext/spl/spl_array.c
+@@ -1781,7 +1781,7 @@ SPL_METHOD(Array, unserialize)
  	++p;
  
  	if (*p!='m') {
@@ -16,7 +16,7 @@ Date:   Tue Jun 25 21:18:09 2013 -0300
  		}
  		intern->ar_flags &= ~SPL_ARRAY_CLONE_MASK;
 --- /dev/null
-+++ b/ext/spl/tests/bug62672.phpt
++++ php5/ext/spl/tests/bug62672.phpt
 @@ -0,0 +1,31 @@
 +--TEST--
 +Bug #62672 (Error on serialize of ArrayObject)

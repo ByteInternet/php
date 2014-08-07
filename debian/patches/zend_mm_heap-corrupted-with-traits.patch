@@ -4,9 +4,9 @@ Date:   Tue Oct 23 11:34:25 2012 +0800
 
     Fixed bug #63305 (zend_mm_heap corrupted with traits)
 
---- a/NEWS
-+++ b/NEWS
-@@ -915,6 +915,9 @@
+--- php5.orig/NEWS
++++ php5/NEWS
+@@ -915,6 +915,9 @@ PHP
    . Fixed bug #60150 (Integer overflow during the parsing of invalid exif
      header). (CVE-2011-4566) (Stas, flolechaud at gmail dot com)
  
@@ -17,7 +17,7 @@ Date:   Tue Oct 23 11:34:25 2012 +0800
    . Fixed bug #60094 (C++ comment fails in c89). (Laruence)
    . Fixed possible memory leak in finfo_open(). (Felipe)
 --- /dev/null
-+++ b/Zend/tests/bug63305.phpt
++++ php5/Zend/tests/bug63305.phpt
 @@ -0,0 +1,43 @@
 +--TEST--
 +Bug #63305 (zend_mm_heap corrupted with traits)
@@ -62,9 +62,9 @@ Date:   Tue Oct 23 11:34:25 2012 +0800
 +?>
 +--EXPECT--
 +okey
---- a/Zend/zend_compile.c
-+++ b/Zend/zend_compile.c
-@@ -3877,7 +3877,7 @@
+--- php5.orig/Zend/zend_compile.c
++++ php5/Zend/zend_compile.c
+@@ -3877,7 +3877,7 @@ static int zend_traits_copy_functions(ze
  					
  				/* if it is 0, no modifieres has been changed */
  				if (aliases[i]->modifiers) { 
@@ -73,7 +73,7 @@ Date:   Tue Oct 23 11:34:25 2012 +0800
  					if (!(aliases[i]->modifiers & ZEND_ACC_PPP_MASK)) {
  						fn_copy.common.fn_flags |= ZEND_ACC_PUBLIC;
  					}
-@@ -3917,7 +3917,7 @@
+@@ -3917,7 +3917,7 @@ static int zend_traits_copy_functions(ze
  					&& (!aliases[i]->trait_method->ce || fn->common.scope == aliases[i]->trait_method->ce)
  					&& (aliases[i]->trait_method->mname_len == fnname_len)
  					&& (zend_binary_strcasecmp(aliases[i]->trait_method->method_name, aliases[i]->trait_method->mname_len, fn->common.function_name, fnname_len) == 0)) {

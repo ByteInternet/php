@@ -1,7 +1,7 @@
 X-Git-Url: http://git.php.net/?p=php-src.git;a=blobdiff_plain;f=sapi%2Ffpm%2Ffpm%2Ffastcgi.c;h=9df26f11cdb497108850d4b5ad42089d8129312b;hp=212b6ff1db5221e7540f23f4c58ed02deae9822a;hb=60cca8b9c9b879295dbf1f76e305882e347dcb53;hpb=e052da3a6bc353636fa4bf9cb488573c50adf9a0
 
---- a/sapi/fpm/fpm/fastcgi.c
-+++ b/sapi/fpm/fpm/fastcgi.c
+--- php5.orig/sapi/fpm/fpm/fastcgi.c
++++ php5/sapi/fpm/fpm/fastcgi.c
 @@ -399,7 +399,7 @@ static inline int fcgi_param_get_eff_len
  {
  	int ret = 1;

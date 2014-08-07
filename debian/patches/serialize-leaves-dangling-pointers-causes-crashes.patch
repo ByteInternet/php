@@ -6,11 +6,9 @@ Date:   Fri Oct 26 16:36:47 2012 +0400
     
     (un)serialize() leaves dangling pointers, causes crashes
 
-Index: php/NEWS
-===================================================================
---- php.orig/NEWS	2013-10-17 14:43:54.224097271 +0200
-+++ php/NEWS	2013-10-17 14:43:54.336097271 +0200
-@@ -926,6 +926,8 @@
+--- php5.orig/NEWS
++++ php5/NEWS
+@@ -926,6 +926,8 @@ PHP
  
  - Core:
    . Fixed bug #63305 (zend_mm_heap corrupted with traits). (Dmitry, Laruence)
@@ -19,11 +17,9 @@ Index: php/NEWS
  
  - Fileinfo:
    . Fixed bug #60094 (C++ comment fails in c89). (Laruence)
-Index: php/ext/standard/basic_functions.c
-===================================================================
---- php.orig/ext/standard/basic_functions.c	2013-10-17 14:43:50.372097298 +0200
-+++ php/ext/standard/basic_functions.c	2013-10-17 14:43:54.336097271 +0200
-@@ -3684,6 +3684,11 @@
+--- php5.orig/ext/standard/basic_functions.c
++++ php5/ext/standard/basic_functions.c
+@@ -3684,6 +3684,11 @@ PHP_MSHUTDOWN_FUNCTION(basic) /* {{{ */
  PHP_RINIT_FUNCTION(basic) /* {{{ */
  {
  	memset(BG(strtok_table), 0, 256);

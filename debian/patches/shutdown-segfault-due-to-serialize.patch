@@ -4,9 +4,9 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
 
     fix bug #65481 (shutdown segfault due to serialize)
 
---- a/ext/standard/php_var.h
-+++ b/ext/standard/php_var.h
-@@ -115,6 +115,7 @@
+--- php5.orig/ext/standard/php_var.h
++++ php5/ext/standard/php_var.h
+@@ -115,6 +115,7 @@ do { \
  
  PHPAPI void var_replace(php_unserialize_data_t *var_hash, zval *ozval, zval **nzval);
  PHPAPI void var_push_dtor(php_unserialize_data_t *var_hash, zval **val);
@@ -15,7 +15,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  
  #define PHP_VAR_UNSERIALIZE_ZVAL_CHANGED(var_hash, ozval, nzval) \
 --- /dev/null
-+++ b/ext/standard/tests/serialize/bug65481.phpt
++++ php5/ext/standard/tests/serialize/bug65481.phpt
 @@ -0,0 +1,40 @@
 +--TEST--
 +Bug #65481 (shutdown segfault due to serialize)
@@ -57,8 +57,8 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
 +--EXPECT--
 +Test
 +Done
---- a/ext/standard/var_unserializer.c
-+++ b/ext/standard/var_unserializer.c
+--- php5.orig/ext/standard/var_unserializer.c
++++ php5/ext/standard/var_unserializer.c
 @@ -25,6 +25,7 @@
  
  /* {{{ reference-handling for unserializer: var_* */
@@ -67,7 +67,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  
  typedef struct {
  	zval *data[VAR_ENTRIES_MAX];
-@@ -35,7 +36,7 @@
+@@ -35,7 +36,7 @@ typedef struct {
  static inline void var_push(php_unserialize_data_t *var_hashx, zval **rval)
  {
  	var_entries *var_hash = (*var_hashx)->last;
@@ -76,7 +76,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	fprintf(stderr, "var_push(%ld): %d\n", var_hash?var_hash->used_slots:-1L, Z_TYPE_PP(rval));
  #endif
  
-@@ -59,7 +60,7 @@
+@@ -59,7 +60,7 @@ static inline void var_push(php_unserial
  PHPAPI void var_push_dtor(php_unserialize_data_t *var_hashx, zval **rval)
  {
  	var_entries *var_hash = (*var_hashx)->last_dtor;
@@ -85,7 +85,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	fprintf(stderr, "var_push_dtor(%ld): %d\n", var_hash?var_hash->used_slots:-1L, Z_TYPE_PP(rval));
  #endif
  
-@@ -81,11 +82,35 @@
+@@ -81,11 +82,35 @@ PHPAPI void var_push_dtor(php_unserializ
  	var_hash->data[var_hash->used_slots++] = *rval;
  }
  
@@ -122,7 +122,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	fprintf(stderr, "var_replace(%ld): %d\n", var_hash?var_hash->used_slots:-1L, Z_TYPE_PP(nzval));
  #endif
  	
-@@ -103,7 +128,7 @@
+@@ -103,7 +128,7 @@ PHPAPI void var_replace(php_unserialize_
  static int var_access(php_unserialize_data_t *var_hashx, long id, zval ***store)
  {
  	var_entries *var_hash = (*var_hashx)->first;
@@ -131,7 +131,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	fprintf(stderr, "var_access(%ld): %ld\n", var_hash?var_hash->used_slots:-1L, id);
  #endif
  		
-@@ -126,7 +151,7 @@
+@@ -126,7 +151,7 @@ PHPAPI void var_destroy(php_unserialize_
  	void *next;
  	long i;
  	var_entries *var_hash = (*var_hashx)->first;
@@ -140,7 +140,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	fprintf(stderr, "var_destroy(%ld)\n", var_hash?var_hash->used_slots:-1L);
  #endif
  	
-@@ -617,9 +642,9 @@
+@@ -617,9 +642,9 @@ yy20:
  
  	do {
  		/* Try to find class directly */
@@ -152,7 +152,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  			if (EG(exception)) {
  				efree(class_name);
  				return 0;
-@@ -627,7 +652,7 @@
+@@ -627,7 +652,7 @@ yy20:
  			ce = *pce;
  			break;
  		}
@@ -161,7 +161,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  
  		if (EG(exception)) {
  			efree(class_name);
-@@ -647,9 +672,9 @@
+@@ -647,9 +672,9 @@ yy20:
  		args[0] = &arg_func_name;
  		MAKE_STD_ZVAL(arg_func_name);
  		ZVAL_STRING(arg_func_name, class_name, 1);
@@ -173,7 +173,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  			if (EG(exception)) {
  				efree(class_name);
  				zval_ptr_dtor(&user_func);
-@@ -663,7 +688,7 @@
+@@ -663,7 +688,7 @@ yy20:
  			zval_ptr_dtor(&arg_func_name);
  			break;
  		}
@@ -182,7 +182,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  		if (retval_ptr) {
  			zval_ptr_dtor(&retval_ptr);
  		}
-@@ -691,7 +716,9 @@
+@@ -691,7 +716,9 @@ yy20:
  	*p = YYCURSOR;
  
  	if (custom_object) {
@@ -193,7 +193,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  
  		if (ret && incomplete_class) {
  			php_store_class_name(*rval, class_name, len2);
-@@ -1151,7 +1178,7 @@
+@@ -1151,7 +1178,7 @@ yy91:
  	if (*rval == *rval_ref) return 0;
  
  	if (*rval != NULL) {
@@ -202,8 +202,8 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	}
  	*rval = *rval_ref;
  	Z_ADDREF_PP(rval);
---- a/ext/standard/var_unserializer.re
-+++ b/ext/standard/var_unserializer.re
+--- php5.orig/ext/standard/var_unserializer.re
++++ php5/ext/standard/var_unserializer.re
 @@ -24,6 +24,7 @@
  
  /* {{{ reference-handling for unserializer: var_* */
@@ -212,7 +212,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  
  typedef struct {
  	zval *data[VAR_ENTRIES_MAX];
-@@ -34,7 +35,7 @@
+@@ -34,7 +35,7 @@ typedef struct {
  static inline void var_push(php_unserialize_data_t *var_hashx, zval **rval)
  {
  	var_entries *var_hash = (*var_hashx)->last;
@@ -221,7 +221,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	fprintf(stderr, "var_push(%ld): %d\n", var_hash?var_hash->used_slots:-1L, Z_TYPE_PP(rval));
  #endif
  
-@@ -58,7 +59,7 @@
+@@ -58,7 +59,7 @@ static inline void var_push(php_unserial
  PHPAPI void var_push_dtor(php_unserialize_data_t *var_hashx, zval **rval)
  {
  	var_entries *var_hash = (*var_hashx)->last_dtor;
@@ -230,7 +230,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	fprintf(stderr, "var_push_dtor(%ld): %d\n", var_hash?var_hash->used_slots:-1L, Z_TYPE_PP(rval));
  #endif
  
-@@ -80,11 +81,35 @@
+@@ -80,11 +81,35 @@ PHPAPI void var_push_dtor(php_unserializ
  	var_hash->data[var_hash->used_slots++] = *rval;
  }
  
@@ -267,7 +267,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	fprintf(stderr, "var_replace(%ld): %d\n", var_hash?var_hash->used_slots:-1L, Z_TYPE_PP(nzval));
  #endif
  	
-@@ -102,7 +127,7 @@
+@@ -102,7 +127,7 @@ PHPAPI void var_replace(php_unserialize_
  static int var_access(php_unserialize_data_t *var_hashx, long id, zval ***store)
  {
  	var_entries *var_hash = (*var_hashx)->first;
@@ -276,7 +276,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	fprintf(stderr, "var_access(%ld): %ld\n", var_hash?var_hash->used_slots:-1L, id);
  #endif
  		
-@@ -125,7 +150,7 @@
+@@ -125,7 +150,7 @@ PHPAPI void var_destroy(php_unserialize_
  	void *next;
  	long i;
  	var_entries *var_hash = (*var_hashx)->first;
@@ -285,7 +285,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	fprintf(stderr, "var_destroy(%ld)\n", var_hash?var_hash->used_slots:-1L);
  #endif
  	
-@@ -472,7 +497,7 @@
+@@ -472,7 +497,7 @@ PHPAPI int php_var_unserialize(UNSERIALI
  	if (*rval == *rval_ref) return 0;
  
  	if (*rval != NULL) {
@@ -294,7 +294,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  	}
  	*rval = *rval_ref;
  	Z_ADDREF_PP(rval);
-@@ -683,9 +708,9 @@
+@@ -683,9 +708,9 @@ object ":" uiv ":" ["]	{
  
  	do {
  		/* Try to find class directly */
@@ -306,7 +306,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  			if (EG(exception)) {
  				efree(class_name);
  				return 0;
-@@ -693,7 +718,7 @@
+@@ -693,7 +718,7 @@ object ":" uiv ":" ["]	{
  			ce = *pce;
  			break;
  		}
@@ -315,7 +315,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  
  		if (EG(exception)) {
  			efree(class_name);
-@@ -713,9 +738,9 @@
+@@ -713,9 +738,9 @@ object ":" uiv ":" ["]	{
  		args[0] = &arg_func_name;
  		MAKE_STD_ZVAL(arg_func_name);
  		ZVAL_STRING(arg_func_name, class_name, 1);
@@ -327,7 +327,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  			if (EG(exception)) {
  				efree(class_name);
  				zval_ptr_dtor(&user_func);
-@@ -729,7 +754,7 @@
+@@ -729,7 +754,7 @@ object ":" uiv ":" ["]	{
  			zval_ptr_dtor(&arg_func_name);
  			break;
  		}
@@ -336,7 +336,7 @@ Date:   Mon Jul 29 17:59:35 2013 +0200
  		if (retval_ptr) {
  			zval_ptr_dtor(&retval_ptr);
  		}
-@@ -757,7 +782,9 @@
+@@ -757,7 +782,9 @@ object ":" uiv ":" ["]	{
  	*p = YYCURSOR;
  
  	if (custom_object) {

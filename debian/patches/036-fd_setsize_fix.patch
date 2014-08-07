@@ -3,8 +3,8 @@ Origin: vendor
 Forwarded: no
 Last-Update: 2010-01-18
 
---- a/ext/sockets/sockets.c
-+++ b/ext/sockets/sockets.c
+--- php5.orig/ext/sockets/sockets.c
++++ php5/ext/sockets/sockets.c
 @@ -889,6 +889,7 @@ static int php_sock_array_to_fd_set(zval
  
  		php_sock = (php_socket*) zend_fetch_resource(element TSRMLS_CC, -1, le_socket_name, NULL, 1, le_socket);
@@ -13,8 +13,8 @@ Last-Update: 2010-01-18
  
  		PHP_SAFE_FD_SET(php_sock->bsd_socket, fds);
  		if (php_sock->bsd_socket > *max_fd) {
---- a/ext/standard/streamsfuncs.c
-+++ b/ext/standard/streamsfuncs.c
+--- php5.orig/ext/standard/streamsfuncs.c
++++ php5/ext/standard/streamsfuncs.c
 @@ -621,6 +621,8 @@ static int stream_array_to_fd_set(zval *
  		 * is not displayed.
  		 * */

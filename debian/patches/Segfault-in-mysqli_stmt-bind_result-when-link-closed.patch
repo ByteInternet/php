@@ -12,9 +12,9 @@ Date:   Thu Feb 27 08:45:16 2014 +0100
     
     So, libmysqlclient and mysqlnd have the same behavior.
 
---- a/ext/mysqli/mysqli.c
-+++ b/ext/mysqli/mysqli.c
-@@ -176,8 +176,11 @@
+--- php5.orig/ext/mysqli/mysqli.c
++++ php5/ext/mysqli/mysqli.c
+@@ -176,8 +176,11 @@ void php_clear_stmt_bind(MY_STMT *stmt T
  	php_free_stmt_bind_buffer(stmt->param, FETCH_SIMPLE);
  	/* Clean output bind */
  	php_free_stmt_bind_buffer(stmt->result, FETCH_RESULT);
@@ -27,7 +27,7 @@ Date:   Thu Feb 27 08:45:16 2014 +0100
  	if (stmt->query) {
  		efree(stmt->query);
  	}
-@@ -1052,6 +1055,10 @@
+@@ -1052,6 +1055,10 @@ PHP_FUNCTION(mysqli_stmt_construct)
  		efree(stmt);
  		RETURN_FALSE;
  	}
@@ -38,9 +38,9 @@ Date:   Thu Feb 27 08:45:16 2014 +0100
  
  	mysqli_resource = (MYSQLI_RESOURCE *)ecalloc (1, sizeof(MYSQLI_RESOURCE));
  	mysqli_resource->ptr = (void *)stmt;
---- a/ext/mysqli/mysqli_api.c
-+++ b/ext/mysqli/mysqli_api.c
-@@ -1837,6 +1837,10 @@
+--- php5.orig/ext/mysqli/mysqli_api.c
++++ php5/ext/mysqli/mysqli_api.c
+@@ -1837,6 +1837,10 @@ PHP_FUNCTION(mysqli_prepare)
  		efree(stmt);
  		RETURN_FALSE;
  	}
@@ -51,7 +51,7 @@ Date:   Thu Feb 27 08:45:16 2014 +0100
  
  	mysqli_resource = (MYSQLI_RESOURCE *)ecalloc (1, sizeof(MYSQLI_RESOURCE));
  	mysqli_resource->ptr = (void *)stmt;
-@@ -2365,6 +2369,10 @@
+@@ -2365,6 +2369,10 @@ PHP_FUNCTION(mysqli_stmt_init)
  		efree(stmt);
  		RETURN_FALSE;
  	}
@@ -62,9 +62,9 @@ Date:   Thu Feb 27 08:45:16 2014 +0100
  
  	mysqli_resource = (MYSQLI_RESOURCE *)ecalloc (1, sizeof(MYSQLI_RESOURCE));
  	mysqli_resource->status = MYSQLI_STATUS_INITIALIZED;
---- a/ext/mysqli/php_mysqli_structs.h
-+++ b/ext/mysqli/php_mysqli_structs.h
-@@ -116,6 +116,10 @@
+--- php5.orig/ext/mysqli/php_mysqli_structs.h
++++ php5/ext/mysqli/php_mysqli_structs.h
+@@ -116,6 +116,10 @@ typedef struct {
  	BIND_BUFFER	param;
  	BIND_BUFFER	result;
  	char		*query;

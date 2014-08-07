@@ -4,11 +4,9 @@ Date:   Thu Aug 2 12:30:07 2012 +0800
 
     Fixed bug #62716 (munmap() is called with the incorrect length)
 
-diff --git a/Zend/zend_stream.c b/Zend/zend_stream.c
-index 5a02ecd..bc5206c 100644
---- a/Zend/zend_stream.c
-+++ b/Zend/zend_stream.c
-@@ -79,7 +79,7 @@ static size_t zend_stream_stdio_fsizer(void *handle TSRMLS_DC) /* {{{ */
+--- php5.orig/Zend/zend_stream.c
++++ php5/Zend/zend_stream.c
+@@ -79,7 +79,7 @@ static size_t zend_stream_stdio_fsizer(v
  static void zend_stream_unmap(zend_stream *stream TSRMLS_DC) { /* {{{ */
  #if HAVE_MMAP
  	if (stream->mmap.map) {

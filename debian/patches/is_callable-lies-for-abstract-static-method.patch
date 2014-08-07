@@ -5,7 +5,7 @@ Date:   Fri Sep 21 13:07:14 2012 +0400
     Fixed bug #63111 (is_callable() lies for abstract static method)
 
 --- /dev/null
-+++ b/Zend/tests/bug63111.phpt
++++ php5/Zend/tests/bug63111.phpt
 @@ -0,0 +1,36 @@
 +--TEST--
 +Bug #63111 (is_callable() lies for abstract static method)
@@ -43,9 +43,9 @@ Date:   Fri Sep 21 13:07:14 2012 +0400
 +
 +Fatal error: Cannot call abstract method Foo::bar() in %sbug63111.php on line 20
 +
---- a/Zend/zend_API.c
-+++ b/Zend/zend_API.c
-@@ -2811,7 +2811,14 @@
+--- php5.orig/Zend/zend_API.c
++++ php5/Zend/zend_API.c
+@@ -2811,7 +2811,14 @@ get_function_via_handler:
  
  	if (retval) {
  		if (fcc->calling_scope && !call_via_handler) {

@@ -4,9 +4,9 @@ Date:   Wed Jan 9 11:30:50 2013 +0400
 
     Fixed bug #63882 (zend_std_compare_objects crash on recursion)
 
---- a/NEWS
-+++ b/NEWS
-@@ -48,6 +48,7 @@
+--- php5.orig/NEWS
++++ php5/NEWS
+@@ -48,6 +48,7 @@ PHP
  - CURL:
    . Fixed bug #61948 (CURLOPT_COOKIEFILE '' raises open_basedir restriction).
      (Laruence)
@@ -15,7 +15,7 @@ Date:   Wed Jan 9 11:30:50 2013 +0400
  - Intl:
    . Fixed bug #62082 (Memory corruption in internal function 
 --- /dev/null
-+++ b/Zend/tests/bug63882.phpt
++++ php5/Zend/tests/bug63882.phpt
 @@ -0,0 +1,15 @@
 +--TEST--
 +Bug #63882 (zend_std_compare_objects crash on recursion)
@@ -32,8 +32,8 @@ Date:   Wed Jan 9 11:30:50 2013 +0400
 +?>
 +--EXPECTF--
 +Fatal error: Nesting level too deep - recursive dependency? in %sbug63882.php on line 9
---- a/Zend/zend_object_handlers.c
-+++ b/Zend/zend_object_handlers.c
+--- php5.orig/Zend/zend_object_handlers.c
++++ php5/Zend/zend_object_handlers.c
 @@ -35,6 +35,17 @@
  #define Z_OBJ_P(zval_p) \
  	((zend_object*)(EG(objects_store).object_buckets[Z_OBJ_HANDLE_P(zval_p)].bucket.obj.object))
@@ -52,7 +52,7 @@ Date:   Wed Jan 9 11:30:50 2013 +0400
  /*
    __X accessors explanation:
  
-@@ -1325,28 +1336,43 @@
+@@ -1325,28 +1336,43 @@ static int zend_std_compare_objects(zval
  	}
  	if (!zobj1->properties && !zobj2->properties) {
  		int i;
@@ -96,9 +96,9 @@ Date:   Wed Jan 9 11:30:50 2013 +0400
  		return 0;
  	} else {
  		if (!zobj1->properties) {
---- a/Zend/zend_objects_API.c
-+++ b/Zend/zend_objects_API.c
-@@ -117,6 +117,7 @@
+--- php5.orig/Zend/zend_objects_API.c
++++ php5/Zend/zend_objects_API.c
+@@ -117,6 +117,7 @@ ZEND_API zend_object_handle zend_objects
  	obj = &EG(objects_store).object_buckets[handle].bucket.obj;
  	EG(objects_store).object_buckets[handle].destructor_called = 0;
  	EG(objects_store).object_buckets[handle].valid = 1;
@@ -106,9 +106,9 @@ Date:   Wed Jan 9 11:30:50 2013 +0400
  
  	obj->refcount = 1;
  	GC_OBJ_INIT(obj);
---- a/Zend/zend_objects_API.h
-+++ b/Zend/zend_objects_API.h
-@@ -31,6 +31,7 @@
+--- php5.orig/Zend/zend_objects_API.h
++++ php5/Zend/zend_objects_API.h
+@@ -31,6 +31,7 @@ typedef void (*zend_objects_store_clone_
  typedef struct _zend_object_store_bucket {
  	zend_bool destructor_called;
  	zend_bool valid;

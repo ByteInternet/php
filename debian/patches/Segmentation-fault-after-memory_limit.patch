@@ -10,9 +10,9 @@ Date:   Tue Jan 21 16:28:30 2014 +0100
     RSHIUTDOWN) won't cause a double free, instead we rely on the engine to
     free emalloc()ed memory after bailout.
 
---- a/ext/mysqlnd/mysqlnd_result.c
-+++ b/ext/mysqlnd/mysqlnd_result.c
-@@ -198,9 +198,11 @@
+--- php5.orig/ext/mysqlnd/mysqlnd_result.c
++++ php5/ext/mysqlnd/mysqlnd_result.c
+@@ -198,9 +198,11 @@ MYSQLND_METHOD(mysqlnd_res, free_buffere
  	if (set->data) {
  		unsigned int copy_on_write_performed = 0;
  		unsigned int copy_on_write_saved = 0;
@@ -25,7 +25,7 @@ Date:   Tue Jan 21 16:28:30 2014 +0100
  			MYSQLND_MEMORY_POOL_CHUNK *current_buffer = set->row_buffers[row];
  			int64_t col;
  
-@@ -222,8 +224,7 @@
+@@ -222,8 +224,7 @@ MYSQLND_METHOD(mysqlnd_res, free_buffere
  
  		MYSQLND_INC_GLOBAL_STATISTIC_W_VALUE2(STAT_COPY_ON_WRITE_PERFORMED, copy_on_write_performed,
  											  STAT_COPY_ON_WRITE_SAVED, copy_on_write_saved);

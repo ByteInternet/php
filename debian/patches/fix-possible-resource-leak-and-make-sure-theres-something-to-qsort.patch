@@ -4,9 +4,9 @@ Date:   Wed Jul 10 13:00:47 2013 +0200
 
     fix possible resource leak and make sure there's something to qsort()
 
---- a/main/streams/streams.c
-+++ b/main/streams/streams.c
-@@ -2350,6 +2350,7 @@
+--- php5.orig/main/streams/streams.c
++++ php5/main/streams/streams.c
+@@ -2350,6 +2350,7 @@ PHPAPI int _php_stream_scandir(char *dir
  			} else {
  				if(vector_size*2 < vector_size) {
  					/* overflow */
@@ -14,7 +14,7 @@ Date:   Wed Jul 10 13:00:47 2013 +0200
  					efree(vector);
  					return FAILURE;
  				}
-@@ -2363,6 +2364,7 @@
+@@ -2363,6 +2364,7 @@ PHPAPI int _php_stream_scandir(char *dir
  		nfiles++;
  		if(vector_size < 10 || nfiles == 0) {
  			/* overflow */
@@ -22,7 +22,7 @@ Date:   Wed Jul 10 13:00:47 2013 +0200
  			efree(vector);
  			return FAILURE;
  		}
-@@ -2371,7 +2373,7 @@
+@@ -2371,7 +2373,7 @@ PHPAPI int _php_stream_scandir(char *dir
  
  	*namelist = vector;
  

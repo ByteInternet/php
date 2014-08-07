@@ -4,8 +4,8 @@ Date:   Tue Jul 9 15:05:10 2013 +0200
 
     Fixed #65225: PHP_BINARY incorrectly set
 
---- a/main/main.c
-+++ b/main/main.c
+--- php5.orig/main/main.c
++++ php5/main/main.c
 @@ -115,6 +115,10 @@
  #endif
  /* }}} */
@@ -17,7 +17,7 @@ Date:   Tue Jul 9 15:05:10 2013 +0200
  PHPAPI int (*php_register_internal_extensions_func)(TSRMLS_D) = php_register_internal_extensions;
  
  #ifndef ZTS
-@@ -276,13 +280,14 @@
+@@ -276,13 +280,14 @@ static void php_binary_init(TSRMLS_D)
  			if ((envpath = getenv("PATH")) != NULL) {
  				char *search_dir, search_path[MAXPATHLEN];
  				char *last = NULL;

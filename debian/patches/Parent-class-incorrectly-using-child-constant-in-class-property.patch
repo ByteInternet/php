@@ -5,7 +5,7 @@ Date:   Tue Mar 19 16:59:01 2013 +0400
     Fixed bug #63976 (Parent class incorrectly using child constant in class property)
 
 --- /dev/null
-+++ b/Zend/tests/bug63976.phpt
++++ php5/Zend/tests/bug63976.phpt
 @@ -0,0 +1,20 @@
 +--TEST--
 +Bug #63976 (Parent class incorrectly using child constant in class property)
@@ -27,9 +27,9 @@ Date:   Tue Mar 19 16:59:01 2013 +0400
 +?>
 +--EXPECT--
 +string(3) "foo"
---- a/Zend/zend_API.c
-+++ b/Zend/zend_API.c
-@@ -1022,6 +1022,40 @@
+--- php5.orig/Zend/zend_API.c
++++ php5/Zend/zend_API.c
+@@ -1022,6 +1022,40 @@ ZEND_API void zend_merge_properties(zval
  }
  /* }}} */
  
@@ -70,7 +70,7 @@ Date:   Tue Mar 19 16:59:01 2013 +0400
  ZEND_API void zend_update_class_constants(zend_class_entry *class_type TSRMLS_DC) /* {{{ */
  {
  	if ((class_type->ce_flags & ZEND_ACC_CONSTANTS_UPDATED) == 0 || (!CE_STATIC_MEMBERS(class_type) && class_type->default_static_members_count)) {
-@@ -1034,7 +1068,7 @@
+@@ -1034,7 +1068,7 @@ ZEND_API void zend_update_class_constant
  
  		for (i = 0; i < class_type->default_properties_count; i++) {
  			if (class_type->default_properties_table[i]) {
@@ -79,7 +79,7 @@ Date:   Tue Mar 19 16:59:01 2013 +0400
  			}
  		}
  
-@@ -1075,7 +1109,7 @@
+@@ -1075,7 +1109,7 @@ ZEND_API void zend_update_class_constant
  		}
  
  		for (i = 0; i < class_type->default_static_members_count; i++) {

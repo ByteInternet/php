@@ -4,9 +4,9 @@ Date:   Thu Jul 11 00:48:12 2013 +0200
 
     Fixed bug #65226 chroot() does not get enabled
 
---- a/ext/standard/config.m4
-+++ b/ext/standard/config.m4
-@@ -363,7 +363,29 @@
+--- php5.orig/ext/standard/config.m4
++++ php5/ext/standard/config.m4
+@@ -363,7 +363,29 @@ else
    AC_MSG_RESULT(no)
  fi
  

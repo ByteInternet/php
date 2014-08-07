@@ -4,9 +4,9 @@ Date:   Tue Jun 25 21:36:50 2013 -0300
 
     - Fixed bug #62475 (variant_* functions causes crash when null given as an argument)
 
---- a/ext/com_dotnet/com_variant.c
-+++ b/ext/com_dotnet/com_variant.c
-@@ -102,8 +102,9 @@
+--- php5.orig/ext/com_dotnet/com_variant.c
++++ php5/ext/com_dotnet/com_variant.c
+@@ -102,8 +102,9 @@ PHP_COM_DOTNET_API void php_com_variant_
  {
  	OLECHAR *olestring;
  	php_com_dotnet_object *obj;

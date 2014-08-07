@@ -5,7 +5,7 @@ Date:   Wed Apr 2 15:36:39 2014 +0200
     Fixed bug #61019 (Out of memory on command stream_get_contents)
 
 --- /dev/null
-+++ b/ext/standard/tests/streams/bug61019.phpt
++++ php5/ext/standard/tests/streams/bug61019.phpt
 @@ -0,0 +1,78 @@
 +--TEST--
 +Bug #61019 (Out of memory on command stream_get_contents)
@@ -85,9 +85,9 @@ Date:   Wed Apr 2 15:36:39 2014 +0200
 +
 +STDERR: 
 +===DONE===
---- a/main/streams/streams.c
-+++ b/main/streams/streams.c
-@@ -735,6 +735,10 @@
+--- php5.orig/main/streams/streams.c
++++ php5/main/streams/streams.c
+@@ -735,6 +735,10 @@ PHPAPI size_t _php_stream_read(php_strea
  
  		if (!stream->readfilters.head && (stream->flags & PHP_STREAM_FLAG_NO_BUFFER || stream->chunk_size == 1)) {
  			toread = stream->ops->read(stream, buf, size TSRMLS_CC);

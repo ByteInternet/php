@@ -1,5 +1,5 @@
---- a/ext/exif/exif.c
-+++ b/ext/exif/exif.c
+--- php5.orig/ext/exif/exif.c
++++ php5/ext/exif/exif.c
 @@ -3254,7 +3254,7 @@ static void exif_process_APP12(image_inf
  	if ((l1 = php_strnlen(buffer+2, length-2)) > 0) {
  		exif_iif_add_tag(ImageInfo, SECTION_APP12, "Company", TAG_NONE, TAG_FMT_STRING, l1, buffer+2 TSRMLS_CC);

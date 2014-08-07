@@ -4,9 +4,9 @@ Date:   Sun Jul 21 21:07:19 2013 +0800
 
     Fixed bug #65304 (Use of max int in array_sum)
 
---- a/ext/standard/array.c
-+++ b/ext/standard/array.c
-@@ -4037,17 +4037,7 @@
+--- php5.orig/ext/standard/array.c
++++ php5/ext/standard/array.c
+@@ -4037,17 +4037,7 @@ PHP_FUNCTION(array_sum)
  		entry_n = **entry;
  		zval_copy_ctor(&entry_n);
  		convert_scalar_to_number(&entry_n TSRMLS_CC);
@@ -26,7 +26,7 @@ Date:   Sun Jul 21 21:07:19 2013 +0800
  }
  /* }}} */
 --- /dev/null
-+++ b/ext/standard/tests/array/bug65304.phpt
++++ php5/ext/standard/tests/array/bug65304.phpt
 @@ -0,0 +1,10 @@
 +--TEST--
 +Bug #65304 (Use of max int in array_sum)

@@ -8,8 +8,8 @@ Subject: [PATCH] - Fixed bug #62507 (['REQUEST_TIME'] under mod_php5 returns
  sapi/apache2filter/sapi_apache2.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sapi/apache2filter/sapi_apache2.c
-+++ b/sapi/apache2filter/sapi_apache2.c
+--- php5.orig/sapi/apache2filter/sapi_apache2.c
++++ php5/sapi/apache2filter/sapi_apache2.c
 @@ -311,7 +311,7 @@ php_apache_disable_caching(ap_filter_t *
  static double php_apache_sapi_get_request_time(TSRMLS_D)
  {

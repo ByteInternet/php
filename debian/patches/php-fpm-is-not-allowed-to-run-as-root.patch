@@ -4,10 +4,8 @@ Date:   Wed May 23 10:32:42 2012 +0200
 
     - Fixed bug #61835 (php-fpm is not allowed to run as root)
 
-diff --git a/sapi/fpm/fpm/fpm.c b/sapi/fpm/fpm/fpm.c
-index 96aabbf..909902b 100644
---- a/sapi/fpm/fpm/fpm.c
-+++ b/sapi/fpm/fpm/fpm.c
+--- php5.orig/sapi/fpm/fpm/fpm.c
++++ php5/sapi/fpm/fpm/fpm.c
 @@ -37,10 +37,11 @@ struct fpm_globals_s fpm_globals = {
  	.max_requests = 0,
  	.is_child = 0,
@@ -22,7 +20,7 @@ index 96aabbf..909902b 100644
  {
  	fpm_globals.argc = argc;
  	fpm_globals.argv = argv;
-@@ -49,6 +50,7 @@ int fpm_init(int argc, char **argv, char *config, char *prefix, char *pid, int t
+@@ -49,6 +50,7 @@ int fpm_init(int argc, char **argv, char
  	}
  	fpm_globals.prefix = prefix;
  	fpm_globals.pid = pid;
@@ -30,10 +28,8 @@ index 96aabbf..909902b 100644
  
  	if (0 > fpm_php_init_main()           ||
  	    0 > fpm_stdio_init_main()         ||
-diff --git a/sapi/fpm/fpm/fpm.h b/sapi/fpm/fpm/fpm.h
-index bfeac4d..2a69cb2 100644
---- a/sapi/fpm/fpm/fpm.h
-+++ b/sapi/fpm/fpm/fpm.h
+--- php5.orig/sapi/fpm/fpm/fpm.h
++++ php5/sapi/fpm/fpm/fpm.h
 @@ -8,7 +8,7 @@
  #include <unistd.h>
  
@@ -51,10 +47,8 @@ index bfeac4d..2a69cb2 100644
  };
  
  extern struct fpm_globals_s fpm_globals;
-diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index a28af53..dd48ffd 100644
---- a/sapi/fpm/fpm/fpm_main.c
-+++ b/sapi/fpm/fpm/fpm_main.c
+--- php5.orig/sapi/fpm/fpm/fpm_main.c
++++ php5/sapi/fpm/fpm/fpm_main.c
 @@ -154,6 +154,7 @@ static const opt_struct OPTIONS[] = {
  	{'t', 0, "test"},
  	{'p', 1, "prefix"},
@@ -91,7 +85,7 @@ index a28af53..dd48ffd 100644
  			default:
  			case 'h':
  			case '?':
-@@ -1789,7 +1797,7 @@ consult the installation file that came with this distribution, or visit \n\
+@@ -1789,7 +1797,7 @@ consult the installation file that came
  		}
  	}
  
@@ -100,11 +94,9 @@ index a28af53..dd48ffd 100644
  		return FAILURE;
  	}
  
-diff --git a/sapi/fpm/fpm/fpm_unix.c b/sapi/fpm/fpm/fpm_unix.c
-index 17d0b81..fb61d63 100644
---- a/sapi/fpm/fpm/fpm_unix.c
-+++ b/sapi/fpm/fpm/fpm_unix.c
-@@ -112,12 +112,12 @@ static int fpm_unix_conf_wp(struct fpm_worker_pool_s *wp) /* {{{ */
+--- php5.orig/sapi/fpm/fpm/fpm_unix.c
++++ php5/sapi/fpm/fpm/fpm_unix.c
+@@ -112,12 +112,12 @@ static int fpm_unix_conf_wp(struct fpm_w
  			}
  		}
  

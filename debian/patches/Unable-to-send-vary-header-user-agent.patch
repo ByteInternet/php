@@ -8,7 +8,7 @@ Date:   Fri Aug 9 11:14:04 2013 +0200
     ob_start('ob_gzhandler') is called
 
 --- /dev/null
-+++ b/ext/zlib/tests/bug65391.phpt
++++ php5/ext/zlib/tests/bug65391.phpt
 @@ -0,0 +1,27 @@
 +--TEST--
 +Bug #65391 (Unable to send vary header user-agent when ob_start('ob_gzhandler') is called)
@@ -37,9 +37,9 @@ Date:   Fri Aug 9 11:14:04 2013 +0200
 +    [2] => Vary: Accept-Encoding
 +)
 +Done
---- a/ext/zlib/zlib.c
-+++ b/ext/zlib/zlib.c
-@@ -190,7 +190,7 @@
+--- php5.orig/ext/zlib/zlib.c
++++ php5/ext/zlib/zlib.c
+@@ -190,7 +190,7 @@ static int php_zlib_output_handler(void
  		if ((output_context->op & PHP_OUTPUT_HANDLER_START)
  		&&	(output_context->op != (PHP_OUTPUT_HANDLER_START|PHP_OUTPUT_HANDLER_CLEAN|PHP_OUTPUT_HANDLER_FINAL))
  		) {
@@ -48,7 +48,7 @@ Date:   Fri Aug 9 11:14:04 2013 +0200
  		}
  		return FAILURE;
  	}
-@@ -220,7 +220,7 @@
+@@ -220,7 +220,7 @@ static int php_zlib_output_handler(void
  						deflateEnd(&ctx->Z);
  						return FAILURE;
  				}
@@ -57,7 +57,7 @@ Date:   Fri Aug 9 11:14:04 2013 +0200
  				php_output_handler_hook(PHP_OUTPUT_HANDLER_HOOK_IMMUTABLE, NULL TSRMLS_CC);
  			}
  		}
-@@ -478,7 +478,7 @@
+@@ -478,7 +478,7 @@ static PHP_FUNCTION(ob_gzhandler)
  				sapi_add_header_ex(ZEND_STRL("Content-Encoding: deflate"), 1, 1 TSRMLS_CC);
  				break;
  		}

@@ -4,9 +4,9 @@ Date:   Mon Feb 18 16:07:51 2013 +0400
 
     Fixed bug #64070 (Inheritance with Traits failed with error)
 
---- a/NEWS
-+++ b/NEWS
-@@ -135,6 +135,7 @@
+--- php5.orig/NEWS
++++ php5/NEWS
+@@ -135,6 +135,7 @@ PHP
    . Fixed bug #52719 (array_walk_recursive crashes if third param of the
      function is by reference). (Nikita Popov)
    . Improve performance of set_exception_handler while doing reset (Laruence)
@@ -15,7 +15,7 @@ Date:   Mon Feb 18 16:07:51 2013 +0400
  - fileinfo:
    . Fix fileinfo test problems. (Anatoliy Belsky)
 --- /dev/null
-+++ b/Zend/tests/traits/bug64070.phpt
++++ php5/Zend/tests/traits/bug64070.phpt
 @@ -0,0 +1,36 @@
 +--TEST--
 +Bug #64070 (Inheritance with Traits failed with error)
@@ -53,9 +53,9 @@ Date:   Mon Feb 18 16:07:51 2013 +0400
 +--EXPECT--
 +From Second Trait
 +From First Trait
---- a/Zend/zend_compile.c
-+++ b/Zend/zend_compile.c
-@@ -3858,7 +3858,7 @@
+--- php5.orig/Zend/zend_compile.c
++++ php5/Zend/zend_compile.c
+@@ -3858,7 +3858,7 @@ static int zend_traits_copy_functions(ze
  	aliases       = va_arg(args, zend_trait_alias**);
  	exclude_table = va_arg(args, HashTable*);
  
@@ -64,7 +64,7 @@ Date:   Mon Feb 18 16:07:51 2013 +0400
  
  	/* apply aliases which are qualified with a class name, there should not be any ambiguity */
  	if (aliases) {
-@@ -3867,7 +3867,7 @@
+@@ -3867,7 +3867,7 @@ static int zend_traits_copy_functions(ze
  			if (aliases[i]->alias != NULL
  				&& (!aliases[i]->trait_method->ce || fn->common.scope == aliases[i]->trait_method->ce)
  				&& aliases[i]->trait_method->mname_len == fnname_len
@@ -73,7 +73,7 @@ Date:   Mon Feb 18 16:07:51 2013 +0400
  				fn_copy = *fn;
  				function_add_ref(&fn_copy);
  				/* this function_name is never destroyed, because its refcount
-@@ -3900,7 +3900,7 @@
+@@ -3900,7 +3900,7 @@ static int zend_traits_copy_functions(ze
  		}
  	}
  
@@ -82,7 +82,7 @@ Date:   Mon Feb 18 16:07:51 2013 +0400
  
  	if (exclude_table == NULL || zend_hash_find(exclude_table, lcname, fnname_len, &dummy) == FAILURE) {
  		/* is not in hashtable, thus, function is not to be excluded */
-@@ -3916,7 +3916,7 @@
+@@ -3916,7 +3916,7 @@ static int zend_traits_copy_functions(ze
  				if (aliases[i]->alias == NULL && aliases[i]->modifiers != 0
  					&& (!aliases[i]->trait_method->ce || fn->common.scope == aliases[i]->trait_method->ce)
  					&& (aliases[i]->trait_method->mname_len == fnname_len)
@@ -91,7 +91,7 @@ Date:   Mon Feb 18 16:07:51 2013 +0400
  					fn_copy.common.fn_flags = aliases[i]->modifiers | ZEND_ACC_ALIAS;
  
  					if (!(aliases[i]->modifiers & ZEND_ACC_PPP_MASK)) {
-@@ -3938,8 +3938,6 @@
+@@ -3938,8 +3938,6 @@ static int zend_traits_copy_functions(ze
  		}
  	}
  

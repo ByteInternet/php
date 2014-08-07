@@ -1,8 +1,6 @@
-diff --git a/ext/intl/msgformat/msgformat_class.c b/ext/intl/msgformat/msgformat_class.c
-index d013885..8145a46 100755
---- a/ext/intl/msgformat/msgformat_class.c
-+++ b/ext/intl/msgformat/msgformat_class.c
-@@ -60,6 +60,7 @@ zend_object_value MessageFormatter_object_create(zend_class_entry *ce TSRMLS_DC)
+--- php5.orig/ext/intl/msgformat/msgformat_class.c
++++ php5/ext/intl/msgformat/msgformat_class.c
+@@ -60,6 +60,7 @@ zend_object_value MessageFormatter_objec
  	intern = ecalloc( 1, sizeof(MessageFormatter_object) );
  	msgformat_data_init( &intern->mf_data TSRMLS_CC );
  	zend_object_std_init( &intern->zo, ce TSRMLS_CC );

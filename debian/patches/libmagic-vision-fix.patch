@@ -1,5 +1,5 @@
---- a/ext/fileinfo/libmagic/readcdf.c
-+++ b/ext/fileinfo/libmagic/readcdf.c
+--- php5.orig/ext/fileinfo/libmagic/readcdf.c
++++ php5/ext/fileinfo/libmagic/readcdf.c
 @@ -295,7 +295,7 @@ file_trycdf(struct magic_set *ms, int fd
  		    d = &dir.dir_tab[j];
  		    for (k = 0; k < sizeof(name); k++)

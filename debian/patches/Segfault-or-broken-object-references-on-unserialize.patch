@@ -4,9 +4,9 @@ Date:   Fri Aug 17 18:28:32 2012 +0800
 
     Fixed bug #62836 (Seg fault or broken object references on unserialize())
 
---- a/NEWS
-+++ b/NEWS
-@@ -886,6 +886,10 @@
+--- php5.orig/NEWS
++++ php5/NEWS
+@@ -886,6 +886,10 @@ PHP
    . Fixed bug #43200 (Interface implementation / inheritence not possible in
      abstract classes). (Felipe)
  
@@ -18,7 +18,7 @@ Date:   Fri Aug 17 18:28:32 2012 +0800
  - BCmath:
    . Fixed bug #60377 (bcscale related crashes on 64bits platforms). (shm)
 --- /dev/null
-+++ b/ext/standard/tests/serialize/bug62836_1.phpt
++++ php5/ext/standard/tests/serialize/bug62836_1.phpt
 @@ -0,0 +1,34 @@
 +--TEST--
 +Bug #62836 (Seg fault or broken object references on unserialize())
@@ -55,7 +55,7 @@ Date:   Fri Aug 17 18:28:32 2012 +0800
 +)
 +okey
 --- /dev/null
-+++ b/ext/standard/tests/serialize/bug62836_2.phpt
++++ php5/ext/standard/tests/serialize/bug62836_2.phpt
 @@ -0,0 +1,37 @@
 +--TEST--
 +Bug #62836 (Seg fault or broken object references on unserialize())
@@ -94,9 +94,9 @@ Date:   Fri Aug 17 18:28:32 2012 +0800
 +
 +)
 +okey
---- a/ext/standard/var_unserializer.c
-+++ b/ext/standard/var_unserializer.c
-@@ -612,10 +612,13 @@
+--- php5.orig/ext/standard/var_unserializer.c
++++ php5/ext/standard/var_unserializer.c
+@@ -612,10 +612,13 @@ yy20:
  
  	do {
  		/* Try to find class directly */
@@ -110,7 +110,7 @@ Date:   Fri Aug 17 18:28:32 2012 +0800
  		
  		/* Check for unserialize callback */
  		if ((PG(unserialize_callback_func) == NULL) || (PG(unserialize_callback_func)[0] == '\0')) {
-@@ -630,7 +633,9 @@
+@@ -630,7 +633,9 @@ yy20:
  		args[0] = &arg_func_name;
  		MAKE_STD_ZVAL(arg_func_name);
  		ZVAL_STRING(arg_func_name, class_name, 1);
@@ -120,7 +120,7 @@ Date:   Fri Aug 17 18:28:32 2012 +0800
  			php_error_docref(NULL TSRMLS_CC, E_WARNING, "defined (%s) but not found", user_func->value.str.val);
  			incomplete_class = 1;
  			ce = PHP_IC_ENTRY;
-@@ -638,6 +643,7 @@
+@@ -638,6 +643,7 @@ yy20:
  			zval_ptr_dtor(&arg_func_name);
  			break;
  		}
@@ -128,9 +128,9 @@ Date:   Fri Aug 17 18:28:32 2012 +0800
  		if (retval_ptr) {
  			zval_ptr_dtor(&retval_ptr);
  		}
---- a/ext/standard/var_unserializer.re
-+++ b/ext/standard/var_unserializer.re
-@@ -678,10 +678,13 @@
+--- php5.orig/ext/standard/var_unserializer.re
++++ php5/ext/standard/var_unserializer.re
+@@ -678,10 +678,13 @@ object ":" uiv ":" ["]	{
  
  	do {
  		/* Try to find class directly */
@@ -144,7 +144,7 @@ Date:   Fri Aug 17 18:28:32 2012 +0800
  		
  		/* Check for unserialize callback */
  		if ((PG(unserialize_callback_func) == NULL) || (PG(unserialize_callback_func)[0] == '\0')) {
-@@ -696,7 +699,9 @@
+@@ -696,7 +699,9 @@ object ":" uiv ":" ["]	{
  		args[0] = &arg_func_name;
  		MAKE_STD_ZVAL(arg_func_name);
  		ZVAL_STRING(arg_func_name, class_name, 1);
@@ -154,7 +154,7 @@ Date:   Fri Aug 17 18:28:32 2012 +0800
  			php_error_docref(NULL TSRMLS_CC, E_WARNING, "defined (%s) but not found", user_func->value.str.val);
  			incomplete_class = 1;
  			ce = PHP_IC_ENTRY;
-@@ -704,6 +709,7 @@
+@@ -704,6 +709,7 @@ object ":" uiv ":" ["]	{
  			zval_ptr_dtor(&arg_func_name);
  			break;
  		}

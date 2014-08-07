@@ -4,9 +4,9 @@ Date:   Thu Apr 4 14:34:11 2013 +0800
 
     Fixed bug #64578 (debug_backtrace in set_error_handler corrupts zend heap: segfault)
 
---- a/NEWS
-+++ b/NEWS
-@@ -890,6 +890,9 @@
+--- php5.orig/NEWS
++++ php5/NEWS
+@@ -890,6 +890,9 @@ PHP
    . Fixed bug #62836 (Seg fault or broken object references on unserialize()).
      (Laruence)
  
@@ -17,7 +17,7 @@ Date:   Thu Apr 4 14:34:11 2013 +0800
  - BCmath:
    . Fixed bug #60377 (bcscale related crashes on 64bits platforms). (shm)
 --- /dev/null
-+++ b/Zend/tests/bug64578.phpt
++++ php5/Zend/tests/bug64578.phpt
 @@ -0,0 +1,15 @@
 +--TEST--
 +Bug #64578 (debug_backtrace in set_error_handler corrupts zend heap: segfault)
@@ -34,9 +34,9 @@ Date:   Thu Apr 4 14:34:11 2013 +0800
 +--EXPECTF--
 +Warning: Illegal offset type in %sbug64578.php on line %d
 +string(1) "1"
---- a/Zend/zend_execute.c
-+++ b/Zend/zend_execute.c
-@@ -1145,6 +1145,10 @@
+--- php5.orig/Zend/zend_execute.c
++++ php5/Zend/zend_execute.c
+@@ -1145,6 +1145,10 @@ convert_to_array:
  					zend_error_noreturn(E_ERROR, "[] operator not supported for strings");
  				}
  
@@ -47,7 +47,7 @@ Date:   Thu Apr 4 14:34:11 2013 +0800
  				if (Z_TYPE_P(dim) != IS_LONG) {
  
  					switch(Z_TYPE_P(dim)) {
-@@ -1173,9 +1177,6 @@
+@@ -1173,9 +1177,6 @@ convert_to_array:
  					convert_to_long(&tmp);
  					dim = &tmp;
  				}

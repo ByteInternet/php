@@ -4,9 +4,9 @@ Date:   Thu May 2 09:38:00 2013 +0200
 
     fix possible null deref (detected by code coverity scan)
 
---- a/sapi/fpm/fpm/fpm_main.c
-+++ b/sapi/fpm/fpm/fpm_main.c
-@@ -1164,119 +1164,123 @@
+--- php5.orig/sapi/fpm/fpm/fpm_main.c
++++ php5/sapi/fpm/fpm/fpm_main.c
+@@ -1164,119 +1164,123 @@ static void init_request_info(TSRMLS_D)
  				int len = script_path_translated_len;
  				char *ptr;
  

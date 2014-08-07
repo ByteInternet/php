@@ -4,9 +4,9 @@ Date:   Thu Aug 29 11:16:56 2013 +0400
 
     Fixed bug #61759 (class_alias() should accept classes with leading backslashes). (Julien)
 
---- a/Zend/zend_API.c
-+++ b/Zend/zend_API.c
-@@ -2479,7 +2479,12 @@
+--- php5.orig/Zend/zend_API.c
++++ php5/Zend/zend_API.c
+@@ -2479,7 +2479,12 @@ ZEND_API int zend_register_class_alias_e
  	char *lcname = zend_str_tolower_dup(name, name_len);
  	int ret;
  
@@ -20,9 +20,9 @@ Date:   Thu Aug 29 11:16:56 2013 +0400
  	efree(lcname);
  	if (ret == SUCCESS) {
  		ce->refcount++;
---- a/Zend/zend_builtin_functions.c
-+++ b/Zend/zend_builtin_functions.c
-@@ -1399,15 +1399,8 @@
+--- php5.orig/Zend/zend_builtin_functions.c
++++ php5/Zend/zend_builtin_functions.c
+@@ -1399,15 +1399,8 @@ ZEND_FUNCTION(class_alias)
  		return;
  	}
  

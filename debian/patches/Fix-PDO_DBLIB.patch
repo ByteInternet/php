@@ -6,8 +6,8 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
     
     Synchronize with master
 
---- a/ext/pdo_dblib/dblib_driver.c
-+++ b/ext/pdo_dblib/dblib_driver.c
+--- php5.orig/ext/pdo_dblib/dblib_driver.c
++++ php5/ext/pdo_dblib/dblib_driver.c
 @@ -32,6 +32,9 @@
  #include "php_pdo_dblib_int.h"
  #include "zend_exceptions.h"
@@ -18,7 +18,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  static int dblib_fetch_error(pdo_dbh_t *dbh, pdo_stmt_t *stmt, zval *info TSRMLS_DC)
  {
  	pdo_dblib_db_handle *H = (pdo_dblib_db_handle *)dbh->driver_data;
-@@ -262,17 +265,41 @@
+@@ -262,17 +265,41 @@ static struct pdo_dbh_methods dblib_meth
  static int pdo_dblib_handle_factory(pdo_dbh_t *dbh, zval *driver_options TSRMLS_DC)
  {
  	pdo_dblib_db_handle *H;
@@ -69,7 +69,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  
  	H = pecalloc(1, sizeof(*H), dbh->is_persistent);
  	H->login = dblogin();
-@@ -282,11 +309,37 @@
+@@ -282,11 +309,37 @@ static int pdo_dblib_handle_factory(pdo_
  		goto cleanup;
  	}
  
@@ -109,7 +109,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  	}
  	
  #if !PHP_DBLIB_IS_MSSQL
-@@ -297,17 +350,29 @@
+@@ -297,17 +350,29 @@ static int pdo_dblib_handle_factory(pdo_
  
  	DBSETLAPP(H->login, vars[1].optval);
  
@@ -143,7 +143,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  #if PHP_DBLIB_IS_MSSQL
  	/* dblib do not return more than this length from text/image */
  	DBSETOPT(H->link, DBTEXTLIMIT, "2147483647");
-@@ -317,18 +382,14 @@
+@@ -317,18 +382,14 @@ static int pdo_dblib_handle_factory(pdo_
  	DBSETOPT(H->link, DBTEXTSIZE, "2147483647");
  
  	/* allow double quoted indentifiers */
@@ -164,8 +164,8 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  		if (vars[i].freeme) {
  			efree(vars[i].optval);
  		}
---- a/ext/pdo_dblib/dblib_stmt.c
-+++ b/ext/pdo_dblib/dblib_stmt.c
+--- php5.orig/ext/pdo_dblib/dblib_stmt.c
++++ php5/ext/pdo_dblib/dblib_stmt.c
 @@ -36,35 +36,51 @@
  
  /* {{{ pdo_dblib_get_field_name
@@ -222,7 +222,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  		case 165: return "varbinary";
  		case 167: return "varchar";
  		case 173: return "binary";
-@@ -72,23 +88,22 @@
+@@ -72,23 +88,22 @@ static char *pdo_dblib_get_field_name(in
  		case 189: return "timestamp";
  		case 231: return "nvarchar";
  		case 239: return "nchar";
@@ -251,7 +251,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  	stmt->columns = NULL;
  	
  	return 1;
-@@ -98,7 +113,8 @@
+@@ -98,7 +113,8 @@ static int pdo_dblib_stmt_dtor(pdo_stmt_
  {
  	pdo_dblib_stmt *S = (pdo_dblib_stmt*)stmt->driver_data;
  
@@ -261,7 +261,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  
  	efree(S);
  		
-@@ -113,7 +129,12 @@
+@@ -113,7 +129,12 @@ static int pdo_dblib_stmt_next_rowset(pd
  	
  	ret = dbresults(H->link);
  	
@@ -275,7 +275,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  		return 0;
  	}
  	
-@@ -131,6 +152,8 @@
+@@ -131,6 +152,8 @@ static int pdo_dblib_stmt_execute(pdo_st
  	
  	dbsetuserdata(H->link, (BYTE*) &S->err);
  	
@@ -284,7 +284,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  	if (FAIL == dbcmd(H->link, stmt->active_query_string)) {
  		return 0;
  	}
-@@ -141,10 +164,6 @@
+@@ -141,10 +164,6 @@ static int pdo_dblib_stmt_execute(pdo_st
  	
  	ret = pdo_dblib_stmt_next_rowset(stmt TSRMLS_CC);
  	
@@ -295,7 +295,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  	stmt->row_count = DBCOUNT(H->link);
  	stmt->column_count = dbnumcols(H->link);
  	
-@@ -162,7 +181,12 @@
+@@ -162,7 +181,12 @@ static int pdo_dblib_stmt_fetch(pdo_stmt
  	
  	ret = dbnextrow(H->link);
  	
@@ -309,7 +309,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  		return 0;
  	}
  	
-@@ -174,6 +198,10 @@
+@@ -174,6 +198,10 @@ static int pdo_dblib_stmt_describe(pdo_s
  	pdo_dblib_stmt *S = (pdo_dblib_stmt*)stmt->driver_data;
  	pdo_dblib_db_handle *H = S->H;
  	
@@ -320,7 +320,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  	struct pdo_column_data *col = &stmt->columns[colno];
  	
  	col->name = (char*)dbcolname(H->link, colno+1);
-@@ -205,11 +233,12 @@
+@@ -205,11 +233,12 @@ static int pdo_dblib_stmt_get_col(pdo_st
  	}
  	
  	switch (coltype) {
@@ -335,7 +335,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  		case SQLVARCHAR:
  			tmp_ptr = emalloc(*len + 1);
  			memcpy(tmp_ptr, *ptr, *len);
-@@ -225,34 +254,26 @@
+@@ -225,34 +254,26 @@ static int pdo_dblib_stmt_get_col(pdo_st
  			*ptr = tmp_ptr;
  			break;
  		}
@@ -375,7 +375,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  	}
  
  	*caller_frees = 1;
-@@ -270,17 +291,25 @@
+@@ -270,17 +291,25 @@ static int pdo_dblib_stmt_get_column_met
  {
  	pdo_dblib_stmt *S = (pdo_dblib_stmt*)stmt->driver_data;
  	pdo_dblib_db_handle *H = S->H;
@@ -403,7 +403,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  
  	return 1;
  }
-@@ -297,6 +326,6 @@
+@@ -297,6 +326,6 @@ struct pdo_stmt_methods dblib_stmt_metho
  	NULL, /* get attr */
  	pdo_dblib_stmt_get_column_meta, /* meta */
  	pdo_dblib_stmt_next_rowset, /* nextrow */
@@ -411,9 +411,9 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
 +	pdo_dblib_stmt_cursor_closer
  };
  
---- a/ext/pdo_dblib/pdo_dblib.c
-+++ b/ext/pdo_dblib/pdo_dblib.c
-@@ -93,8 +93,12 @@
+--- php5.orig/ext/pdo_dblib/pdo_dblib.c
++++ php5/ext/pdo_dblib/pdo_dblib.c
+@@ -93,8 +93,12 @@ int error_handler(DBPROCESS *dbproc, int
  	char *state = "HY000";
  	TSRMLS_FETCH();
  
@@ -428,8 +428,8 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  
  	einfo->severity = severity;
  	einfo->oserr = oserr;
---- a/ext/pdo_dblib/php_pdo_dblib_int.h
-+++ b/ext/pdo_dblib/php_pdo_dblib_int.h
+--- php5.orig/ext/pdo_dblib/php_pdo_dblib_int.h
++++ php5/ext/pdo_dblib/php_pdo_dblib_int.h
 @@ -71,6 +71,8 @@
  # define SQLVARBINARY	SYBVARBINARY
  # ifdef SYBUNIQUE
@@ -439,7 +439,7 @@ Date:   Mon Jun 3 20:02:08 2013 -0700
  # endif
  
  # define DBERRHANDLE(a, b)	dberrhandle(b)
-@@ -118,6 +120,12 @@
+@@ -118,6 +120,12 @@ typedef struct {
  	pdo_dblib_err err;
  } pdo_dblib_stmt;
  

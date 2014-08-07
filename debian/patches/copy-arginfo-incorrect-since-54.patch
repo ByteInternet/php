@@ -8,9 +8,9 @@ Date:   Sat Jan 18 11:25:53 2014 -0500
     by non _EX, causing Reflection to assume the
     $context parameter is required.
 
---- a/ext/standard/basic_functions.c
-+++ b/ext/standard/basic_functions.c
-@@ -1206,7 +1206,7 @@
+--- php5.orig/ext/standard/basic_functions.c
++++ php5/ext/standard/basic_functions.c
+@@ -1206,7 +1206,7 @@ ZEND_END_ARG_INFO()
  ZEND_BEGIN_ARG_INFO(arginfo_fstat, 0)
  	ZEND_ARG_INFO(0, fp)
  ZEND_END_ARG_INFO()
@@ -20,7 +20,7 @@ Date:   Sat Jan 18 11:25:53 2014 -0500
  	ZEND_ARG_INFO(0, destination_file)
  	ZEND_ARG_INFO(0, context)
 --- /dev/null
-+++ b/ext/standard/tests/file/bug66509.phpt
++++ php5/ext/standard/tests/file/bug66509.phpt
 @@ -0,0 +1,15 @@
 +--TEST--
 +Bug #66509 (copy() showing $context parameter as required)

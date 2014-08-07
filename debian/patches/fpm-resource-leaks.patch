@@ -38,9 +38,9 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
 
     Call php_module_shutdown() for php-fpm child processes
 
---- a/sapi/fpm/fpm/fpm_conf.c
-+++ b/sapi/fpm/fpm/fpm_conf.c
-@@ -536,12 +536,17 @@
+--- php5.orig/sapi/fpm/fpm/fpm_conf.c
++++ php5/sapi/fpm/fpm/fpm_conf.c
+@@ -536,12 +536,17 @@ static char *fpm_conf_set_array(zval *ke
  	kv->key = strdup(Z_STRVAL_P(key));
  
  	if (!kv->key) {
@@ -59,7 +59,7 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  		kv->value = strdup(b ? "1" : "0");
  	} else {
  		kv->value = strdup(Z_STRVAL_P(value));
-@@ -552,6 +557,7 @@
+@@ -552,6 +557,7 @@ static char *fpm_conf_set_array(zval *ke
  
  	if (!kv->value) {
  		free(kv->key);
@@ -67,7 +67,7 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  		return "fpm_conf_set_array: strdup(value) failed";
  	}
  
-@@ -574,6 +580,7 @@
+@@ -574,6 +580,7 @@ static void *fpm_worker_pool_config_allo
  	wp->config = malloc(sizeof(struct fpm_worker_pool_config_s));
  
  	if (!wp->config) { 
@@ -75,7 +75,7 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  		return 0;
  	}
  
-@@ -1089,6 +1096,7 @@
+@@ -1089,6 +1096,7 @@ int fpm_conf_write_pid() /* {{{ */
  
  		if (len != write(fd, buf, len)) {
  			zlog(ZLOG_SYSERROR, "Unable to write to the PID file.");
@@ -83,7 +83,7 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  			return -1;
  		}
  		close(fd);
-@@ -1437,6 +1445,7 @@
+@@ -1437,6 +1445,7 @@ int fpm_conf_load_ini_file(char *filenam
  
  	if (ini_recursion++ > 4) {
  		zlog(ZLOG_ERROR, "failed to include more than 5 files recusively");
@@ -91,8 +91,8 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  		return -1;
  	}
  
---- a/sapi/fpm/fpm/fpm_worker_pool.c
-+++ b/sapi/fpm/fpm/fpm_worker_pool.c
+--- php5.orig/sapi/fpm/fpm/fpm_worker_pool.c
++++ php5/sapi/fpm/fpm/fpm_worker_pool.c
 @@ -18,6 +18,21 @@
  
  struct fpm_worker_pool_s *fpm_worker_all_pools;
@@ -115,7 +115,7 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  static void fpm_worker_pool_cleanup(int which, void *arg) /* {{{ */
  {
  	struct fpm_worker_pool_s *wp, *wp_next;
-@@ -29,10 +44,7 @@
+@@ -29,10 +44,7 @@ static void fpm_worker_pool_cleanup(int
  		if ((which & FPM_CLEANUP_CHILD) == 0 && fpm_globals.parent_pid == getpid()) {
  			fpm_scoreboard_free(wp->scoreboard);
  		}
@@ -127,9 +127,9 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  	}
  	fpm_worker_all_pools = NULL;
  }
---- a/sapi/fpm/fpm/fpm_worker_pool.h
-+++ b/sapi/fpm/fpm/fpm_worker_pool.h
-@@ -45,6 +45,7 @@
+--- php5.orig/sapi/fpm/fpm/fpm_worker_pool.h
++++ php5/sapi/fpm/fpm/fpm_worker_pool.h
+@@ -45,6 +45,7 @@ struct fpm_worker_pool_s {
  };
  
  struct fpm_worker_pool_s *fpm_worker_pool_alloc();
@@ -137,9 +137,9 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  int fpm_worker_pool_init_main();
  
  extern struct fpm_worker_pool_s *fpm_worker_all_pools;
---- a/sapi/fpm/fpm/fpm_sockets.c
-+++ b/sapi/fpm/fpm/fpm_sockets.c
-@@ -167,7 +167,7 @@
+--- php5.orig/sapi/fpm/fpm/fpm_sockets.c
++++ php5/sapi/fpm/fpm/fpm_sockets.c
+@@ -167,7 +167,7 @@ static int fpm_sockets_new_listening_soc
  {
  	int flags = 1;
  	int sock;
@@ -148,7 +148,7 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  
  	sock = socket(sa->sa_family, SOCK_STREAM, 0);
  
-@@ -179,6 +179,11 @@
+@@ -179,6 +179,11 @@ static int fpm_sockets_new_listening_soc
  	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &flags, sizeof(flags));
  
  	if (wp->listen_address_domain == FPM_AF_UNIX) {
@@ -160,7 +160,7 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  		unlink( ((struct sockaddr_un *) sa)->sun_path);
  		saved_umask = umask(0777 ^ wp->socket_mode);
  	}
-@@ -188,6 +193,7 @@
+@@ -188,6 +193,7 @@ static int fpm_sockets_new_listening_soc
  		if (wp->listen_address_domain == FPM_AF_UNIX) {
  			umask(saved_umask);
  		}
@@ -168,7 +168,7 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  		return -1;
  	}
  
-@@ -199,6 +205,7 @@
+@@ -199,6 +205,7 @@ static int fpm_sockets_new_listening_soc
  		if (wp->socket_uid != -1 || wp->socket_gid != -1) {
  			if (0 > chown(path, wp->socket_uid, wp->socket_gid)) {
  				zlog(ZLOG_SYSERROR, "failed to chown() the socket '%s'", wp->config->listen_address);
@@ -176,7 +176,7 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  				return -1;
  			}
  		}
-@@ -206,6 +213,7 @@
+@@ -206,6 +213,7 @@ static int fpm_sockets_new_listening_soc
  
  	if (0 > listen(sock, wp->config->listen_backlog)) {
  		zlog(ZLOG_SYSERROR, "failed to listen to address '%s'", wp->config->listen_address);
@@ -184,7 +184,7 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  		return -1;
  	}
  
-@@ -450,3 +458,25 @@
+@@ -450,3 +458,25 @@ int fpm_socket_get_listening_queue(int s
  }
  
  #endif
@@ -210,8 +210,8 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
 +	return 0;
 +}
 +/* }}} */
---- a/sapi/fpm/fpm/fpm_sockets.h
-+++ b/sapi/fpm/fpm/fpm_sockets.h
+--- php5.orig/sapi/fpm/fpm/fpm_sockets.h
++++ php5/sapi/fpm/fpm/fpm_sockets.h
 @@ -22,6 +22,7 @@
  enum fpm_address_domain fpm_sockets_domain_from_address(char *addr);
  int fpm_sockets_init_main();
@@ -220,9 +220,9 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  
  
  static inline int fd_set_blocked(int fd, int blocked) /* {{{ */
---- a/sapi/fpm/fpm/fpm_stdio.c
-+++ b/sapi/fpm/fpm/fpm_stdio.c
-@@ -34,6 +34,7 @@
+--- php5.orig/sapi/fpm/fpm/fpm_stdio.c
++++ php5/sapi/fpm/fpm/fpm_stdio.c
+@@ -34,6 +34,7 @@ int fpm_stdio_init_main() /* {{{ */
  
  	if (0 > dup2(fd, STDIN_FILENO) || 0 > dup2(fd, STDOUT_FILENO)) {
  		zlog(ZLOG_SYSERROR, "failed to init stdio: dup2()");
@@ -230,9 +230,9 @@ Date:   Mon Sep 9 13:06:38 2013 +1200
  		return -1;
  	}
  	close(fd);
---- a/sapi/fpm/fpm/fpm_main.c
-+++ b/sapi/fpm/fpm/fpm_main.c
-@@ -1950,8 +1950,9 @@
+--- php5.orig/sapi/fpm/fpm/fpm_main.c
++++ php5/sapi/fpm/fpm/fpm_main.c
+@@ -1950,8 +1950,9 @@ fastcgi_request_done:
  out:
  
  	SG(server_context) = NULL;

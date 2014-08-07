@@ -10,9 +10,9 @@ Date:   Thu Oct 3 13:34:31 2013 +0200
 
     typo: really fix bug #51936 	Crash with clone xmlreader
 
---- a/ext/xmlreader/php_xmlreader.c
-+++ b/ext/xmlreader/php_xmlreader.c
-@@ -1320,6 +1320,7 @@
+--- php5.orig/ext/xmlreader/php_xmlreader.c
++++ php5/ext/xmlreader/php_xmlreader.c
+@@ -1320,6 +1320,7 @@ PHP_MINIT_FUNCTION(xmlreader)
  	xmlreader_object_handlers.read_property = xmlreader_read_property;
  	xmlreader_object_handlers.write_property = xmlreader_write_property;
  	xmlreader_object_handlers.get_property_ptr_ptr = xmlreader_get_property_ptr_ptr;
@@ -21,7 +21,7 @@ Date:   Thu Oct 3 13:34:31 2013 +0200
  	INIT_CLASS_ENTRY(ce, "XMLReader", xmlreader_functions);
  	ce.create_object = xmlreader_objects_new;
 --- /dev/null
-+++ b/ext/xmlreader/tests/bug51936.phpt
++++ php5/ext/xmlreader/tests/bug51936.phpt
 @@ -0,0 +1,22 @@
 +--TEST--
 +Bug #51936 (Crash with clone XMLReader)

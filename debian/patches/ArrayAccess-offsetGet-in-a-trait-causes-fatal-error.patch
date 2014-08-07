@@ -5,7 +5,7 @@ Date:   Tue Mar 19 12:48:23 2013 +0400
     Fixed bug #64417 (ArrayAccess::&offsetGet() in a trait causes fatal error)
 
 --- /dev/null
-+++ b/Zend/tests/bug64417.phpt
++++ php5/Zend/tests/bug64417.phpt
 @@ -0,0 +1,39 @@
 +--TEST--
 +Bug #64417 (BC break: ArrayAccess::&offsetGet() in a trait causes fatal error)
@@ -46,9 +46,9 @@ Date:   Tue Mar 19 12:48:23 2013 +0400
 +--EXPECT--
 +2
 +
---- a/Zend/zend_compile.c
-+++ b/Zend/zend_compile.c
-@@ -3630,9 +3630,9 @@
+--- php5.orig/Zend/zend_compile.c
++++ php5/Zend/zend_compile.c
+@@ -3630,9 +3630,9 @@ static zend_bool zend_traits_method_comp
  	zend_uint other_flags = other_fn->common.scope->ce_flags;
  	
  	return zend_do_perform_implementation_check(fn, other_fn TSRMLS_CC)

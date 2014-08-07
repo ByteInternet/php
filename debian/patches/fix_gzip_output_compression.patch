@@ -1,5 +1,5 @@
---- a/ext/zlib/php_zlib.h
-+++ b/ext/zlib/php_zlib.h
+--- php5.orig/ext/zlib/php_zlib.h
++++ php5/ext/zlib/php_zlib.h
 @@ -52,8 +52,10 @@ ZEND_BEGIN_MODULE_GLOBALS(zlib)
  	int compression_coding;
  	long output_compression;
@@ -11,8 +11,8 @@
  ZEND_END_MODULE_GLOBALS(zlib);
  
  php_stream *php_stream_gzopen(php_stream_wrapper *wrapper, char *path, char *mode, int options, char **opened_path, php_stream_context *context STREAMS_DC TSRMLS_DC);
---- a/ext/zlib/zlib.c
-+++ b/ext/zlib/zlib.c
+--- php5.orig/ext/zlib/zlib.c
++++ php5/ext/zlib/zlib.c
 @@ -263,6 +263,8 @@ static php_output_handler *php_zlib_outp
  		ZLIBG(output_compression) = chunk_size ? chunk_size : PHP_OUTPUT_HANDLER_DEFAULT_SIZE;
  	}

@@ -1,5 +1,5 @@
---- a/Zend/zend_compile.c
-+++ b/Zend/zend_compile.c
+--- php5.orig/Zend/zend_compile.c
++++ php5/Zend/zend_compile.c
 @@ -3619,6 +3619,7 @@ ZEND_API void zend_do_implement_trait(ze
  			}
  		}
@@ -19,8 +19,8 @@
  				fn_copy.common.function_name = aliases[i]->alias;
  					
  				/* if it is 0, no modifieres has been changed */
---- a/Zend/zend_opcode.c
-+++ b/Zend/zend_opcode.c
+--- php5.orig/Zend/zend_opcode.c
++++ php5/Zend/zend_opcode.c
 @@ -215,6 +215,12 @@ ZEND_API int zend_cleanup_class_data(zen
  void _destroy_zend_class_traits_info(zend_class_entry *ce)
  {

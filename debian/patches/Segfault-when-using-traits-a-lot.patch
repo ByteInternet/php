@@ -16,9 +16,9 @@ Date:   Wed Sep 5 09:58:22 2012 +0400
 
     Fixed bug #62907 (Double free when use traits)
 
---- a/NEWS
-+++ b/NEWS
-@@ -42,6 +42,8 @@
+--- php5.orig/NEWS
++++ php5/NEWS
+@@ -42,6 +42,8 @@ PHP
    . Fixed bug #54197 ([PATH=] sections incompatibility with user_ini.filename
      set to null). (Anatoliy)
    . Changed php://fd to be available only for CLI.
@@ -27,7 +27,7 @@ Date:   Wed Sep 5 09:58:22 2012 +0400
  
  - CURL:
    . Fixed bug #61948 (CURLOPT_COOKIEFILE '' raises open_basedir restriction).
-@@ -55,6 +57,9 @@
+@@ -55,6 +57,9 @@ PHP
    . Fixed handling null bytes in subjectAltName (CVE-2013-4073). 
      (Christian Heimes)
  
@@ -38,7 +38,7 @@ Date:   Wed Sep 5 09:58:22 2012 +0400
    . Fixed bug #61755 (A parsing bug in the prepared statements can lead to
      access violations). (Johannes)
 --- /dev/null
-+++ b/Zend/tests/bug62358.phpt
++++ php5/Zend/tests/bug62358.phpt
 @@ -0,0 +1,32 @@
 +--TEST--
 +Bug #62358 (Segfault when using traits a lot)
@@ -72,9 +72,9 @@ Date:   Wed Sep 5 09:58:22 2012 +0400
 +?>
 +--EXPECTF--
 +Strict Standards: Declaration of B::foo() should be compatible with A::foo() in %sbug62358.php on line %d
---- a/Zend/zend_compile.c
-+++ b/Zend/zend_compile.c
-@@ -3801,9 +3801,12 @@
+--- php5.orig/Zend/zend_compile.c
++++ php5/Zend/zend_compile.c
+@@ -3801,9 +3801,12 @@ static int zend_traits_merge_functions_t
  		if (prototype) {
  			do_inheritance_check_on_method(fn, prototype TSRMLS_CC);
  		}
@@ -87,7 +87,7 @@ Date:   Wed Sep 5 09:58:22 2012 +0400
  		}
  
  		/* delete inherited fn if the function to be added is not abstract */
-@@ -3870,10 +3873,10 @@
+@@ -3870,10 +3873,10 @@ static int zend_traits_copy_functions(ze
  				&& (zend_binary_strcasecmp(aliases[i]->trait_method->method_name, aliases[i]->trait_method->mname_len, hash_key->arKey, fnname_len) == 0)) {
  				fn_copy = *fn;
  				function_add_ref(&fn_copy);
@@ -101,7 +101,7 @@ Date:   Wed Sep 5 09:58:22 2012 +0400
  					
  				/* if it is 0, no modifieres has been changed */
  				if (aliases[i]->modifiers) { 
-@@ -3906,6 +3909,7 @@
+@@ -3906,6 +3909,7 @@ static int zend_traits_copy_functions(ze
  		/* is not in hashtable, thus, function is not to be excluded */
  		fn_copy = *fn;
  		function_add_ref(&fn_copy);
@@ -109,9 +109,9 @@ Date:   Wed Sep 5 09:58:22 2012 +0400
  
  		/* apply aliases which are not qualified by a class name, or which have not
  		 * alias name, just setting visibility */
---- a/Zend/zend_compile.h
-+++ b/Zend/zend_compile.h
-@@ -207,6 +207,8 @@
+--- php5.orig/Zend/zend_compile.h
++++ php5/Zend/zend_compile.h
+@@ -207,6 +207,8 @@ typedef struct _zend_try_catch_element {
  #define ZEND_ACC_RETURN_REFERENCE		0x4000000
  #define ZEND_ACC_DONE_PASS_TWO			0x8000000
  
@@ -120,9 +120,9 @@ Date:   Wed Sep 5 09:58:22 2012 +0400
  char *zend_visibility_string(zend_uint fn_flags);
  
  
---- a/Zend/zend_opcode.c
-+++ b/Zend/zend_opcode.c
-@@ -267,6 +267,15 @@
+--- php5.orig/Zend/zend_opcode.c
++++ php5/Zend/zend_opcode.c
+@@ -267,6 +267,15 @@ void _destroy_zend_class_traits_info(zen
  	}
  }
  
@@ -138,7 +138,7 @@ Date:   Wed Sep 5 09:58:22 2012 +0400
  ZEND_API void destroy_zend_class(zend_class_entry **pce)
  {
  	zend_class_entry *ce = *pce;
-@@ -298,6 +307,9 @@
+@@ -298,6 +307,9 @@ ZEND_API void destroy_zend_class(zend_cl
  			}
  			zend_hash_destroy(&ce->properties_info);
  			str_efree(ce->name);
@@ -148,7 +148,7 @@ Date:   Wed Sep 5 09:58:22 2012 +0400
  			zend_hash_destroy(&ce->function_table);
  			zend_hash_destroy(&ce->constants_table);
  			if (ce->num_interfaces > 0 && ce->interfaces) {
-@@ -387,7 +399,7 @@
+@@ -387,7 +399,7 @@ ZEND_API void destroy_op_array(zend_op_a
  	}
  	efree(op_array->opcodes);
  

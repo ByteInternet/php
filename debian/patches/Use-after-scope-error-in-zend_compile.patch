@@ -4,9 +4,9 @@ Date:   Fri Jan 4 11:02:21 2013 +0800
 
     Fixed bug #63899 (Use after scope error in zend_compile)
 
---- a/Zend/zend_compile.c
-+++ b/Zend/zend_compile.c
-@@ -4960,7 +4960,7 @@
+--- php5.orig/Zend/zend_compile.c
++++ php5/Zend/zend_compile.c
+@@ -4960,7 +4960,7 @@ void zend_do_begin_class_declaration(con
  		tmp.u.constant = *CG(current_namespace);
  		zval_copy_ctor(&tmp.u.constant);
  		zend_do_build_namespace_name(&tmp, &tmp, class_name TSRMLS_CC);

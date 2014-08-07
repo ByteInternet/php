@@ -4,9 +4,9 @@ Date:   Sat Sep 15 11:50:16 2012 +0800
 
     Fixed bug #63093 (Segfault while load extension failed in zts-build).
 
---- a/Zend/zend_API.c
-+++ b/Zend/zend_API.c
-@@ -2265,7 +2265,9 @@
+--- php5.orig/Zend/zend_API.c
++++ php5/Zend/zend_API.c
+@@ -2265,7 +2265,9 @@ void module_destructor(zend_module_entry
  	/* Deinitilaise module globals */
  	if (module->globals_size) {
  #ifdef ZTS

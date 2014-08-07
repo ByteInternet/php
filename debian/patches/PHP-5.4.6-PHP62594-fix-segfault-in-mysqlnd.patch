@@ -1,7 +1,5 @@
-diff --git a/ext/mysqlnd/mysqlnd_debug.c b/ext/mysqlnd/mysqlnd_debug.c
-index 5c77b42..044a7d6 100644
---- a/ext/mysqlnd/mysqlnd_debug.c
-+++ b/ext/mysqlnd/mysqlnd_debug.c
+--- php5.orig/ext/mysqlnd/mysqlnd_debug.c
++++ php5/ext/mysqlnd/mysqlnd_debug.c
 @@ -516,9 +516,11 @@ enum mysqlnd_debug_parser_state
  static void
  MYSQLND_METHOD(mysqlnd_debug, set_mode)(MYSQLND_DEBUG * self, const char * const mode)

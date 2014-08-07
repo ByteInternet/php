@@ -6,9 +6,9 @@ Date:   Mon Mar 24 23:24:41 2014 -0400
     
     Fix #66952: memory leak in openssl_open()
 
---- a/NEWS
-+++ b/NEWS
-@@ -1068,6 +1068,10 @@
+--- php5.orig/NEWS
++++ php5/NEWS
+@@ -1068,6 +1068,10 @@ PHP
  - Session:
    . Fixed bug #55267 (session_regenerate_id fails after header sent). (Hannes)
  
@@ -19,9 +19,9 @@ Date:   Mon Mar 24 23:24:41 2014 -0400
  - SimpleXML:
    . Reverted the SimpleXML->query() behaviour to returning empty arrays
      instead of false when no nodes are found as it was since 5.3.3 
---- a/ext/openssl/openssl.c
-+++ b/ext/openssl/openssl.c
-@@ -4287,6 +4287,7 @@
+--- php5.orig/ext/openssl/openssl.c
++++ php5/ext/openssl/openssl.c
+@@ -4287,6 +4287,7 @@ PHP_FUNCTION(openssl_seal)
  
  	if (!EVP_EncryptInit(&ctx,cipher,NULL,NULL)) {
  		RETVAL_FALSE;
@@ -29,7 +29,7 @@ Date:   Mon Mar 24 23:24:41 2014 -0400
  		goto clean_exit;
  	}
  
-@@ -4297,10 +4298,12 @@
+@@ -4297,10 +4298,12 @@ PHP_FUNCTION(openssl_seal)
  #endif
  	/* allocate one byte extra to make room for \0 */
  	buf = emalloc(data_len + EVP_CIPHER_CTX_block_size(&ctx));
@@ -42,7 +42,7 @@ Date:   Mon Mar 24 23:24:41 2014 -0400
  		goto clean_exit;
  	}
  
-@@ -4333,6 +4336,7 @@
+@@ -4333,6 +4336,7 @@ PHP_FUNCTION(openssl_seal)
  		efree(buf);
  	}
  	RETVAL_LONG(len1 + len2);
@@ -50,7 +50,7 @@ Date:   Mon Mar 24 23:24:41 2014 -0400
  
  clean_exit:
  	for (i=0; i<nkeys; i++) {
-@@ -4391,25 +4395,21 @@
+@@ -4391,25 +4395,21 @@ PHP_FUNCTION(openssl_open)
  	if (EVP_OpenInit(&ctx, cipher, (unsigned char *)ekey, ekey_len, NULL, pkey) && EVP_OpenUpdate(&ctx, buf, &len1, (unsigned char *)data, data_len)) {
  		if (!EVP_OpenFinal(&ctx, buf + len1, &len2) || (len1 + len2 == 0)) {
  			efree(buf);

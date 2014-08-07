@@ -11,9 +11,9 @@ Date:   Thu Dec 27 13:31:55 2012 -0500
     function in which case we can not know if the post data is
     still in use or not by any curl handle
 
---- a/ext/curl/interface.c
-+++ b/ext/curl/interface.c
-@@ -2111,6 +2111,9 @@
+--- php5.orig/ext/curl/interface.c
++++ php5/ext/curl/interface.c
+@@ -2111,6 +2111,9 @@ string_copy:
  					return 1;
  				}
  

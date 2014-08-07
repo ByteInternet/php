@@ -10,9 +10,9 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
 
     - Fixed bug #62947 (Unneccesary warnings on FPM)
 
---- a/sapi/fpm/fpm/fpm_conf.c
-+++ b/sapi/fpm/fpm/fpm_conf.c
-@@ -70,6 +70,7 @@
+--- php5.orig/sapi/fpm/fpm/fpm_conf.c
++++ php5/sapi/fpm/fpm/fpm_conf.c
+@@ -70,6 +70,7 @@ struct fpm_global_config_s fpm_global_co
  	.syslog_facility = -1,
  #endif
  	.process_max = 0,
@@ -20,7 +20,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  };
  static struct fpm_worker_pool_s *current_wp = NULL;
  static int ini_recursion = 0;
-@@ -92,6 +93,7 @@
+@@ -92,6 +93,7 @@ static struct ini_value_parser_s ini_fpm
  	{ "emergency_restart_interval",  &fpm_conf_set_time,            GO(emergency_restart_interval) },
  	{ "process_control_timeout",     &fpm_conf_set_time,            GO(process_control_timeout) },
  	{ "process.max",                 &fpm_conf_set_integer,         GO(process_max) },
@@ -28,7 +28,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  	{ "daemonize",                   &fpm_conf_set_boolean,         GO(daemonize) },
  	{ "rlimit_files",                &fpm_conf_set_integer,         GO(rlimit_files) },
  	{ "rlimit_core",                 &fpm_conf_set_rlimit_core,     GO(rlimit_core) },
-@@ -112,6 +114,7 @@
+@@ -112,6 +114,7 @@ static struct ini_value_parser_s ini_fpm
  	{ "listen.group",              &fpm_conf_set_string,      WPO(listen_group) },
  	{ "listen.mode",               &fpm_conf_set_string,      WPO(listen_mode) },
  	{ "listen.allowed_clients",    &fpm_conf_set_string,      WPO(listen_allowed_clients) },
@@ -36,7 +36,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  	{ "pm",                        &fpm_conf_set_pm,          WPO(pm) },
  	{ "pm.max_children",           &fpm_conf_set_integer,     WPO(pm_max_children) },
  	{ "pm.start_servers",          &fpm_conf_set_integer,     WPO(pm_start_servers) },
-@@ -577,6 +580,7 @@
+@@ -577,6 +580,7 @@ static void *fpm_worker_pool_config_allo
  	memset(wp->config, 0, sizeof(struct fpm_worker_pool_config_s));
  	wp->config->listen_backlog = FPM_BACKLOG_DEFAULT;
  	wp->config->pm_process_idle_timeout = 10; /* 10s by default */
@@ -44,7 +44,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  
  	if (!fpm_worker_all_pools) {
  		fpm_worker_all_pools = wp;
-@@ -741,6 +745,11 @@
+@@ -741,6 +745,11 @@ static int fpm_conf_process_all_pools()
  			return -1;
  		}
  
@@ -56,7 +56,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  		/* pm */
  		if (wp->config->pm != PM_STYLE_STATIC && wp->config->pm != PM_STYLE_DYNAMIC && wp->config->pm != PM_STYLE_ONDEMAND) {
  			zlog(ZLOG_ALERT, "[pool %s] the process manager is missing (static, dynamic or ondemand)", wp->config->name);
-@@ -1103,6 +1112,11 @@
+@@ -1103,6 +1112,11 @@ static int fpm_conf_post_process(TSRMLS_
  		return -1;
  	}
  
@@ -68,7 +68,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  	if (!fpm_global_config.error_log) {
  		fpm_global_config.error_log = strdup("log/php-fpm.log");
  	}
-@@ -1485,6 +1499,11 @@
+@@ -1485,6 +1499,11 @@ static void fpm_conf_dump() /* {{{ */
  	zlog(ZLOG_NOTICE, "\temergency_restart_threshold = %d", fpm_global_config.emergency_restart_threshold);
  	zlog(ZLOG_NOTICE, "\tprocess_control_timeout = %ds",    fpm_global_config.process_control_timeout);
  	zlog(ZLOG_NOTICE, "\tprocess.max = %d",                 fpm_global_config.process_max);
@@ -80,7 +80,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  	zlog(ZLOG_NOTICE, "\tdaemonize = %s",                   BOOL2STR(fpm_global_config.daemonize));
  	zlog(ZLOG_NOTICE, "\trlimit_files = %d",                fpm_global_config.rlimit_files);
  	zlog(ZLOG_NOTICE, "\trlimit_core = %d",                 fpm_global_config.rlimit_core);
-@@ -1504,6 +1523,11 @@
+@@ -1504,6 +1523,11 @@ static void fpm_conf_dump() /* {{{ */
  		zlog(ZLOG_NOTICE, "\tlisten.group = %s",               STR2STR(wp->config->listen_group));
  		zlog(ZLOG_NOTICE, "\tlisten.mode = %s",                STR2STR(wp->config->listen_mode));
  		zlog(ZLOG_NOTICE, "\tlisten.allowed_clients = %s",     STR2STR(wp->config->listen_allowed_clients));
@@ -92,9 +92,9 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  		zlog(ZLOG_NOTICE, "\tpm = %s",                         PM2STR(wp->config->pm));
  		zlog(ZLOG_NOTICE, "\tpm.max_children = %d",            wp->config->pm_max_children);
  		zlog(ZLOG_NOTICE, "\tpm.start_servers = %d",           wp->config->pm_start_servers);
---- a/sapi/fpm/fpm/fpm_conf.h
-+++ b/sapi/fpm/fpm/fpm_conf.h
-@@ -35,6 +35,7 @@
+--- php5.orig/sapi/fpm/fpm/fpm_conf.h
++++ php5/sapi/fpm/fpm/fpm_conf.h
+@@ -35,6 +35,7 @@ struct fpm_global_config_s {
  	int emergency_restart_interval;
  	int process_control_timeout;
  	int process_max;
@@ -102,7 +102,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  	int daemonize;
  	int rlimit_files;
  	int rlimit_core;
-@@ -57,6 +58,7 @@
+@@ -57,6 +58,7 @@ struct fpm_worker_pool_config_s {
  	char *listen_group;
  	char *listen_mode;
  	char *listen_allowed_clients;
@@ -110,9 +110,9 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  	int pm;
  	int pm_max_children;
  	int pm_start_servers;
---- a/sapi/fpm/fpm/fpm_unix.c
-+++ b/sapi/fpm/fpm/fpm_unix.c
-@@ -120,13 +120,16 @@
+--- php5.orig/sapi/fpm/fpm/fpm_unix.c
++++ php5/sapi/fpm/fpm/fpm_unix.c
+@@ -120,13 +120,16 @@ static int fpm_unix_conf_wp(struct fpm_w
  		}
  	} else { /* not root */
  		if (wp->config->user && *wp->config->user) {
@@ -132,7 +132,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  		}
  
  		/* set up HOME and USER anyway */
-@@ -183,6 +186,14 @@
+@@ -183,6 +186,14 @@ int fpm_unix_init_child(struct fpm_worke
  	}
  
  	if (is_root) {
@@ -147,7 +147,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  		if (wp->set_gid) {
  			if (0 > setgid(wp->set_gid)) {
  				zlog(ZLOG_SYSERROR, "[pool %s] failed to setgid(%d)", wp->config->name, wp->set_gid);
-@@ -217,6 +228,7 @@
+@@ -217,6 +228,7 @@ int fpm_unix_init_child(struct fpm_worke
  int fpm_unix_init_main() /* {{{ */
  {
  	struct fpm_worker_pool_s *wp;
@@ -155,7 +155,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  
  	if (fpm_global_config.rlimit_files) {
  		struct rlimit r;
-@@ -259,6 +271,17 @@
+@@ -259,6 +271,17 @@ int fpm_unix_init_main() /* {{{ */
  		return -1;
  	}
  
@@ -173,9 +173,9 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  	fpm_globals.parent_pid = getpid();
  	for (wp = fpm_worker_all_pools; wp; wp = wp->next) {
  		if (0 > fpm_unix_conf_wp(wp)) {
---- a/sapi/fpm/php-fpm.conf.in
-+++ b/sapi/fpm/php-fpm.conf.in
-@@ -76,6 +76,14 @@
+--- php5.orig/sapi/fpm/php-fpm.conf.in
++++ php5/sapi/fpm/php-fpm.conf.in
+@@ -76,6 +76,14 @@ error_log = @EXPANDED_LOCALSTATEDIR@/log
  ; Default Value: 0
  ; process.max = 128
  
@@ -190,7 +190,7 @@ Date:   Fri Sep 28 01:08:08 2012 +0200
  ; Send FPM to background. Set to 'no' to keep FPM in foreground for debugging.
  ; Default Value: yes
  ;daemonize = yes
-@@ -167,6 +175,14 @@
+@@ -167,6 +175,14 @@ listen = /var/run/php5-fpm.sock
  ; Default Value: any
  ;listen.allowed_clients = 127.0.0.1
  

@@ -1,8 +1,5 @@
-diff --git a/ext/standard/tests/serialize/bug62373.phpt b/ext/standard/tests/serialize/bug62373.phpt
-new file mode 100644
-index 0000000..666c33e
 --- /dev/null
-+++ b/ext/standard/tests/serialize/bug62373.phpt
++++ php5/ext/standard/tests/serialize/bug62373.phpt
 @@ -0,0 +1,25 @@
 +--TEST--
 +Bug #62373 (serialize() generates wrong reference to the object)
@@ -29,11 +26,9 @@ index 0000000..666c33e
 +?>
 +--EXPECT--
 +OK
-diff --git a/ext/standard/var.c b/ext/standard/var.c
-index c6126e9..735d0a7 100644
---- a/ext/standard/var.c
-+++ b/ext/standard/var.c
-@@ -541,12 +541,9 @@ static inline int php_add_var_hash(HashTable *var_hash, zval *var, void *var_old
+--- php5.orig/ext/standard/var.c
++++ php5/ext/standard/var.c
+@@ -541,12 +541,9 @@ static inline int php_add_var_hash(HashT
  
  	/* relies on "(long)" being a perfect hash function for data pointers,
  	 * however the actual identity of an object has had to be determined

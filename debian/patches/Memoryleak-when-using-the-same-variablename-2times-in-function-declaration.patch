@@ -5,7 +5,7 @@ Date:   Tue Mar 26 11:44:57 2013 +0800
     Fixed bug #64515 (Memoryleak when using the same variablename 2times in function declaration)
 
 --- /dev/null
-+++ b/Zend/tests/bug64515.phpt
++++ php5/Zend/tests/bug64515.phpt
 @@ -0,0 +1,10 @@
 +--TEST--
 +Bug #64515 (Memoryleak when using the same variablename 2times in function declaration)
@@ -17,9 +17,9 @@ Date:   Tue Mar 26 11:44:57 2013 +0800
 +foo();
 +?>
 +--EXPECT--
---- a/Zend/zend_vm_def.h
-+++ b/Zend/zend_vm_def.h
-@@ -3240,7 +3240,7 @@
+--- php5.orig/Zend/zend_vm_def.h
++++ php5/Zend/zend_vm_def.h
+@@ -3240,7 +3240,7 @@ ZEND_VM_HANDLER(64, ZEND_RECV_INIT, ANY,
  
  	zend_verify_arg_type((zend_function *) EG(active_op_array), arg_num, assignment_value, opline->extended_value TSRMLS_CC);
  	var_ptr = _get_zval_ptr_ptr_cv_BP_VAR_W(EX_CVs(), opline->result.var TSRMLS_CC);
@@ -28,9 +28,9 @@ Date:   Tue Mar 26 11:44:57 2013 +0800
  	*var_ptr = assignment_value;
  
  	CHECK_EXCEPTION();
---- a/Zend/zend_vm_execute.h
-+++ b/Zend/zend_vm_execute.h
-@@ -1368,7 +1368,7 @@
+--- php5.orig/Zend/zend_vm_execute.h
++++ php5/Zend/zend_vm_execute.h
+@@ -1368,7 +1368,7 @@ static int ZEND_FASTCALL  ZEND_RECV_INIT
  
  	zend_verify_arg_type((zend_function *) EG(active_op_array), arg_num, assignment_value, opline->extended_value TSRMLS_CC);
  	var_ptr = _get_zval_ptr_ptr_cv_BP_VAR_W(EX_CVs(), opline->result.var TSRMLS_CC);

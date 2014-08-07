@@ -1,5 +1,5 @@
---- a/sapi/fpm/fpm/fpm_php.c
-+++ b/sapi/fpm/fpm/fpm_php.c
+--- php5.orig/sapi/fpm/fpm/fpm_php.c
++++ php5/sapi/fpm/fpm/fpm_php.c
 @@ -257,3 +257,41 @@ int fpm_php_limit_extensions(char *path)
  	return 1; /* extension not found: not allowed  */
  }
@@ -42,8 +42,8 @@
 +}
 +/* }}} */
 +
---- a/sapi/fpm/fpm/fpm_php.h
-+++ b/sapi/fpm/fpm/fpm_php.h
+--- php5.orig/sapi/fpm/fpm/fpm_php.h
++++ php5/sapi/fpm/fpm/fpm_php.h
 @@ -44,6 +44,7 @@ void fpm_php_soft_quit();
  int fpm_php_init_main();
  int fpm_php_apply_defines_ex(struct key_value_s *kv, int mode);
@@ -52,8 +52,8 @@
  
  #endif
  
---- a/sapi/fpm/fpm/fpm_status.c
-+++ b/sapi/fpm/fpm/fpm_status.c
+--- php5.orig/sapi/fpm/fpm/fpm_status.c
++++ php5/sapi/fpm/fpm/fpm_status.c
 @@ -14,6 +14,7 @@
  #include "zlog.h"
  #include "fpm_atomic.h"
