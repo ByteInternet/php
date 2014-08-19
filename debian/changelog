@@ -15,10 +15,11 @@ php5 (5.4.4-14+deb7u13) stable-security; urgency=medium
     Vulnerability
   * d/NEWS: Adjust file name of default pool configuration
   * [CVE-2014-3538]: extensive backtracking in rule regular expression  
-  * [CVE-2014-3587]: Segfault in dns_get_record (PHP#67717)
+  * [CVE-2014-3597]: Segfault in dns_get_record (PHP#67717)
   * [CVE-2014-3587]: Segfault in cdf.c (PHP#67716)
+  * [CVE-2014-4670]: SPL Iterators use-after-free (PHP#67538)
 
- -- Ondřej Surý <ondrej@debian.org>  Tue, 19 Aug 2014 15:42:42 +0200
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 19 Aug 2014 15:47:37 +0200
 
 php5 (5.4.4-14+deb7u12) stable-security; urgency=high
 
