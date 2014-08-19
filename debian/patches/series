@@ -169,3 +169,4 @@ fix-autoloader-if-two-method-definitions-doesnt-match.patch
 CVE-2014-3538.patch
 CVE-2014-3597.patch
 CVE-2014-3587.patch
+CVE-2014-4670.patch
