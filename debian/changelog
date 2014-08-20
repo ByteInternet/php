@@ -1,4 +1,4 @@
-php5 (5.4.4-14+deb7u13) stable-security; urgency=medium
+php5 (5.4.4-14+deb7u13) wheezy-security; urgency=high
 
   * upstream fix: Cookies disabled when setting CURLOPT_COOKIEFILE to
     empty string or NULL (Closes: #680260)
