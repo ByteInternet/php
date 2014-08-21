@@ -1,3 +1,11 @@
+php5 (5.4.4-14+deb7u14) wheezy-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * Install sessionclean script into /usr/lib/php5/
+    Thanks to Daniel Néri (Closes: #758774)
+
+ -- Salvatore Bonaccorso <carnil@debian.org>  Thu, 21 Aug 2014 10:15:08 +0200
+
 php5 (5.4.4-14+deb7u13) wheezy-security; urgency=high
 
   * upstream fix: Cookies disabled when setting CURLOPT_COOKIEFILE to
