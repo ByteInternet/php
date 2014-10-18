@@ -1,3 +1,28 @@
+php5 (5.4.34-1) wheezy-security; urgency=medium
+
+  * Remove obsolete patches that has been merged upstream
+  * Update gbp.conf to not clash with other branches
+  * New upstream version 5.4.34:
+   + Fileinfo:
+    - Fixed bug #66242 (libmagic: don't assume char is signed).
+   + Core:
+    - Fixed bug #67985 (Incorrect last used array index copied to new
+      array after unset).
+    - Fixed bug #68044 (Integer overflow in unserialize() (32-bits only)).
+      (CVE-2014-3669)
+   + cURL:
+    - Fixed bug #68089 (NULL byte injection - cURL lib).
+   + EXIF:
+    - Fixed bug #68113 (Heap corruption in exif_thumbnail()).
+      (CVE-2014-3670)
+   + OpenSSL:
+    - Reverted fixes for bug #41631, due to regressions.
+   + XMLRPC:
+    - Fixed bug #68027 (Global buffer overflow in mkgmtime() function).
+      (CVE-2014-3668)
+
+ -- Ondřej Surý <ondrej@debian.org>  Sat, 18 Oct 2014 09:51:47 +0200
+
 php5 (5.4.4-14+deb7u14) wheezy-security; urgency=high
 
   * Non-maintainer upload by the Security Team.
