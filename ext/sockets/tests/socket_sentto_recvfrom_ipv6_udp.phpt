@@ -5,6 +5,9 @@ Test if socket_recvfrom() receives data sent by socket_sendto() via IPv6 UDP
 if (!extension_loaded('sockets')) {
     die('SKIP The sockets extension is not loaded.');
 }
+if (substr(PHP_OS, 0, 3) == 'WIN') {
+	die('skip Not valid for Windows');
+}
 require 'ipv6_skipif.inc';
 --FILE--
 <?php
@@ -26,7 +29,7 @@ require 'ipv6_skipif.inc';
     $len = strlen($msg);
     $bytes_sent = socket_sendto($socket, $msg, $len, 0, $address, 1223);
     if ($bytes_sent == -1) {
-        die('An error occured while sending to the socket');
+        die('An error occurred while sending to the socket');
     } else if ($bytes_sent != $len) {
         die($bytes_sent . ' bytes have been sent instead of the ' . $len . ' bytes expected');
     }
@@ -37,7 +40,7 @@ require 'ipv6_skipif.inc';
     socket_recvfrom($socket, $buf, 12, 0, $from); // cause warning
     $bytes_received = socket_recvfrom($socket, $buf, 12, 0, $from, $port);
     if ($bytes_received == -1) {
-        die('An error occured while receiving from the socket');
+        die('An error occurred while receiving from the socket');
     } else if ($bytes_received != $len) {
         die($bytes_received . ' bytes have been received instead of the ' . $len . ' bytes expected');
     }

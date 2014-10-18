@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 5                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2012 The PHP Group                                |
+   | Copyright (c) 1997-2014 The PHP Group                                |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -191,6 +191,9 @@ PHP_FUNCTION(curl_multi_select)
 	FD_ZERO(&exceptfds);
 
 	curl_multi_fdset(mh->multi, &readfds, &writefds, &exceptfds, &maxfd);
+	if (maxfd == -1) {
+		RETURN_LONG(-1);
+	}
 	RETURN_LONG(select(maxfd + 1, &readfds, &writefds, &exceptfds, &to));
 }
 /* }}} */
@@ -250,6 +253,8 @@ PHP_FUNCTION(curl_multi_getcontent)
 		smart_str_0(&ch->handlers->write->buf);
 		RETURN_STRINGL(ch->handlers->write->buf.c, ch->handlers->write->buf.len, 1);
 	}
+
+        RETURN_EMPTY_STRING();
 }
 /* }}} */
 

@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 5                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2012 The PHP Group                                |
+   | Copyright (c) 1997-2014 The PHP Group                                |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -170,6 +170,12 @@ static int php_curl_option_url(php_curl *ch, const char *url, const int len TSRM
 #if LIBCURL_VERSION_NUM < 0x071100
 	char *copystr = NULL;
 #endif
+
+	if (strlen(url) != len) {
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Curl option contains invalid characters (\\0)");
+		return 0;
+	}
+
 	/* Disable file:// if open_basedir are used */
 	if (PG(open_basedir) && *PG(open_basedir)) {
 #if LIBCURL_VERSION_NUM >= 0x071304
@@ -713,6 +719,14 @@ PHP_MINIT_FUNCTION(curl)
 #if LIBCURL_VERSION_NUM >= 0x071202
     REGISTER_CURL_CONSTANT(CURLINFO_REDIRECT_URL);
 #endif
+#if LIBCURL_VERSION_NUM >= 0x071300 /* 7.19.0 */
+	REGISTER_CURL_CONSTANT(CURLINFO_PRIMARY_IP);
+#endif
+#if LIBCURL_VERSION_NUM >= 0x071500 /* 7.21.0 */
+	REGISTER_CURL_CONSTANT(CURLINFO_PRIMARY_PORT);
+	REGISTER_CURL_CONSTANT(CURLINFO_LOCAL_IP);
+	REGISTER_CURL_CONSTANT(CURLINFO_LOCAL_PORT);
+#endif
 
 
 	/* cURL protocol constants (curl_version) */
@@ -969,6 +983,15 @@ PHP_MSHUTDOWN_FUNCTION(curl)
 }
 /* }}} */
 
+/* {{{ curl_write_nothing
+ * Used as a work around. See _php_curl_close_ex
+ */
+static size_t curl_write_nothing(char *data, size_t size, size_t nmemb, void *ctx) 
+{
+	return size * nmemb;
+}
+/* }}} */
+
 /* {{{ curl_write
  */
 static size_t curl_write(char *data, size_t size, size_t nmemb, void *ctx)
@@ -1051,7 +1074,6 @@ static size_t curl_progress(void *clientp, double dltotal, double dlnow, double 
 {
 	php_curl       *ch = (php_curl *) clientp;
 	php_curl_progress  *t  = ch->handlers->progress;
-	int             length = -1;
 	size_t	rval = 0;
 
 #if PHP_CURL_DEBUG
@@ -1101,7 +1123,6 @@ static size_t curl_progress(void *clientp, double dltotal, double dlnow, double 
 			ch->in_callback = 0;
 			if (error == FAILURE) {
 				php_error_docref(NULL TSRMLS_CC, E_WARNING, "Cannot call the CURLOPT_PROGRESSFUNCTION");
-				length = -1;
 			} else if (retval_ptr) {
 				if (Z_TYPE_P(retval_ptr) != IS_LONG) {
 					convert_to_long_ex(&retval_ptr);
@@ -1356,9 +1377,9 @@ static void curl_free_post(void **post)
 
 /* {{{ curl_free_slist
  */
-static void curl_free_slist(void **slist)
+static void curl_free_slist(void *slist)
 {
-	curl_slist_free_all((struct curl_slist *) *slist);
+	curl_slist_free_all(*((struct curl_slist **) slist));
 }
 /* }}} */
 
@@ -1426,8 +1447,10 @@ static void alloc_curl_handle(php_curl **ch)
 	(*ch)->handlers->read->stream = NULL;
 
 	zend_llist_init(&(*ch)->to_free->str,   sizeof(char *),            (llist_dtor_func_t) curl_free_string, 0);
-	zend_llist_init(&(*ch)->to_free->slist, sizeof(struct curl_slist), (llist_dtor_func_t) curl_free_slist,  0);
 	zend_llist_init(&(*ch)->to_free->post,  sizeof(struct HttpPost),   (llist_dtor_func_t) curl_free_post,   0);
+
+	(*ch)->to_free->slist = emalloc(sizeof(HashTable));
+	zend_hash_init((*ch)->to_free->slist, 4, NULL, curl_free_slist, 0);
 }
 /* }}} */
 
@@ -1606,9 +1629,9 @@ PHP_FUNCTION(curl_copy_handle)
 	dupch->uses = 0;
 	ch->uses++;
 	if (ch->handlers->write->stream) {
-		Z_ADDREF_P(dupch->handlers->write->stream);
-		dupch->handlers->write->stream = ch->handlers->write->stream;
+		Z_ADDREF_P(ch->handlers->write->stream);
 	}
+	dupch->handlers->write->stream = ch->handlers->write->stream;
 	dupch->handlers->write->method = ch->handlers->write->method;
 	dupch->handlers->write->type   = ch->handlers->write->type;
 	if (ch->handlers->read->stream) {
@@ -1658,6 +1681,7 @@ PHP_FUNCTION(curl_copy_handle)
 	curl_easy_setopt(dupch->cp, CURLOPT_WRITEHEADER,       (void *) dupch);
 	curl_easy_setopt(dupch->cp, CURLOPT_PROGRESSDATA,      (void *) dupch); 
 
+	efree(dupch->to_free->slist);
 	efree(dupch->to_free);
 	dupch->to_free = ch->to_free;
 
@@ -1675,6 +1699,17 @@ static int _php_curl_setopt(php_curl *ch, long option, zval **zvalue, zval *retu
 	CURLcode     error=CURLE_OK;
 
 	switch (option) {
+		/* Long options */
+		case CURLOPT_SSL_VERIFYHOST:
+			if(Z_BVAL_PP(zvalue) == 1) {
+#if LIBCURL_VERSION_NUM <= 0x071c00 /* 7.28.0 */
+				php_error_docref(NULL TSRMLS_CC, E_NOTICE, "CURLOPT_SSL_VERIFYHOST with value 1 is deprecated and will be removed as of libcurl 7.28.1. It is recommended to use value 2 instead");
+#else
+				php_error_docref(NULL TSRMLS_CC, E_NOTICE, "CURLOPT_SSL_VERIFYHOST no longer accepts the value 1, value 2 will be used instead");
+				error = curl_easy_setopt(ch->cp, option, 2);
+				break;
+#endif
+			}
 		case CURLOPT_INFILESIZE:
 		case CURLOPT_VERBOSE:
 		case CURLOPT_HEADER:
@@ -1713,7 +1748,6 @@ static int _php_curl_setopt(php_curl *ch, long option, zval **zvalue, zval *retu
 #if LIBCURL_VERSION_NUM > 0x071002
 		case CURLOPT_CONNECTTIMEOUT_MS:
 #endif
-		case CURLOPT_SSL_VERIFYHOST:
 		case CURLOPT_SSL_VERIFYPEER:
 		case CURLOPT_DNS_USE_GLOBAL_CACHE:
 		case CURLOPT_NOSIGNAL:
@@ -1824,10 +1858,6 @@ static int _php_curl_setopt(php_curl *ch, long option, zval **zvalue, zval *retu
 		case CURLOPT_SSH_PRIVATE_KEYFILE:
 #endif
 		{
-#if LIBCURL_VERSION_NUM < 0x071100
-			char *copystr = NULL;
-#endif
-
 			convert_to_string_ex(zvalue);
 #if LIBCURL_VERSION_NUM >= 0x071300
 			if (
@@ -2108,6 +2138,9 @@ string_copy:
 					return 1;
 				}
 
+				if (Z_REFCOUNT_P(ch->clone) <= 1) {
+					zend_llist_clean(&ch->to_free->post);
+				}
 				zend_llist_add_element(&ch->to_free->post, &first);
 				error = curl_easy_setopt(ch->cp, CURLOPT_HTTPPOST, first);
 
@@ -2158,7 +2191,7 @@ string_copy:
 					return 1;
 				}
 			}
-			zend_llist_add_element(&ch->to_free->slist, &slist);
+			zend_hash_index_update(ch->to_free->slist, (ulong) option, &slist, sizeof(struct curl_slist *), NULL);
 
 			error = curl_easy_setopt(ch->cp, option, slist);
 
@@ -2177,7 +2210,7 @@ string_copy:
 
 			convert_to_string_ex(zvalue);
 
-			if (!Z_STRLEN_PP(zvalue) || php_check_open_basedir(Z_STRVAL_PP(zvalue) TSRMLS_CC)) {
+			if (Z_STRLEN_PP(zvalue) && php_check_open_basedir(Z_STRVAL_PP(zvalue) TSRMLS_CC)) {
 				RETVAL_FALSE;
 				return 1;
 			}
@@ -2447,6 +2480,8 @@ PHP_FUNCTION(curl_getinfo)
 			create_certinfo(ci, listcode TSRMLS_CC);
 			CAAZ("certinfo", listcode);
 		}
+#endif
+#if LIBCURL_VERSION_NUM >= 0x071300 /* 7.19.0 */
 		if (curl_easy_getinfo(ch->cp, CURLINFO_PRIMARY_IP, &s_code) == CURLE_OK) {
 			CAAS("primary_ip", s_code);
 		}
@@ -2473,10 +2508,10 @@ PHP_FUNCTION(curl_getinfo)
 	} else {
 		switch (option) {
 			/* string variable types */
-#if LIBCURL_VERSION_NUM >= 0x071500
+#if LIBCURL_VERSION_NUM >= 0x071300 /* 7.19.0 */
 			case CURLINFO_PRIMARY_IP:
 #endif
-#if LIBCURL_VERSION_NUM >= 0x071500
+#if LIBCURL_VERSION_NUM >= 0x071500 /* 7.21.0 */
 			case CURLINFO_LOCAL_IP:
 #endif
 			case CURLINFO_PRIVATE:
@@ -2496,7 +2531,7 @@ PHP_FUNCTION(curl_getinfo)
 				break;
 			}
 			/* Long variable types */
-#if LIBCURL_VERSION_NUM >= 0x071500
+#if LIBCURL_VERSION_NUM >= 0x071500 /* 7.21.0 */
 			case CURLINFO_PRIMARY_PORT:
 			case CURLINFO_LOCAL_PORT:
 #endif
@@ -2632,13 +2667,29 @@ static void _php_curl_close_ex(php_curl *ch TSRMLS_DC)
 #endif
 
 	_php_curl_verify_handlers(ch, 0 TSRMLS_CC);
+
+	/* 
+	 * Libcurl is doing connection caching. When easy handle is cleaned up,
+	 * if the handle was previously used by the curl_multi_api, the connection 
+	 * remains open un the curl multi handle is cleaned up. Some protocols are
+	 * sending content like the FTP one, and libcurl try to use the 
+	 * WRITEFUNCTION or the HEADERFUNCTION. Since structures used in those
+	 * callback are freed, we need to use an other callback to which avoid
+	 * segfaults.
+	 *
+	 * Libcurl commit d021f2e8a00 fix this issue and should be part of 7.28.2 
+	 */
+	curl_easy_setopt(ch->cp, CURLOPT_HEADERFUNCTION, curl_write_nothing);
+	curl_easy_setopt(ch->cp, CURLOPT_WRITEFUNCTION, curl_write_nothing);
+
 	curl_easy_cleanup(ch->cp);
 
 	/* cURL destructors should be invoked only by last curl handle */
 	if (Z_REFCOUNT_P(ch->clone) <= 1) {
 		zend_llist_clean(&ch->to_free->str);
-		zend_llist_clean(&ch->to_free->slist);
 		zend_llist_clean(&ch->to_free->post);
+		zend_hash_destroy(ch->to_free->slist);
+		efree(ch->to_free->slist);
 		efree(ch->to_free);
 		FREE_ZVAL(ch->clone);
 	} else {

@@ -2,7 +2,7 @@
   +----------------------------------------------------------------------+
   | PHP Version 5                                                        |
   +----------------------------------------------------------------------+
-  | Copyright (c) 2006-2012 The PHP Group                                |
+  | Copyright (c) 2006-2014 The PHP Group                                |
   +----------------------------------------------------------------------+
   | This source file is subject to version 3.01 of the PHP license,      |
   | that is bundled with this package in the file LICENSE, and is        |
@@ -251,6 +251,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, simple_command_handle_response)(MYSQLND_CONN_D
 									conn->persistent);
 
 					if (!ignore_upsert_status) {
+						memset(conn->upsert_status, 0, sizeof(*conn->upsert_status));
 						conn->upsert_status->warning_count = ok_response->warning_count;
 						conn->upsert_status->server_status = ok_response->server_status;
 						conn->upsert_status->affected_rows = ok_response->affected_rows;
@@ -314,6 +315,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, simple_command)(MYSQLND_CONN_DATA * conn, enum
 
 	DBG_ENTER("mysqlnd_conn_data::simple_command");
 	DBG_INF_FMT("command=%s ok_packet=%u silent=%u", mysqlnd_command_to_text[command], ok_packet, silent);
+	DBG_INF_FMT("conn->server_status=%u", conn->upsert_status->server_status);
 
 	switch (CONN_GET_STATE(conn)) {
 		case CONN_READY:
@@ -328,10 +330,6 @@ MYSQLND_METHOD(mysqlnd_conn_data, simple_command)(MYSQLND_CONN_DATA * conn, enum
 			DBG_RETURN(FAIL);
 	}
 
-	/* clean UPSERT info */
-	if (!ignore_upsert_status) {
-		memset(conn->upsert_status, 0, sizeof(*conn->upsert_status));
-	}
 	SET_ERROR_AFF_ROWS(conn);
 	SET_EMPTY_ERROR(*conn->error_info);
 
@@ -527,7 +525,7 @@ mysqlnd_connect_run_authentication(
 
 				if (!auth_plugin) {
 					php_error_docref(NULL TSRMLS_CC, E_WARNING, "The server requested authentication method unknown to the client [%s]", requested_protocol);
-					SET_CLIENT_ERROR(*conn->error_info, CR_NOT_IMPLEMENTED, UNKNOWN_SQLSTATE, "The server requested authentication method umknown to the client");
+					SET_CLIENT_ERROR(*conn->error_info, CR_NOT_IMPLEMENTED, UNKNOWN_SQLSTATE, "The server requested authentication method unknown to the client");
 					break;
 				}
 			}
@@ -764,8 +762,17 @@ MYSQLND_METHOD(mysqlnd_conn_data, connect)(MYSQLND_CONN_DATA * conn,
 	conn->server_version	= mnd_pestrdup(greet_packet->server_version, conn->persistent);
 
 	conn->greet_charset = mysqlnd_find_charset_nr(greet_packet->charset_no);
+	if (!conn->greet_charset) {
+		php_error_docref(NULL TSRMLS_CC, E_WARNING,
+			"Server sent charset (%d) unknown to the client. Please, report to the developers", greet_packet->charset_no);
+		SET_CLIENT_ERROR(*conn->error_info, CR_NOT_IMPLEMENTED, UNKNOWN_SQLSTATE,
+			"Server sent charset unknown to the client. Please, report to the developers");
+		goto err;
+	}
 	/* we allow load data local infile by default */
 	mysql_flags |= MYSQLND_CAPABILITIES;
+
+	mysql_flags |= conn->options->flags; /* use the flags from set_client_option() */
 
 	if (db) {
 		mysql_flags |= CLIENT_CONNECT_WITH_DB;
@@ -879,6 +886,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, connect)(MYSQLND_CONN_DATA * conn,
 		conn->max_packet_size	= MYSQLND_ASSEMBLED_PACKET_MAX_SIZE;
 		/* todo: check if charset is available */
 		conn->server_capabilities = greet_packet->server_capabilities;
+		memset(conn->upsert_status, 0, sizeof(*conn->upsert_status));
 		conn->upsert_status->warning_count = 0;
 		conn->upsert_status->server_status = greet_packet->server_status;
 		conn->upsert_status->affected_rows = 0;
@@ -1052,9 +1060,10 @@ static enum_func_status
 MYSQLND_METHOD(mysqlnd_conn_data, send_query)(MYSQLND_CONN_DATA * conn, const char * query, unsigned int query_len TSRMLS_DC)
 {
 	size_t this_func = STRUCT_OFFSET(struct st_mysqlnd_conn_data_methods, send_query);
-	enum_func_status ret;
+	enum_func_status ret = FAIL;
 	DBG_ENTER("mysqlnd_conn_data::send_query");
 	DBG_INF_FMT("conn=%llu query=%s", conn->thread_id, query);
+	DBG_INF_FMT("conn->server_status=%u", conn->upsert_status->server_status);
 
 	if (PASS == conn->m->local_tx_start(conn, this_func TSRMLS_CC)) {
 		ret = conn->m->simple_command(conn, COM_QUERY, (zend_uchar *) query, query_len,
@@ -1065,6 +1074,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, send_query)(MYSQLND_CONN_DATA * conn, const ch
 		}
 		conn->m->local_tx_end(conn, this_func, ret TSRMLS_CC);
 	}
+	DBG_INF_FMT("conn->server_status=%u", conn->upsert_status->server_status);
 	DBG_RETURN(ret);
 }
 /* }}} */
@@ -1080,6 +1090,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, reap_query)(MYSQLND_CONN_DATA * conn TSRMLS_DC
 	DBG_ENTER("mysqlnd_conn_data::reap_query");
 	DBG_INF_FMT("conn=%llu", conn->thread_id);
 
+	DBG_INF_FMT("conn->server_status=%u", conn->upsert_status->server_status);
 	if (PASS == conn->m->local_tx_start(conn, this_func TSRMLS_CC)) {
 		if (state <= CONN_READY || state == CONN_QUIT_SENT) {
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Connection not opened, clear or has been closed");
@@ -1090,6 +1101,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, reap_query)(MYSQLND_CONN_DATA * conn TSRMLS_DC
 
 		conn->m->local_tx_end(conn, this_func, ret TSRMLS_CC);
 	}
+	DBG_INF_FMT("conn->server_status=%u", conn->upsert_status->server_status);
 	DBG_RETURN(ret);
 }
 /* }}} */
@@ -1133,6 +1145,7 @@ MYSQLND ** mysqlnd_stream_array_check_for_readiness(MYSQLND ** conn_array TSRMLS
 static int mysqlnd_stream_array_to_fd_set(MYSQLND ** conn_array, fd_set * fds, php_socket_t * max_fd TSRMLS_DC)
 {
 	php_socket_t this_fd;
+	php_stream *stream = NULL;
 	int cnt = 0;
 	MYSQLND **p = conn_array;
 
@@ -1142,7 +1155,8 @@ static int mysqlnd_stream_array_to_fd_set(MYSQLND ** conn_array, fd_set * fds, p
 		 * when casting.  It is only used here so that the buffered data warning
 		 * is not displayed.
 		 * */
-		if (SUCCESS == php_stream_cast((*p)->data->net->stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL,
+		stream = (*p)->data->net->stream;
+		if (stream != NULL && SUCCESS == php_stream_cast(stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL,
 										(void*)&this_fd, 1) && this_fd >= 0) {
 
 			PHP_SAFE_FD_SET(this_fd, fds);
@@ -1160,6 +1174,7 @@ static int mysqlnd_stream_array_to_fd_set(MYSQLND ** conn_array, fd_set * fds, p
 static int mysqlnd_stream_array_from_fd_set(MYSQLND ** conn_array, fd_set * fds TSRMLS_DC)
 {
 	php_socket_t this_fd;
+	php_stream *stream = NULL;
 	int ret = 0;
 	zend_bool disproportion = FALSE;
 
@@ -1167,7 +1182,8 @@ static int mysqlnd_stream_array_from_fd_set(MYSQLND ** conn_array, fd_set * fds 
 	MYSQLND **fwd = conn_array, **bckwd = conn_array;
 
 	while (*fwd) {
-		if (SUCCESS == php_stream_cast((*fwd)->data->net->stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL,
+		stream = (*fwd)->data->net->stream;
+		if (stream != NULL && SUCCESS == php_stream_cast(stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL,
 										(void*)&this_fd, 1) && this_fd >= 0) {
 			if (PHP_SAFE_FD_ISSET(this_fd, fds)) {
 				if (disproportion) {
@@ -1198,7 +1214,7 @@ static int mysqlnd_stream_array_from_fd_set(MYSQLND ** conn_array, fd_set * fds 
 
 /* {{{ _mysqlnd_poll */
 PHPAPI enum_func_status
-_mysqlnd_poll(MYSQLND **r_array, MYSQLND **e_array, MYSQLND ***dont_poll, long sec, long usec, uint * desc_num TSRMLS_DC)
+_mysqlnd_poll(MYSQLND **r_array, MYSQLND **e_array, MYSQLND ***dont_poll, long sec, long usec, int * desc_num TSRMLS_DC)
 {
 	struct timeval	tv;
 	struct timeval *tv_p = NULL;
@@ -1328,7 +1344,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, list_fields)(MYSQLND_CONN_DATA * conn, const c
 			}
 
 			if (FAIL == result->m.read_result_metadata(result, conn TSRMLS_CC)) {
-				DBG_ERR("Error ocurred while reading metadata");
+				DBG_ERR("Error occurred while reading metadata");
 				result->m.free_result(result, TRUE TSRMLS_CC);
 				result = NULL;
 				break;
@@ -1459,11 +1475,12 @@ static ulong
 MYSQLND_METHOD(mysqlnd_conn_data, escape_string)(MYSQLND_CONN_DATA * const conn, char * newstr, const char * escapestr, size_t escapestr_len TSRMLS_DC)
 {
 	size_t this_func = STRUCT_OFFSET(struct st_mysqlnd_conn_data_methods, escape_string);
-	ulong ret;
+	ulong ret = FAIL;
 	DBG_ENTER("mysqlnd_conn_data::escape_string");
 	DBG_INF_FMT("conn=%llu", conn->thread_id);
 
 	if (PASS == conn->m->local_tx_start(conn, this_func TSRMLS_CC)) {
+		DBG_INF_FMT("server_status=%u", conn->upsert_status->server_status);
 		if (conn->upsert_status->server_status & SERVER_STATUS_NO_BACKSLASH_ESCAPES) {
 			ret = mysqlnd_cset_escape_quotes(conn->charset, newstr, escapestr, escapestr_len TSRMLS_CC);
 		} else {
@@ -2149,7 +2166,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, change_user)(MYSQLND_CONN_DATA * const conn,
 
 				if (!auth_plugin) {
 					php_error_docref(NULL TSRMLS_CC, E_WARNING, "The server requested authentication method unknown to the client [%s]", requested_protocol);
-					SET_CLIENT_ERROR(*conn->error_info, CR_NOT_IMPLEMENTED, UNKNOWN_SQLSTATE, "The server requested authentication method umknown to the client");
+					SET_CLIENT_ERROR(*conn->error_info, CR_NOT_IMPLEMENTED, UNKNOWN_SQLSTATE, "The server requested authentication method unknown to the client");
 					break;
 				}
 			}
@@ -2177,7 +2194,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, change_user)(MYSQLND_CONN_DATA * const conn,
 				}
 				memcpy(conn->auth_plugin_data, plugin_data, plugin_data_len);
 
-				DBG_INF_FMT("salt=[%*s]", plugin_data_len - 1, plugin_data);
+				DBG_INF_FMT("salt=[%*.s]", plugin_data_len - 1, plugin_data);
 
 				/* The data should be allocated with malloc() */
 				scrambled_data =
@@ -2277,7 +2294,7 @@ MYSQLND_METHOD(mysqlnd_conn_data, set_client_option)(MYSQLND_CONN_DATA * const c
 			break;
 #endif
 		case MYSQL_OPT_LOCAL_INFILE:
-			if (!value || (*(unsigned int*) value) ? 1 : 0) {
+			if (value && (*(unsigned int*) value) ? 1 : 0) {
 				conn->options->flags |= CLIENT_LOCAL_FILES;
 			} else {
 				conn->options->flags &= ~CLIENT_LOCAL_FILES;
@@ -2312,7 +2329,14 @@ MYSQLND_METHOD(mysqlnd_conn_data, set_client_option)(MYSQLND_CONN_DATA * const c
 			break;
 		case MYSQL_SET_CHARSET_NAME:
 		{
-			char * new_charset_name = mnd_pestrdup(value, conn->persistent);
+			char * new_charset_name;
+			if (!mysqlnd_find_charset_name(value)) {
+				SET_CLIENT_ERROR(*conn->error_info, CR_CANT_FIND_CHARSET, UNKNOWN_SQLSTATE, "Unknown character set");
+				ret = FAIL;
+				break;
+			}
+				
+			new_charset_name = mnd_pestrdup(value, conn->persistent);
 			if (!new_charset_name) {
 				goto oom;
 			}
@@ -2361,6 +2385,13 @@ MYSQLND_METHOD(mysqlnd_conn_data, set_client_option)(MYSQLND_CONN_DATA * const c
 			DBG_INF_FMT("auth_protocol=%s", conn->options->auth_protocol);
 			break;
 		}
+		case MYSQL_OPT_CAN_HANDLE_EXPIRED_PASSWORDS:
+			if (value && (*(unsigned int*) value) ? 1 : 0) {
+				conn->options->flags |= CLIENT_CAN_HANDLE_EXPIRED_PASSWORDS;
+			} else {
+				conn->options->flags &= ~CLIENT_CAN_HANDLE_EXPIRED_PASSWORDS;
+			}
+			break;
 #ifdef WHEN_SUPPORTED_BY_MYSQLI
 		case MYSQL_SHARED_MEMORY_BASE_NAME:
 		case MYSQL_OPT_USE_RESULT:
