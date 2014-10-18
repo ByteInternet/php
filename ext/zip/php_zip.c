@@ -2,7 +2,7 @@
   +----------------------------------------------------------------------+
   | PHP Version 5                                                        |
   +----------------------------------------------------------------------+
-  | Copyright (c) 1997-2012 The PHP Group                                |
+  | Copyright (c) 1997-2014 The PHP Group                                |
   +----------------------------------------------------------------------+
   | This source file is subject to version 3.01 of the PHP license,      |
   | that is bundled with this package in the file LICENSE, and is        |
@@ -28,6 +28,7 @@
 #include "ext/standard/file.h"
 #include "ext/standard/php_string.h"
 #include "ext/pcre/php_pcre.h"
+#include "ext/standard/php_filestat.h"
 #include "php_zip.h"
 #include "lib/zip.h"
 #include "lib/zipint.h"
@@ -101,12 +102,12 @@ static char * php_zip_make_relative_path(char *path, int path_len) /* {{{ */
 	char *path_begin = path;
 	size_t i;
 
-	if (IS_SLASH(path[0])) {
-		return path + 1;
-	}
-
 	if (path_len < 1 || path == NULL) {
 		return NULL;
+	}
+
+	if (IS_SLASH(path[0])) {
+		return path + 1;
 	}
 
 	i = path_len;
@@ -300,6 +301,7 @@ static int php_zip_add_file(struct zip *za, const char *filename, size_t filenam
 	struct zip_source *zs;
 	int cur_idx;
 	char resolved_path[MAXPATHLEN];
+	zval exists_flag;
 
 
 	if (ZIP_OPENBASEDIR_CHECKPATH(filename)) {
@@ -307,6 +309,11 @@ static int php_zip_add_file(struct zip *za, const char *filename, size_t filenam
 	}
 
 	if (!expand_filepath(filename, resolved_path TSRMLS_CC)) {
+		return -1;
+	}
+
+	php_stat(resolved_path, strlen(resolved_path), FS_EXISTS, &exists_flag TSRMLS_CC);
+	if (!Z_BVAL(exists_flag)) {
 		return -1;
 	}
 
@@ -1152,7 +1159,13 @@ static void php_zip_free_entry(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 
 	if (zr_rsrc) {
 		if (zr_rsrc->zf) {
-			zip_fclose(zr_rsrc->zf);
+			if (zr_rsrc->zf->za) {
+				zip_fclose(zr_rsrc->zf);
+			} else {
+				if (zr_rsrc->zf->src)
+					zip_source_free(zr_rsrc->zf->src);
+				free(zr_rsrc->zf);
+			}
 			zr_rsrc->zf = NULL;
 		}
 		efree(zr_rsrc);
@@ -1321,9 +1334,8 @@ static PHP_NAMED_FUNCTION(zif_zip_entry_open)
 }
 /* }}} */
 
-/* {{{ proto void zip_entry_close(resource zip_ent)
+/* {{{ proto bool zip_entry_close(resource zip_ent)
    Close a zip entry */
-/* another dummy function to fit in the old api*/
 static PHP_NAMED_FUNCTION(zif_zip_entry_close)
 {
 	zval * zip_entry;
@@ -1334,8 +1346,8 @@ static PHP_NAMED_FUNCTION(zif_zip_entry_close)
 	}
 
 	ZEND_FETCH_RESOURCE(zr_rsrc, zip_read_rsrc *, &zip_entry, -1, le_zip_entry_name, le_zip_entry);
-	/*  we got a zip_entry resource, be happy */
-	RETURN_TRUE;
+
+	RETURN_BOOL(SUCCESS == zend_list_delete(Z_LVAL_P(zip_entry)));
 }
 /* }}} */
 
@@ -1525,7 +1537,7 @@ static ZIPARCHIVE_METHOD(open)
 		RETURN_LONG((long)err);
 	}
 	ze_obj->filename = estrdup(resolved_path);
-	ze_obj->filename_len = filename_len;
+	ze_obj->filename_len = strlen(resolved_path);
 	ze_obj->za = intern;
 	RETURN_TRUE;
 }
@@ -1642,7 +1654,7 @@ static void php_zip_add_from_pattern(INTERNAL_FUNCTION_PARAMETERS, int type) /* 
 	char *path = NULL;
 	char *remove_path = NULL;
 	char *add_path = NULL;
-	int pattern_len, add_path_len, remove_path_len, path_len = 0;
+	int pattern_len, add_path_len = 0, remove_path_len = 0, path_len = 0;
 	long remove_all_path = 0;
 	long flags = 0;
 	zval *options = NULL;
@@ -1844,15 +1856,16 @@ static ZIPARCHIVE_METHOD(addFromString)
 	/* TODO: fix  _zip_replace */
 	if (cur_idx >= 0) {
 		if (zip_delete(intern, cur_idx) == -1) {
-			RETURN_FALSE;
+			goto fail;
 		}
 	}
 
-	if (zip_add(intern, name, zs) == -1) {
-		RETURN_FALSE;
-	} else {
+	if (zip_add(intern, name, zs) != -1) {
 		RETURN_TRUE;
 	}
+fail:
+	zip_source_free(zs);
+	RETURN_FALSE;	
 }
 /* }}} */
 
@@ -2863,7 +2876,7 @@ static PHP_MINFO_FUNCTION(zip)
 	php_info_print_table_row(2, "Zip", "enabled");
 	php_info_print_table_row(2, "Extension Version","$Id$");
 	php_info_print_table_row(2, "Zip version", PHP_ZIP_VERSION_STRING);
-	php_info_print_table_row(2, "Libzip version", "0.9.0");
+	php_info_print_table_row(2, "Libzip version", LIBZIP_VERSION);
 
 	php_info_print_table_end();
 }
