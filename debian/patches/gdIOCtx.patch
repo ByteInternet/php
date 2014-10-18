@@ -57,7 +57,7 @@
  			return;
  		}
  	}
-@@ -117,21 +89,19 @@ static void _php_image_output_ctx(INTERN
+@@ -117,26 +89,19 @@ static void _php_image_output_ctx(INTERN
  		}
  	}
  
@@ -68,6 +68,11 @@
 -				RETURN_FALSE;
 -			}
 -		} else if (Z_TYPE_P(to_zval) == IS_STRING) {
+-			if (CHECK_ZVAL_NULL_PATH(to_zval)) {
+-				php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid 2nd parameter, filename must not contain null bytes");
+-				RETURN_FALSE;
+-			}
+-
 -			stream = php_stream_open_wrapper(Z_STRVAL_P(to_zval), "wb", REPORT_ERRORS|IGNORE_PATH|IGNORE_URL_WIN, NULL);
 -			if (stream == NULL) {
 -				RETURN_FALSE;
@@ -76,21 +81,21 @@
 -			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid 2nd parameter, it must a filename or a stream");
 +	if (argc > 1 && file_len) {
 +		if (strlen(file) != file_len) {
-+			RETURN_FALSE;
-+		}
+ 			RETURN_FALSE;
+ 		}
 +		PHP_GD_CHECK_OPEN_BASEDIR(file, "Invalid filename");
 +
 +		fp = VCWD_FOPEN(file, "wb");
 +		if (!fp) {
 +			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unable to open '%s' for writing: %s", file, strerror(errno));
- 			RETURN_FALSE;
- 		}
++ 			RETURN_FALSE;
++ 		}
 +
 +		ctx = gdNewFileCtx(fp);
  	} else {
  		ctx = emalloc(sizeof(gdIOCtx));
  		ctx->putC = _php_image_output_putc;
-@@ -145,14 +115,6 @@ static void _php_image_output_ctx(INTERN
+@@ -150,14 +115,6 @@ static void _php_image_output_ctx(INTERN
  #endif
  	}
  
@@ -105,7 +110,7 @@
  	switch(image_type) {
  		case PHP_GDIMG_CONVERT_WBM:
  			if(q<0||q>255) {
-@@ -189,11 +151,12 @@ static void _php_image_output_ctx(INTERN
+@@ -194,11 +151,12 @@ static void _php_image_output_ctx(INTERN
  			break;
  	}
  

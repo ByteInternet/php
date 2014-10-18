@@ -11,7 +11,7 @@
  
 --- php5.orig/ext/interbase/interbase.c
 +++ php5/ext/interbase/interbase.c
-@@ -24,7 +24,6 @@
+@@ -22,7 +22,6 @@
  #include "config.h"
  #endif
  
@@ -21,7 +21,7 @@
  
 --- php5.orig/ext/pdo_firebird/firebird_driver.c
 +++ php5/ext/pdo_firebird/firebird_driver.c
-@@ -22,7 +22,6 @@
+@@ -20,7 +20,6 @@
  #include "config.h"
  #endif
  
@@ -94,12 +94,12 @@
  #include "php_network.h"
 --- php5.orig/Zend/zend_language_parser.c
 +++ php5/Zend/zend_language_parser.c
-@@ -67,6 +67,8 @@
- #define yydebug zenddebug
- #define yynerrs zendnerrs
+@@ -70,6 +70,8 @@
+ 
+ /* Copy the first part of user declarations.  */
  
 +#include <string.h>
 +
  
- /* Tokens.  */
- #ifndef YYTOKENTYPE
+ /*
+    +----------------------------------------------------------------------+
