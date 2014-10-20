@@ -1,4 +1,4 @@
-php5 (5.4.34-0+deb7u1) wheezy-security; urgency=medium
+php5 (5.4.34-0+deb7u1) wheezy-security; urgency=high
 
   * Remove obsolete patches that has been merged upstream
   * Update gbp.conf to not clash with other branches
