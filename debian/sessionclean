@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # first find all used files and touch them (hope it's not massive amount of files)
-[ -x /usr/bin/lsof ] && /usr/bin/lsof -w -l +d "${1}" -Fn | grep -E "^n" | cut -b 2- | xargs -i touch -c -h {}
+[ -x /usr/bin/lsof ] && /usr/bin/lsof -w -l +d "${1}" -F0 | sed -zne "s/^n//p" | xargs -0i echo touch -c -h "'{}'"
 
 # find all files older then maxlifetime
 find "${1}" -depth -mindepth 1 -maxdepth 1 -ignore_readdir_race -type f -cmin "+${2}" -delete
