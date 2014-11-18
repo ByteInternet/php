@@ -1,3 +1,27 @@
+php5 (5.4.35-0+deb7u1) wheezy-security; urgency=high
+
+  [ Ondřej Surý ]
+  * New upstream version 5.4.35
+   + Core:
+    - Fixed bug #68365 (zend_mm_heap corrupted after memory overflow in
+      zend_hash_copy).
+   + Fileinfo:
+    - Fixed bug #68283 (fileinfo: out-of-bounds read in elf note
+      headers). (CVE-2014-3710)
+   + GMP:
+    - Fixed bug #63595 (GMP memory management conflicts with other
+      libraries using GMP).
+   + PDO_pgsql:
+    - Fixed bug #66584 (Segmentation fault on statement deallocation).
+  * Fix SQL_DESC_OCTET_LENGTH not supported by ADS ODBC driver (PHP#68350)
+    (Closes: #768309)
+  * Fix ODBC not reading columns other than SQL_*CHAR correctly
+    (PHP#68087) (Closes: #769127)
+  * Improve resiliency against symlink attacks by spliting the file names
+    with NULL character in the sessionclean script (Closes: #766147)
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 18 Nov 2014 06:34:02 +0100
+
 php5 (5.4.34-0+deb7u1) wheezy-security; urgency=high
 
   * Remove obsolete patches that has been merged upstream
