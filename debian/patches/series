@@ -60,3 +60,4 @@ expose_all_built_and_installed_apis.patch
 gdIOCtx.patch
 odbc-column-field-type.patch
 ads_odbc_exec.patch
+add-missing-pear-nozlib.patch
