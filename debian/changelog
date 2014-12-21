@@ -2,8 +2,9 @@ php5 (5.4.36-0+deb7u1) wheezy-security; urgency=high
 
   * New upstream version 5.4.36
   * Update patches for 5.4.36 release
+  * Download missing install-pear-nozlib.phar and add it as a quilt patch
 
- -- Ondřej Surý <ondrej@debian.org>  Sun, 21 Dec 2014 20:23:52 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 21 Dec 2014 20:51:11 +0100
 
 php5 (5.4.35-0+deb7u2) wheezy-security; urgency=high
 
