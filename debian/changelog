@@ -3,6 +3,8 @@ php5 (5.4.36-0+deb7u1) wheezy-security; urgency=high
   * New upstream version 5.4.36
   * Update patches for 5.4.36 release
   * Download missing install-pear-nozlib.phar and add it as a quilt patch
+  * Remove extra INI file patch that added duplicate lines
+  * Fix lo_export to check for invalid return value (Closes: #773182)
 
  -- Ondřej Surý <ondrej@debian.org>  Sun, 21 Dec 2014 20:51:11 +0100
 
