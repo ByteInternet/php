@@ -1,11 +1,20 @@
 php5 (5.4.36-0+deb7u1) wheezy-security; urgency=high
 
   * New upstream version 5.4.36
+   + Core:
+    - Upgraded crypt_blowfish to version 1.3.
+    - Fixed bug #68545 (NULL pointer dereference in unserialize.c).
+    - Fixed bug #68594 (Use after free vulnerability in
+      unserialize()). (CVE-2014-8142)
+   + Mcrypt:
+    - Fixed possible read after end of buffer and use after free.
   * Update patches for 5.4.36 release
   * Download missing install-pear-nozlib.phar and add it as a quilt patch
   * Remove extra INI file patch that added duplicate lines
   * Fix lo_export to check for invalid return value (Closes: #773182)
   * Fix out of bounds read that crashes php-cgi
+  * Pull upstream fixes for severe performance issues on pathological
+    input in ext/fileinfo/libmagic/ copy (CVE-2014-8116, CVE-2014-8117)
 
  -- Ondřej Surý <ondrej@debian.org>  Sun, 21 Dec 2014 20:51:11 +0100
 
