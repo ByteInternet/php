@@ -1,1 +1,1 @@
-activate /etc/php5/conf.d
+activate-noawait /etc/php5/conf.d
