@@ -63,3 +63,4 @@ add-missing-pear-nozlib.patch
 check-libpq-lo_export-return-value.patch
 0001-FIx-bug-68618-out-of-bounds-read-crashes-php-cgi.patch
 bug68735.patch
+remove-readelf.c.patch
