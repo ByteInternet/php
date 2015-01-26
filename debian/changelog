@@ -1,3 +1,24 @@
+php5 (5.4.37-0+deb7u1) wheezy-security; urgency=high
+
+  * New upstream version 5.4.37
+    + Core:
+     - Fixed bug #68710 (Use After Free Vulnerability in PHP's
+       unserialize()) (CVE-2015-0231).
+    + CGI:
+     - Fixed bug #68618 (out of bounds read crashes php-cgi)
+       (CVE-2014-9427).
+    + EXIF:
+     - Fixed bug #68799 (Free called on unitialized pointer)
+       (CVE-2015-0232).
+    + Fileinfo:
+     - Removed readelf.c and related code from libmagic sources.
+     - Fixed bug #68735 (fileinfo out-of-bounds memory access).
+    + OpenSSL:
+     - Fixed bug #55618 (use case-insensitive cert name matching).
+  * Remove bugfixes that got merged into 5.4.37 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 26 Jan 2015 11:09:42 +0100
+
 php5 (5.4.36-0+deb7u3) wheezy-security; urgency=medium
 
   * Fix fileinfo out-of-bounds memory access
