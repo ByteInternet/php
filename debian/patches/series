@@ -60,3 +60,4 @@ gdIOCtx.patch
 odbc-column-field-type.patch
 ads_odbc_exec.patch
 check-libpq-lo_export-return-value.patch
+VU695940
