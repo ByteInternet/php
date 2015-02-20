@@ -1,6 +1,20 @@
-php5 (5.4.38-1) wheezy-security; urgency=high
+php5 (5.4.38-0+deb7u1) wheezy-security; urgency=high
 
   * New upstream version 5.4.38
+   - Core:
+    . Removed support for multi-line headers, as the are deprecated by
+      RFC 7230.
+    . Added NULL byte protection to exec, system and passthru.
+    . Fixed bug #68925 (Mitigation for CVE-2015-0235 – GHOST: glibc
+      gethostbyname buffer overflow).
+    . Fixed bug #67827 (broken detection of system crypt sha256/sha512
+      support).
+    . Fixed bug #68942 (Use after free vulnerability in unserialize() with
+      DateTimeZone). (CVE-2015-0273)
+   - Enchant: 
+    . Fixed bug #6855 (heap buffer overflow in enchant_broker_request_dict()).
+   - SOAP:
+    . Fixed bug #67427 (SoapServer cannot handle large messages)
   * Update patches for 5.4.38 release
   * Pull patch from DragonFly BSD Project to limit the pattern space to
     avoid a 32-bit overflow in Henry Spencer regular expressions (regex)
