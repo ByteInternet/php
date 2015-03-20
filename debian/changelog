@@ -18,6 +18,8 @@ php5 (5.4.39-0+deb7u1) wheezy-security; urgency=high
       boundary) (CVE-2015-2331). (Closes: #780713)
   * Refresh patches for 5.4.39 and remove already merged VU695940
   * Start using git pq to manage patches in d/patches/
+  * Move PEAR-Builder-print-info-about-php5-dev.patch to debian/ since
+    it's not a quilt patch
   * Add newly assigned CVE identifiers to older d/changelog entries
   * New patches:
     - 0060-PHP-SegFault-zend_hash_find-PHP-68486.patch
