@@ -1,3 +1,34 @@
+php5 (5.4.39-0+deb7u1) wheezy-security; urgency=high
+
+  * New upstream version 5.4.39
+   - Core:
+    . Fixed bug #68976 (Use After Free Vulnerability in unserialize())
+      (CVE-2015-0231).
+    . Fixed bug #69134 (Per Directory Values overrides PHP_INI_SYSTEM
+      configuration options).
+    . Fixed bug #69207 (move_uploaded_file allows nulls in path).
+   - Ereg:
+    . Fixed bug #69248 (heap overflow vulnerability in regcomp.c)
+      (CVE-2015-2305).
+   - SOAP:
+    . Fixed bug #69085 (SoapClient's __call() type confusion through
+      unserialize()).
+   - ZIP:
+    . Fixed bug #69253 (ZIP Integer Overflow leads to writing past heap
+      boundary) (CVE-2015-2331). (Closes: #780713)
+  * Refresh patches for 5.4.39 and remove already merged VU695940
+  * Start using git pq to manage patches in d/patches/
+  * Add newly assigned CVE identifiers to older d/changelog entries
+  * New patches:
+    - 0060-PHP-SegFault-zend_hash_find-PHP-68486.patch
+    - 0061-Fix-use-after-free-in-phar_object.c-PHP-68901-CVE-20.patch
+      (CVE-2015-2301)
+  * Remove invalid curl patch that got pulled as part of CVE-2015-1352
+    (Closes: #780771, #780764)
+  * Split upstream fixes for PHP#68740 and PHP#68741 into separate patches
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 20 Mar 2015 12:41:48 +0100
+
 php5 (5.4.38-0+deb7u1) wheezy-security; urgency=high
 
   * New upstream version 5.4.38
