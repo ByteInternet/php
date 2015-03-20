@@ -60,5 +60,4 @@ gdIOCtx.patch
 odbc-column-field-type.patch
 ads_odbc_exec.patch
 check-libpq-lo_export-return-value.patch
-VU695940
 CVE-2015-1352.patch
