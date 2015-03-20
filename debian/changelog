@@ -21,6 +21,7 @@ php5 (5.4.38-0+deb7u1) wheezy-security; urgency=high
     library (Closes: #778389)
   * Drop PHP use system libs crypt patch, it has been broken and it's not
     strictly needed
+  * Fix NULL Pointer Deference in pgsql (CVE-2015-1352) (Closes: #777036)
 
  -- Ondřej Surý <ondrej@debian.org>  Fri, 20 Feb 2015 11:41:40 +0100
 
@@ -38,7 +39,8 @@ php5 (5.4.37-0+deb7u1) wheezy-security; urgency=high
        (CVE-2015-0232).
     + Fileinfo:
      - Removed readelf.c and related code from libmagic sources.
-     - Fixed bug #68735 (fileinfo out-of-bounds memory access).
+     - Fixed bug #68735 (fileinfo out-of-bounds memory access)
+       (CVE-2014-9652).
     + OpenSSL:
      - Fixed bug #55618 (use case-insensitive cert name matching).
   * Remove bugfixes that got merged into 5.4.37 release
@@ -255,7 +257,7 @@ php5 (5.4.4-14+deb7u9) stable; urgency=low
 
 php5 (5.4.4-14+deb7u8) wheezy-security; urgency=low
 
-  * [CVE-2014-1943]: Fix segmentation fault in libmagic (Closes: #739012)
+  * [CVE-2014-1943, CVE-2014-8117]: Fix segmentation fault in libmagic (Closes: #739012)
 
  -- Ondřej Surý <ondrej@debian.org>  Mon, 17 Feb 2014 10:07:18 +0100
 
