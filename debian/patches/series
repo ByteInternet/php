@@ -60,3 +60,4 @@
 0060-PHP-SegFault-zend_hash_find-PHP-68486.patch
 0061-Fix-use-after-free-in-phar_object.c-PHP-68901-CVE-20.patch
 0062-Fixed-bug-68740-Null-pointer-deference-in-ext-ereg-r.patch
+0063-Bug-69293-NEW-segfault-when-using-SoapClient-__setSo.patch
