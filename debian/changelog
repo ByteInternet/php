@@ -1,3 +1,9 @@
+php5 (5.4.39-0+deb7u2) wheezy-security; urgency=medium
+
+  * Fix segfault when using SoapClient::__setSoapHeader (Closes: #781125)
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 25 Mar 2015 09:23:26 +0100
+
 php5 (5.4.39-0+deb7u1) wheezy-security; urgency=high
 
   * New upstream version 5.4.39
