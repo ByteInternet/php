@@ -6,7 +6,7 @@
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6	
 # Short-Description: starts php5-fpm
-# Description:       Starts The PHP FastCGI Process Manager Daemon
+# Description:       Starts PHP5 FastCGI Process Manager Daemon
 ### END INIT INFO
 
 # Author: Ondrej Sury <ondrej@debian.org>
@@ -15,9 +15,8 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="PHP5 FastCGI Process Manager"
 NAME=php5-fpm
 DAEMON=/usr/sbin/$NAME
-DAEMON_ARGS="--daemonize --fpm-config /etc/php5/fpm/php-fpm.conf"
-CONF_PIDFILE=$(sed -n 's/^pid[ =]*//p' /etc/php5/fpm/php-fpm.conf)
-PIDFILE=${CONF_PIDFILE:-/run/php5-fpm.pid}
+DAEMON_ARGS="--fpm-config /etc/php5/fpm/php-fpm.conf"
+PIDFILE=/var/run/php5-fpm.pid
 TIMEOUT=30
 SCRIPTNAME=/etc/init.d/$NAME
 
@@ -34,17 +33,18 @@ SCRIPTNAME=/etc/init.d/$NAME
 # Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
 . /lib/lsb/init-functions
 
-# Don't run if we are running upstart
-if init_is_upstart; then
-    exit 1
-fi
-
 #
 # Function to check the correctness of the config file
 #
 do_check()
 {
-    /usr/lib/php5/php5-fpm-checkconf || return 1
+    [ "$1" != "no" ] && $DAEMON $DAEMON_ARGS -t 2>&1 | grep -wv "ERROR"
+
+    if ! $DAEMON $DAEMON_ARGS -t 2>&1 >/dev/null; then
+		echo "Please fix your configuration file..."
+		$DAEMON $DAEMON_ARGS -t 2>&1 | grep -w "ERROR"
+		return 1
+	fi
     return 0
 }
 
@@ -136,9 +136,22 @@ case "$1" in
         do_check yes
 	;;
     reload|force-reload)
-	log_daemon_msg "Reloading $DESC" "$NAME"
-	do_reload
-	log_end_msg $?
+		if status_of_proc "$DAEMON" "$NAME" >/dev/null; then
+			if do_check no; then
+				log_daemon_msg "Reloading $DESC" "$NAME"
+				do_reload
+				log_end_msg $?
+				exit 0
+			else
+				log_daemon_msg "Reloading "$DESC" skipped" "$NAME"
+				log_end_msg 1
+				exit 1
+			fi
+		else
+			log_daemon_msg "$DESC not running, skipping reload" "$NAME"
+			log_end_msg 1
+			exit 1
+		fi
 	;;
     reopen-logs)
 	log_daemon_msg "Reopening $DESC logs" $NAME
