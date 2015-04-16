@@ -1,3 +1,10 @@
+php5 (5.6.7+dfsg-1.1) sid; urgency=medium
+
+  * Team upload.
+  * Fixed #759698: FPM configuration is now tested before reloading
+
+ -- Murukesh Mohanan <murukesh@cse.iitb.ac.in>  Fri, 17 Apr 2015 01:03:07 +0530
+
 php5 (5.6.7+dfsg-1) unstable; urgency=medium
 
   * New upstream version 5.6.7+dfsg
