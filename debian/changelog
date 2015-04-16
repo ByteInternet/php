@@ -1,3 +1,10 @@
+php5 (5.4.39-0+deb7u2.1) wheezy; urgency=medium
+
+  * Team upload.
+  * Fixes #759698 - FPM configuration is now tested before reloading
+
+ -- Murukesh Mohanan <murukesh@cse.iitb.ac.in>  Thu, 16 Apr 2015 16:28:18 +0530
+
 php5 (5.4.39-0+deb7u2) wheezy-security; urgency=medium
 
   * Fix segfault when using SoapClient::__setSoapHeader (Closes: #781125)

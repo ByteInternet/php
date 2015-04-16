@@ -137,9 +137,19 @@ case "$1" in
         do_check yes
 	;;
     reload|force-reload)
-	log_daemon_msg "Reloading $DESC" "$NAME"
-	do_reload
-	log_end_msg $?
+		if status_of_proc "$DAEMON" "$NAME" >/dev/null; then
+			if do_check no; then
+				log_daemon_msg "Config test failed, skipping reload" "$NAME"
+				log_end_msg 1
+			else
+				log_daemon_msg "Reloading $DESC" "$NAME"
+				do_reload
+				log_end_msg $?
+			fi
+		else
+			log_daemon_msg "$DESC not running, skipping reload" "$NAME"
+			log_end_msg 1
+		fi
 	;;
     reopen-logs)
 	log_daemon_msg "Reopening $DESC logs" $NAME
