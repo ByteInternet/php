@@ -38,14 +38,13 @@ SCRIPTNAME=/etc/init.d/$NAME
 #
 do_check()
 {
-    [ "$1" != "no" ] && $DAEMON $DAEMON_ARGS -t 2>&1 | grep -v "\[ERROR\]"
-    FPM_ERROR=$($DAEMON $DAEMON_ARGS -t 2>&1 | grep "\[ERROR\]")
+    [ "$1" != "no" ] && $DAEMON $DAEMON_ARGS -t 2>&1 | grep -wv "ERROR"
 
-    if [ -n "${FPM_ERROR}" ]; then
-	echo "Please fix your configuration file..."
-	$DAEMON $DAEMON_ARGS -t 2>&1 | grep "\[ERROR\]"
-	return 1
-    fi
+    if ! $DAEMON $DAEMON_ARGS -t 2>&1 >/dev/null; then
+		echo "Please fix your configuration file..."
+		$DAEMON $DAEMON_ARGS -t 2>&1 | grep -w "ERROR"
+		return 1
+	fi
     return 0
 }
 
@@ -139,16 +138,19 @@ case "$1" in
     reload|force-reload)
 		if status_of_proc "$DAEMON" "$NAME" >/dev/null; then
 			if do_check no; then
-				log_daemon_msg "Config test failed, skipping reload" "$NAME"
-				log_end_msg 1
-			else
 				log_daemon_msg "Reloading $DESC" "$NAME"
 				do_reload
 				log_end_msg $?
+				exit 0
+			else
+				log_daemon_msg "Reloading "$DESC" skipped" "$NAME"
+				log_end_msg 1
+				exit 1
 			fi
 		else
 			log_daemon_msg "$DESC not running, skipping reload" "$NAME"
 			log_end_msg 1
+			exit 1
 		fi
 	;;
     reopen-logs)
