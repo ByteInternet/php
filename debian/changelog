@@ -1,5 +1,6 @@
-php5 (5.6.9+dfsg-1) unstable; urgency=medium
+php5 (5.6.9+dfsg-0+deb7u1) jessie-security; urgency=medium
 
+  * Update gbp.conf for jessie branch
   * New upstream version 5.6.9+dfsg
    - Core:
     . Fixed bug #69467 (Wrong checked for the interface by using Trait). 
@@ -34,11 +35,6 @@ php5 (5.6.9+dfsg-1) unstable; urgency=medium
     . Fixed bug #69453 (Memory Corruption in phar_parse_tarfile when entry
       filename starts with null).
   * Rebased patches on top of 5.6.9+dfsg version
-
- -- Ondřej Surý <ondrej@debian.org>  Fri, 22 May 2015 09:35:03 +0200
-
-php5 (5.6.8+dfsg-1) unstable; urgency=medium
-
   * New upstream version 5.6.8+dfsg
    - Core:
      . Fixed bug #66609 (php crashes with __get() and ++ operator in some cases).
