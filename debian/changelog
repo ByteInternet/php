@@ -1,4 +1,4 @@
-php5 (5.6.9+dfsg-0+deb7u1) jessie-security; urgency=medium
+php5 (5.6.9+dfsg-0+deb8u1) jessie-security; urgency=medium
 
   * Update gbp.conf for jessie branch
   * New upstream version 5.6.9+dfsg
