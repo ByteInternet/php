@@ -3017,7 +3017,7 @@ void php_date_do_return_parsed_time(INTERNAL_FUNCTION_PARAMETERS, timelib_time *
 			add_assoc_long(element, "weekdays", parsed_time->relative.special.amount);
 		}
 		if (parsed_time->relative.first_last_day_of) {
-			add_assoc_bool(element, parsed_time->relative.first_last_day_of == 1 ? "first_day_of_month" : "last_day_of_month", 1);
+			add_assoc_bool(element, parsed_time->relative.first_last_day_of == TIMELIB_SPECIAL_FIRST_DAY_OF_MONTH ? "first_day_of_month" : "last_day_of_month", 1);
 		}
 		add_assoc_zval(return_value, "relative", element);
 	}
@@ -3926,7 +3926,7 @@ PHP_FUNCTION(timezone_transitions_get)
 		add_assoc_string(element, "abbr", &tzobj->tzi.tz->timezone_abbr[tzobj->tzi.tz->type[tzobj->tzi.tz->trans_idx[i]].abbr_idx], 1); \
 		add_next_index_zval(return_value, element);
 
-#define add_last() add(tzobj->tzi.tz->timecnt - 1, timestamp_begin)
+#define add_last() add(tzobj->tzi.tz->bit32.timecnt - 1, timestamp_begin)
 
 	array_init(return_value);
 
@@ -3937,7 +3937,7 @@ PHP_FUNCTION(timezone_transitions_get)
 	} else {
 		begin = 0;
 		found = 0;
-		if (tzobj->tzi.tz->timecnt > 0) {
+		if (tzobj->tzi.tz->bit32.timecnt > 0) {
 			do {
 				if (tzobj->tzi.tz->trans[begin] > timestamp_begin) {
 					if (begin > 0) {
@@ -3949,18 +3949,18 @@ PHP_FUNCTION(timezone_transitions_get)
 					break;
 				}
 				begin++;
-			} while (begin < tzobj->tzi.tz->timecnt);
+			} while (begin < tzobj->tzi.tz->bit32.timecnt);
 		}
 	}
 
 	if (!found) {
-		if (tzobj->tzi.tz->timecnt > 0) {
+		if (tzobj->tzi.tz->bit32.timecnt > 0) {
 			add_last();
 		} else {
 			add_nominal();
 		}
 	} else {
-		for (i = begin; i < tzobj->tzi.tz->timecnt; ++i) {
+		for (i = begin; i < tzobj->tzi.tz->bit32.timecnt; ++i) {
 			if (tzobj->tzi.tz->trans[i] < timestamp_end) {
 				add(i, tzobj->tzi.tz->trans[i]);
 			}
