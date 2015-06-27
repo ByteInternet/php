@@ -1,0 +1,3 @@
+mod apache2filter-build/.libs/libphp5.6filter.so
+mod debian/php5.6filter.load
+mod debian/php5.6filter.conf

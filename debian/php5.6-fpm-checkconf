@@ -1,0 +1,8 @@
+#!/bin/sh
+[ "$1" != "no" ] && /usr/sbin/php5.6-fpm --fpm-config /etc/php/5.6/fpm/php-fpm.conf -t 2>&1 | grep -wv "ERROR"
+if ! errors=$(/usr/sbin/php5.6-fpm --fpm-config /etc/php/5.6/fpm/php-fpm.conf -t 2>&1); then
+    echo "Please fix your configuration file..."
+    printf "%s\n" "$errors" | grep ERROR
+    exit 1
+fi
+exit 0

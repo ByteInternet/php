@@ -1,0 +1,5 @@
+/etc/php/5.6/fpm
+/etc/php/5.6/fpm/conf.d
+/etc/php/5.6/fpm/pool.d
+/usr/sbin
+/usr/lib/php5.6
