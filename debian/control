@@ -76,9 +76,9 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-php/php.git
 Homepage: http://www.php.net/
 XS-Testsuite: autopkgtest
 
-Package: php5
+Package: php5.6
 Architecture: all
-Depends: ${misc:Depends}, libapache2-mod-php5 (>= ${source:Version}~) | libapache2-mod-php5filter (>= ${source:Version}~) | php5-cgi (>= ${source:Version}~) | php5-fpm (>= ${source:Version}~), php5-common (>= ${source:Version}~)
+Depends: ${misc:Depends}, libapache2-mod-php5 (>= ${source:Version}~) | libapache2-mod-php5filter (>= ${source:Version}~) | php5-cgi (>= ${source:Version}~) | php5-fpm (>= ${source:Version}~), php5.6-common (>= ${source:Version}~)
 Description: server-side, HTML-embedded scripting language (metapackage)
  This package is a metapackage that, when installed, guarantees that you
  have at least one of the four server-side versions of the PHP5 interpreter
@@ -89,7 +89,7 @@ Description: server-side, HTML-embedded scripting language (metapackage)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-common
+Package: php5.6-common
 Architecture: any
 Depends: ${misc:Depends},
 	 ${shlibs:Depends},
@@ -97,7 +97,7 @@ Depends: ${misc:Depends},
 	 psmisc (>= 22.15-1~),
 	 lsof [!kfreebsd-any !hurd-any],
 	 ucf
-Provides: php5-mhash, ${php:Provides}
+Provides: php5.6-mhash, ${php:Provides}
 Conflicts: php5-mhash
 Suggests: php5-user-cache
 Breaks: php5-xdebug (<< 2.2.2),
@@ -114,21 +114,21 @@ Description: Common files for packages built from the php5 source
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: libapache2-mod-php5
+Package: libapache2-mod-php5.6
 Section: httpd
 Architecture: any
 Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 apache2 (>= 2.4),
 	 mime-support,
-	 php5-common (= ${binary:Version}),
+	 php5.6-common (= ${binary:Version}),
 	 php5-cli,
 	 php5-json,
 	 libmagic1,
 	 ucf,
 	 tzdata
 Conflicts: libapache2-mod-php4,
-	   libapache2-mod-php5filter
+	   libapache2-mod-php5.6filter
 Provides: ${php:Provides}
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (Apache 2 module)
@@ -142,7 +142,7 @@ Description: server-side, HTML-embedded scripting language (Apache 2 module)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: libapache2-mod-php5filter
+Package: libapache2-mod-php5.6filter
 Section: httpd
 Priority: extra
 Architecture: any
@@ -150,13 +150,13 @@ Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 apache2 (>= 2.4),
 	 mime-support,
-	 php5-common (= ${binary:Version}),
+	 php5.6-common (= ${binary:Version}),
 	 php5-cli,
 	 php5-json,
 	 libmagic1,
 	 ucf,
 	 tzdata
-Conflicts: libapache2-mod-php4, libapache2-mod-php5
+Conflicts: libapache2-mod-php4, libapache2-mod-php5.6
 Provides: ${php:Provides}
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (apache 2 filter module)
@@ -173,12 +173,12 @@ Description: server-side, HTML-embedded scripting language (apache 2 filter modu
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-cgi
+Package: php5.6-cgi
 Architecture: any
 Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
-	 php5-common (= ${binary:Version}),
+	 php5.6-common (= ${binary:Version}),
 	 php5-cli,
 	 php5-json,
 	libmagic1,
@@ -198,19 +198,19 @@ Description: server-side, HTML-embedded scripting language (CGI binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-cli
+Package: php5.6-cli
 Architecture: any
 Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
-	 php5-common (= ${binary:Version}),
+	 php5.6-common (= ${binary:Version}),
 	 php5-json,
 	 libmagic1,
 	 ucf,
 	 tzdata,
 	 libedit2 (>= 2.11-20080614-4)
 Provides: ${php:Provides}
-Recommends: php5-readline
+Recommends: php5.6-readline
 Suggests: php-pear
 Description: command-line interpreter for the php5 scripting language
  This package provides the /usr/bin/php5 command interpreter, useful for
@@ -222,18 +222,18 @@ Description: command-line interpreter for the php5 scripting language
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-phpdbg
+Package: php5.6-phpdbg
 Architecture: any
 Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
-	 php5-common (= ${binary:Version}),
+	 php5.6-common (= ${binary:Version}),
 	 php5-json,
 	 libmagic1,
 	 ucf,
 	 tzdata
 Provides: ${php:Provides}
-Recommends: php5-readline
+Recommends: php5.6-readline
 Description: server-side, HTML-embedded scripting language (PHPDBG binary)
  This package provides the /usr/bin/phpdbg command interpreter, useful for
  stepthrough debugging of PHP code.
@@ -244,12 +244,12 @@ Description: server-side, HTML-embedded scripting language (PHPDBG binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-fpm
+Package: php5.6-fpm
 Architecture: any
 Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
-	 php5-common (= ${binary:Version}),
+	 php5.6-common (= ${binary:Version}),
 	 php5-cli,
 	 php5-json,
 	 libmagic1,
@@ -269,12 +269,12 @@ Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: libphp5-embed
+Package: libphp5.6-embed
 Architecture: any
 Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
-	 php5-common (= ${binary:Version}),
+	 php5.6-common (= ${binary:Version}),
 	 libmagic1,
 	 ucf,
 	 tzdata
@@ -295,7 +295,7 @@ Description: HTML-embedded scripting language (Embedded SAPI library)
  the API/ABI will be kept compatible even between minor releases.  You
  have been warned.
 
-Package: php5-dev
+Package: php5.6-dev
 Depends: ${misc:Depends},
 	 autoconf (>= 2.63),
 	 automake (>= 1.11),
@@ -303,7 +303,7 @@ Depends: ${misc:Depends},
 	 libpcre3-dev,
 	 libtool (>= 2.2),
 	 shtool,
-	 php5-common (>= ${binary:Version}),
+	 php5.6-common (>= ${binary:Version}),
 	 ${perl:Depends}
 Conflicts: ${libtool:Conflicts}
 Architecture: any
@@ -316,8 +316,8 @@ Description: Files for PHP5 module development
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-dbg
-Depends: ${misc:Depends}, php5-common (= ${binary:Version}), libapache2-mod-php5 (= ${binary:Version}) | libapache2-mod-php5filter (= ${binary:Version}) | php5-cgi (= ${binary:Version}) | php5-cli (= ${binary:Version}) | php5-fpm (= ${binary:Version}) | libphp5-embed (= ${binary:Version}) | php5-curl (= ${binary:Version}) | php5-enchant (= ${binary:Version}) | php5-gd (= ${binary:Version}) | php5-gmp (= ${binary:Version}) | php5-imap (= ${binary:Version}) | php5-interbase (= ${binary:Version}) | php5-intl (= ${binary:Version}) | php5-ldap (= ${binary:Version}) | php5-mcrypt (= ${binary:Version}) | php5-readline (= ${binary:Version}) | php5-mysql (= ${binary:Version}) | php5-mysqlnd (= ${binary:Version}) | php5-odbc (= ${binary:Version}) | php5-pgsql (= ${binary:Version}) | php5-pspell (= ${binary:Version}) | php5-recode (= ${binary:Version}) | php5-snmp (= ${binary:Version}) | php5-sqlite (= ${binary:Version}) | php5-sybase (= ${binary:Version}) | php5-tidy (= ${binary:Version}) | php5-xmlrpc (= ${binary:Version}) | php5-xsl (= ${binary:Version})
+Package: php5.6-dbg
+Depends: ${misc:Depends}, php5.6-common (= ${binary:Version}), libapache2-mod-php5.6 (= ${binary:Version}) | libapache2-mod-php5.6filter (= ${binary:Version}) | php5.6-cgi (= ${binary:Version}) | php5.6-cli (= ${binary:Version}) | php5.6-fpm (= ${binary:Version}) | libphp5.6-embed (= ${binary:Version}) | php5.6-curl (= ${binary:Version}) | php5.6-enchant (= ${binary:Version}) | php5.6-gd (= ${binary:Version}) | php5.6-gmp (= ${binary:Version}) | php5.6-imap (= ${binary:Version}) | php5.6-interbase (= ${binary:Version}) | php5.6-intl (= ${binary:Version}) | php5.6-ldap (= ${binary:Version}) | php5.6-mcrypt (= ${binary:Version}) | php5.6-readline (= ${binary:Version}) | php5.6-mysql (= ${binary:Version}) | php5.6-mysqlnd (= ${binary:Version}) | php5.6-odbc (= ${binary:Version}) | php5.6-pgsql (= ${binary:Version}) | php5.6-pspell (= ${binary:Version}) | php5.6-recode (= ${binary:Version}) | php5.6-snmp (= ${binary:Version}) | php5.6-sqlite (= ${binary:Version}) | php5.6-sybase (= ${binary:Version}) | php5.6-tidy (= ${binary:Version}) | php5.6-xmlrpc (= ${binary:Version}) | php5.6-xsl (= ${binary:Version})
 Recommends: gdb
 Section: debug
 Priority: extra
@@ -332,10 +332,10 @@ Description: Debug symbols for PHP5
 
 Package: php-pear
 Architecture: all
-Depends: ${misc:Depends}, php5-common (>= ${source:Version}~), php5-cli
+Depends: ${misc:Depends}, php5.6-common (>= ${source:Version}~), php5.6-cli
 Recommends: gnupg
 Conflicts: php-xml-util
-Suggests: php5-dev
+Suggests: php5.6-dev
 Replaces: php4-pear (<< 4:4.4.0-0), php-xml-util
 Provides: php-xml-util
 Description: PEAR - PHP Extension and Application Repository
@@ -349,9 +349,9 @@ Description: PEAR - PHP Extension and Application Repository
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-curl
+Package: php5.6-curl
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: CURL module for php5
  CURL is a library for getting files from  FTP, GOPHER, HTTP server.
@@ -360,9 +360,9 @@ Description: CURL module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-enchant
+Package: php5.6-enchant
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: Enchant module for php5
  This package provides a module for the generic spell checking library
@@ -372,9 +372,9 @@ Description: Enchant module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-gd
+Package: php5.6-gd
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: GD module for php5
  This package provides a module for handling graphics directly from PHP
@@ -384,9 +384,9 @@ Description: GD module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-gmp
+Package: php5.6-gmp
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: GMP module for php5
  This package provides a module for arbitrary precision arithmetic via the 
@@ -396,9 +396,9 @@ Description: GMP module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-imap
+Package: php5.6-imap
 Architecture: any
-Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: IMAP module for php5
  This package provides a module for IMAP functions in PHP scripts.
@@ -407,9 +407,9 @@ Description: IMAP module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-interbase
+Package: php5.6-interbase
 Architecture: linux-any kfreebsd-any
-Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: interbase/firebird module for php5
  This package provides a module for interbase/firebird functions in PHP scripts.
@@ -418,9 +418,9 @@ Description: interbase/firebird module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-intl
+Package: php5.6-intl
 Architecture: any
-Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5.6-common (= ${binary:Version}), ucf
 Conflicts: php5-idn
 Replaces: php5-idn
 Provides: php5-idn
@@ -432,9 +432,9 @@ Description: internationalisation module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-ldap
+Package: php5.6-ldap
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: LDAP module for php5
  This package provides a module for LDAP functions in PHP scripts.
@@ -443,9 +443,9 @@ Description: LDAP module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-mcrypt
+Package: php5.6-mcrypt
 Architecture: any
-Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: MCrypt module for php5
  This package provides a module for MCrypt functions in PHP scripts.
@@ -454,9 +454,9 @@ Description: MCrypt module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-readline
+Package: php5.6-readline
 Architecture: any
-Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5-common (= ${binary:Version}), php5-cli (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5.6-common (= ${binary:Version}), php5.6-cli (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: Readline module for php5
  This package provides a module for readline functions (based on libedit)
@@ -466,9 +466,9 @@ Description: Readline module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-mysql
+Package: php5.6-mysql
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Conflicts: php5-mysqli, php5-mysqlnd
 Replaces: php5-mysqli, php5-mysqlnd
 Pre-Depends: ${misc:Pre-Depends}
@@ -483,10 +483,10 @@ Description: MySQL module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-mysqlnd
+Package: php5.6-mysqlnd
 Architecture: any
 Priority: extra
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Conflicts: php5-mysqli, php5-mysql
 Replaces: php5-mysqli, php5-mysql
 Pre-Depends: ${misc:Pre-Depends}
@@ -503,9 +503,9 @@ Description: MySQL module for php5 (Native Driver)
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-odbc
+Package: php5.6-odbc
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: ODBC module for php5
  This package provides a module for database access through ODBC drivers.
@@ -516,9 +516,9 @@ Description: ODBC module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-pgsql
+Package: php5.6-pgsql
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: PostgreSQL module for php5
  This package provides a module for PostgreSQL database connections
@@ -529,9 +529,9 @@ Description: PostgreSQL module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-pspell
+Package: php5.6-pspell
 Architecture: any
-Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: pspell module for php5
  This package provides a module for pspell functions in PHP scripts.
@@ -540,9 +540,9 @@ Description: pspell module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-recode
+Package: php5.6-recode
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: recode module for php5
  This package provides a module for recode - character set recoding.
@@ -551,9 +551,9 @@ Description: recode module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-snmp
+Package: php5.6-snmp
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: SNMP module for php5
  This package provides a module for SNMP functions in PHP scripts.
@@ -562,9 +562,9 @@ Description: SNMP module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-sqlite
+Package: php5.6-sqlite
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Breaks: roundcube-sqlite (<< 0.7.1-2)
 Pre-Depends: ${misc:Pre-Depends}
 Description: SQLite module for php5
@@ -577,9 +577,9 @@ Description: SQLite module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-sybase
+Package: php5.6-sybase
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Provides: php5-mssql
 Pre-Depends: ${misc:Pre-Depends}
 Description: Sybase / MS SQL Server module for php5
@@ -591,9 +591,9 @@ Description: Sybase / MS SQL Server module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-tidy
+Package: php5.6-tidy
 Architecture: any
-Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${php:Depends}, ${misc:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: tidy module for php5
  This package provides a module for tidy functions in PHP scripts.
@@ -607,9 +607,9 @@ Description: tidy module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-xmlrpc
+Package: php5.6-xmlrpc
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: XML-RPC module for php5
  This package provides a module for XML-RPC functions in PHP scripts.
@@ -618,9 +618,9 @@ Description: XML-RPC module for php5
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php5-xsl
+Package: php5.6-xsl
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version}), ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5.6-common (= ${binary:Version}), ucf
 Pre-Depends: ${misc:Pre-Depends}
 Description: XSL module for php5
  This package provides a module for XSL using the libxslt XSL parser.
