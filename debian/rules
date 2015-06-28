@@ -399,7 +399,7 @@ override_dh_auto_clean: unprepared
 		rm -f debian/php$(PHP_NAME_VERSION)-$$package.prerm; \
 		rm -f debian/php$(PHP_NAME_VERSION)-$$package.postrm; \
 	done
-	for sapi in libapache2-mod-php$(PHP_NAME_VERSION) libapache2-mod-php$(PHP_NAME_VERSION) php$(PHP_NAME_VERSION)-cgi php$(PHP_NAME_VERSION)-cli libphp$(PHP_NAME_VERSION)-embed php$(PHP_NAME_VERSION)-fpm; do \
+	for sapi in libapache2-mod-php$(PHP_NAME_VERSION) libapache2-mod-php$(PHP_NAME_VERSION)filter php$(PHP_NAME_VERSION)-cgi php$(PHP_NAME_VERSION)-cli libphp$(PHP_NAME_VERSION)-embed php$(PHP_NAME_VERSION)-fpm; do \
 		for cruft in postrm links; do \
 			rm -f debian/$${sapi}.$${cruft}; \
 		done; \
@@ -576,8 +576,8 @@ endif
 
 	# install common files
 	install -m755 debian/sessionclean debian/php$(PHP_NAME_VERSION)-common/usr/lib/php/$(PHP_NAME_VERSION)
-	install -m755 debian/php5enmod debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)enmod
-	ln -s php5enmod debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)dismod
+	install -m755 debian/php$(PHP_NAME_VERSION)enmod debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)enmod
+	#ln -s php$(PHP_NAME_VERSION) debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)dismod
 	install -m755 debian/php$(PHP_NAME_VERSION)query $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)query
 
 	# remove libtool files
@@ -585,8 +585,8 @@ endif
 	mv $(CURDIR)/debian/libphp$(PHP_NAME_VERSION)-embed/usr/lib/php/$(PHP_NAME_VERSION)/* $(CURDIR)/debian/libphp$(PHP_NAME_VERSION)-embed/usr/lib/
 
 	# install lintian overrides
-	#cp debian/php$(PHP_NAME_VERSION)-common.lintian-overrides $(CURDIR)/debian/php5-common/usr/share/lintian/overrides/php$(PHP_NAME_VERSION)-common
-	#cp debian/php$(PHP_NAME_VERSION)-dev.lintian-overrides $(CURDIR)/debian/php5-dev/usr/share/lintian/overrides/php$(PHP_NAME_VERSION)-dev
+	#cp debian/php$(PHP_NAME_VERSION)-common.lintian-overrides $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/share/lintian/overrides/php$(PHP_NAME_VERSION)-common
+	#cp debian/php$(PHP_NAME_VERSION)-dev.lintian-overrides $(CURDIR)/debian/php$(PHP_NAME_VERSION)-dev/usr/share/lintian/overrides/php$(PHP_NAME_VERSION)-dev
 	#cp debian/php-pear.lintian-overrides $(CURDIR)/debian/php-pear/usr/share/lintian/overrides/php-pear
 
 	# install some generic lintian overrides
