@@ -567,7 +567,7 @@ endif
 
 	# install common files
 	install -m755 debian/sessionclean debian/php$(PHP_NAME_VERSION)-common/usr/lib/php/$(PHP_NAME_VERSION)
-	install -m755 debian/php5enmod debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)enmod
+	install -m755 debian/php$(PHP_NAME_VERSION)enmod debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)enmod
 	#ln -s php5enmod debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)dismod
 	install -m755 debian/php$(PHP_NAME_VERSION)query $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)query
 
@@ -703,7 +703,7 @@ binary-arch: build install
 	                        s/@package@/libphp$(PHP_NAME_VERSION)-$${sapi}/g;" \
 			  < debian/php$(PHP_NAME_VERSION)-sapi.bug.script \
 			  > debian/libphp$(PHP_NAME_VERSION)-$$sapi/usr/share/bug/libphp$(PHP_NAME_VERSION)-$$sapi/script; \
-			chmod 755 debian/libphp5-$$sapi/usr/share/bug/libphp$(PHP_NAME_VERSION)-$$sapi/script; \
+			chmod 755 debian/libphp$(PHP_NAME_VERSION)-$$sapi/usr/share/bug/libphp$(PHP_NAME_VERSION)-$$sapi/script; \
 			cp debian/php$(PHP_NAME_VERSION)-sapi.bug.control debian/libphp$(PHP_NAME_VERSION)-$$sapi/usr/share/bug/libphp$(PHP_NAME_VERSION)-$$sapi/control; \
 		done; \
 	        for sapi in "" "filter"; do \
