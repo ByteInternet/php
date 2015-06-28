@@ -467,6 +467,7 @@ endif
 			main/win95nt.h
 
 	# install PEAR
+	cp -a pear-build/* debian/php-pear/
 
 	# everything under usr/share/php/data except 'PEAR' is b0rken
 	# and actually needs to be fixed
