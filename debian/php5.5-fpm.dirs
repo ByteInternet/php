@@ -1,0 +1,5 @@
+/etc/php/5.5/fpm
+/etc/php/5.5/fpm/conf.d
+/etc/php/5.5/fpm/pool.d
+/usr/sbin
+/usr/lib/php/5.5

@@ -1,0 +1,28 @@
+# The extensions directory must exist, even if empty
+@sapi@: package-contains-empty-directory @extdir@/
+# Not a spelling mistake, just a compilation curiosity
+@sapi@: spelling-error-in-binary * ment meant
+# Not a spelling mistake, tz code for Tahiti
+@sapi@: spelling-error-in-binary * taht that
+libapache2-mod-php5.5: embedded-library usr/lib/apache2/modules/libphp5.5.so: file
+libapache2-mod-php5.5: apache2-module-does-not-ship-load-file libphp5.5
+libapache2-mod-php5.5: non-standard-apache2-module-package-name libapache2-mod-php5.5 != libapache2-libphp5.5
+libapache2-mod-php5.5filter: embedded-library usr/lib/apache2/modules/libphp5.5filter.so: file
+libapache2-mod-php5.5filter: apache2-module-does-not-ship-load-file libphp5.5filter
+libapache2-mod-php5.5filter: non-standard-apache2-module-package-name libapache2-mod-php5.5filter != libapache2-libphp5.5filter
+php5.5-cgi: embedded-library usr/bin/php5.5-cgi: file
+php5.5-cgi: embedded-library usr/lib/cgi-bin/php5.5: file
+php5.5-cli: embedded-library usr/bin/php5.5: file
+php5.5-fpm: embedded-library usr/sbin/php5.5-fpm: file
+libphp5.5-embed: embedded-library usr/lib/libphp5.5.so: file
+libphp5.5-embed: embedded-library usr/lib/php5.5/libphp5.5-*.so: file
+libphp5.5-embed: missing-dependency-on-phpapi
+libphp5.5-embed: package-name-doesnt-match-sonames libphp5.5
+libphp5.5-embed: shlib-without-versioned-soname usr/lib/libphp5.5.so libphp5.5.so
+libapache2-mod-php5.5: embedded-library ./usr/lib/apache2/modules/libphp5.5.so: file
+libapache2-mod-php5.5filter: embedded-library ./usr/lib/apache2/modules/libphp5.5filter.so: file
+php5.5-cgi: embedded-library ./usr/bin/php5.5-cgi: file
+php5.5-cgi: embedded-library ./usr/lib/cgi-bin/php5.5: file
+php5.5-cli: embedded-library ./usr/bin/php5.5: file
+php5.5-fpm: embedded-library ./usr/sbin/php5.5-fpm: file
+libphp5.5-embed: embedded-library ./usr/lib/libphp5.5.so: file

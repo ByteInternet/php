@@ -1,0 +1,10 @@
+/usr/lib/php/5.5
+/usr/share/lintian/overrides
+/usr/share/doc/php5.5-common
+/usr/share/php5.5
+/usr/share/php5.5/sapi
+/etc/php/5.5/mods-available
+/usr/sbin
+/var/lib/php5.5
+/var/lib/php5.5/sessions
+/var/lib/php5.5/modules
