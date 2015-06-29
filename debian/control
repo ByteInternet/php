@@ -126,7 +126,8 @@ Depends: ${shlibs:Depends},
 	 ucf,
 	 tzdata
 Conflicts: libapache2-mod-php4,
-	   libapache2-mod-php5filter
+	   libapache2-mod-php5filter,
+	   libapache2-mod-php5.5filter
 Provides: ${php:Provides}
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (Apache 2 module)
@@ -154,7 +155,7 @@ Depends: ${shlibs:Depends},
 	 libmagic1,
 	 ucf,
 	 tzdata
-Conflicts: libapache2-mod-php4, libapache2-mod-php5
+Conflicts: libapache2-mod-php4, libapache2-mod-php5, libapache2-mod-php5.5
 Provides: ${php:Provides}
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (apache 2 filter module)
@@ -208,7 +209,7 @@ Depends: ${shlibs:Depends},
 	 tzdata,
 	 libedit2 (>= 2.11-20080614-4)
 Provides: ${php:Provides}
-Recommends: php5-readline
+Recommends: php5.5-readline
 Suggests: php-pear
 Description: command-line interpreter for the php5 scripting language
  This package provides the /usr/bin/php5 command interpreter, useful for
