@@ -445,8 +445,8 @@ endif
 	#ln -s ../php$(PHP_NAME_VERSION)-common/script debian/php$(PHP_NAME_VERSION)/usr/share/bug/php$(PHP_NAME_VERSION)/script
 
 	# Install helper shell fragment
-	install -m644 debian/php$(PHP_NAME_VERSION)-helper $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/share/php$(PHP_NAME_VERSION)/
-	install -m644 debian/debhelper/php5-maintscript-helper $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/share/php$(PHP_NAME_VERSION)/
+	#install -m644 debian/php$(PHP_NAME_VERSION)-helper $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/share/php$(PHP_NAME_VERSION)/
+	#install -m644 debian/debhelper/php5-maintscript-helper $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/share/php$(PHP_NAME_VERSION)/
 
 	# install embed SAPI
 	cd embed-build && $(MAKE) install-headers install-build install-sapi install-programs INSTALL_ROOT=$(CURDIR)/debian/libphp$(PHP_NAME_VERSION)-embed
@@ -515,7 +515,7 @@ endif
 	done
 
 	# install CGI
-	cp cgi-build/sapi/cgi/cgi-bin.php5 debian/php$(PHP_NAME_VERSION)-cgi/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
+	cp cgi-build/sapi/cgi/cgi-bin.php$(PHP_NAME_VERSION) debian/php$(PHP_NAME_VERSION)-cgi/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
 	cp cgi-build/sapi/cgi/usr.bin.php$(PHP_NAME_VERSION)-cgi debian/php$(PHP_NAME_VERSION)-cgi/usr/bin/php$(PHP_NAME_VERSION)-cgi
 	cp cli-build/sapi/cli/php.1 debian/php$(PHP_NAME_VERSION)-cgi/usr/share/man/man1/php$(PHP_NAME_VERSION)-cgi.1
 
@@ -539,8 +539,8 @@ endif
             -e's{^;listen\.group{listen.group{;' \
 	    > debian/php$(PHP_NAME_VERSION)-fpm/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d/www.conf
 	# install a helper script for checking PHP FPM configuration
-	install -m 755 debian/php$(PHP_NAME_VERSION)-fpm-checkconf debian/php$(PHP_NAME_VERSION)-fpm/usr/lib/php/$(PHP_NAME_VERSION)
-	install -m 755 debian/php$(PHP_NAME_VERSION)-fpm-reopenlogs debian/php$(PHP_NAME_VERSION)-fpm/usr/lib/php/$(PHP_NAME_VERSION)
+	#install -m 755 debian/php$(PHP_NAME_VERSION)-fpm-checkconf debian/php$(PHP_NAME_VERSION)-fpm/usr/lib/php/$(PHP_NAME_VERSION)
+	#install -m 755 debian/php$(PHP_NAME_VERSION)-fpm-reopenlogs debian/php$(PHP_NAME_VERSION)-fpm/usr/lib/php/$(PHP_NAME_VERSION)
 
 	# move and install -dev files
 	dh_movefiles --sourcedir=debian/libphp$(PHP_NAME_VERSION)-embed
@@ -575,10 +575,10 @@ endif
 	rm $(CURDIR)/debian/php$(PHP_NAME_VERSION)-dev/usr/share/php$(PHP_NAME_VERSION)/skeleton/skeleton.dsp
 
 	# install common files
-	install -m755 debian/sessionclean debian/php$(PHP_NAME_VERSION)-common/usr/lib/php/$(PHP_NAME_VERSION)
-	install -m755 debian/php$(PHP_NAME_VERSION)enmod debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)enmod
+	#install -m755 debian/sessionclean debian/php$(PHP_NAME_VERSION)-common/usr/lib/php/$(PHP_NAME_VERSION)
+	#install -m755 debian/php$(PHP_NAME_VERSION)enmod debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)enmod
 	#ln -s php$(PHP_NAME_VERSION) debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)dismod
-	install -m755 debian/php$(PHP_NAME_VERSION)query $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)query
+	#install -m755 debian/php$(PHP_NAME_VERSION)query $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)query
 
 	# remove libtool files
 	rm -f $(CURDIR)/debian/libphp$(PHP_NAME_VERSION)-embed/usr/lib/php/$(PHP_NAME_VERSION)/libphp5.la
