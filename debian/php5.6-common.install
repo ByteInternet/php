@@ -1,0 +1,5 @@
+debian/php5.6-helper usr/share/php5.6
+debian/debhelper/php5-maintscript-helper usr/share/php5.6
+debian/sessionclean usr/lib/php/5.6
+debian/php5.6enmod usr/sbin
+debian/php5.6query usr/sbin

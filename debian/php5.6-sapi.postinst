@@ -24,7 +24,7 @@ if [ "$1" = "configure" ]; then
     if [ -e /usr/share/php5.6/php5-maintscript-helper ]; then
 	. /usr/share/php5.6/php5-maintscript-helper
 	
-	mods=$(php5query -M)
+	mods=$(php5.6query -M)
 	for mod in $mods; do
 	    php5_invoke enmod @sapi@ $mod
 	done

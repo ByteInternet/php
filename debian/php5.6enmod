@@ -40,7 +40,7 @@ QUIET=no
 NEED_RESTART=no
 MAINT_MODE=no
 
-. /usr/share/php5/php5-helper
+. /usr/share/php5.6/php5.6-helper
 
 usage() {
     [ -n "$@" ] && warning $@
@@ -117,7 +117,7 @@ enmod() {
     module_cleanup $sapi $modname $priority
 
     local module_state=0
-    php5query -q -s $sapi -m $modname || module_state=$?
+    php5.6query -q -s $sapi -m $modname || module_state=$?
 
     case $module_state in
 	# module enabled, but re-enable the conf.d link just in case
@@ -140,22 +140,22 @@ enmod() {
 	    ;;
 	34)
             warning "Not enabling the ${modname} module for ${sapi} SAPI since module symlink"
-	    warning "already exists in /etc/php5/${sapi}/conf.d with different content."
+	    warning "already exists in /etc/php/5.6/${sapi}/conf.d with different content."
 	    return 1
 	    ;;
 	# fail if we get any different result
 	*)
-	    warning "Unable to get module state, run php5query -s $sapi -m $modname manually"
+	    warning "Unable to get module state, run php5.6query -s $sapi -m $modname manually"
 	    warning "and fix the module state."
 	    return 1
     esac
 
-    if [ -d "/etc/php5/$sapi/conf.d" ]; then
+    if [ -d "/etc/php/5.6/$sapi/conf.d" ]; then
 	if [ ! -h "${live_link}" ]; then
 	    ln -s "${live_link_content}" "${live_link}"
 	fi
     else
-	warning "Directory /etc/php5/$sapi/conf.d doesn't exist, not enabling the module"
+	warning "Directory /etc/php/5.6/$sapi/conf.d doesn't exist, not enabling the module"
 	return 1
     fi
 
@@ -169,7 +169,7 @@ dismod() {
 
     if ! module_exists $modname; then
 	if [ "$purge" = "no" ]; then
-	    warning "Module $modname ini file doesn't exist under /etc/php5/mods-available"
+	    warning "Module $modname ini file doesn't exist under /etc/php/5.6/mods-available"
 	    return 1
 	fi
     fi
@@ -181,7 +181,7 @@ dismod() {
     module_cleanup $sapi $modname $priority
 
     local module_state=0
-    php5query -q -s $sapi -m $modname || module_state=$?
+    php5.6query -q -s $sapi -m $modname || module_state=$?
 
     case $module_state in
 	# module enabled
@@ -197,12 +197,12 @@ dismod() {
 	    ;;
 	# fail if we get any different result
 	*)
-	    warning "Unable to get module state, run php5query -s $sapi -m $modname manually"
+	    warning "Unable to get module state, run php5.6query -s $sapi -m $modname manually"
 	    warning "and fix the module state."
 	    return 1
     esac
 
-    if [ -d "/etc/php5/$sapi/conf.d" ]; then
+    if [ -d "/etc/php/5.6/$sapi/conf.d" ]; then
 	if [ -h "$live_link" ]; then
 	    rm -f "$live_link"
 	fi
@@ -244,7 +244,7 @@ if [ "$register" = "no" ]; then
 fi
 
 if [ "$sapis" = "ALL" ]; then
-    sapis=$(php5query -S)
+    sapis=$(php5.6query -S)
 fi
 
 [ -z "$mods" ] && usage

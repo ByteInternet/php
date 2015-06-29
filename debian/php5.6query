@@ -38,7 +38,7 @@ set -ue
 SCRIPT_NAME=${0##*/}
 QUIET=no
 
-. /usr/share/php5/php5-helper
+. /usr/share/php5.6/php5.6-helper
 
 usage() {
     [ -n "$@" ] && warning $@

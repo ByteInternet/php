@@ -1,0 +1,3 @@
+debian/php5.6-fpm-checkconf  usr/lib/php/5.6
+debian/php5.6-fpm-reopenlogs usr/lib/php/5.6
+
