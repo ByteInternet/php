@@ -1,4 +1,4 @@
 if [ "$1" = "remove" ]; then
-    update-alternatives --remove php-cgi /usr/bin/php5-cgi
-    update-alternatives --remove php-cgi-bin /usr/lib/cgi-bin/php5
+    update-alternatives --remove php-cgi /usr/bin/php5.6-cgi
+    update-alternatives --remove php-cgi-bin /usr/lib/cgi-bin/php5.6
 fi

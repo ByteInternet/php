@@ -16,10 +16,10 @@ php5_enable() {
 
 if [ "$1" = "configure" ]; then
     update-alternatives \
-	--install /usr/bin/php-cgi php-cgi /usr/bin/php5-cgi 50 \
+	--install /usr/bin/php-cgi php-cgi /usr/bin/php5.6-cgi 50 \
 	--slave /usr/share/man/man1/php-cgi.1.gz php-cgi.1.gz \
-	/usr/share/man/man1/php5-cgi.1.gz
+	/usr/share/man/man1/php5.6-cgi.1.gz
 
     update-alternatives \
-	--install /usr/lib/cgi-bin/php php-cgi-bin /usr/lib/cgi-bin/php5 50
+	--install /usr/lib/cgi-bin/php php-cgi-bin /usr/lib/cgi-bin/php5.6 50
 fi

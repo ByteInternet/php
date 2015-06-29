@@ -6,8 +6,8 @@ set -e
 
 php5_enable() { return 0; }
 
-if [ -e /usr/share/php5/php5-maintscript-helper ]; then
-    . /usr/share/php5/php5-maintscript-helper
+if [ -e /usr/share/php5.6/php5-maintscript-helper ]; then
+    . /usr/share/php5.6/php5-maintscript-helper
 
     mods=$(php5query -M)
     for mod in $mods; do

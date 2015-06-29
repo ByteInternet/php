@@ -4,7 +4,7 @@ set -e
 
 #EXTRA#
 
-CONFDIR=/etc/php5/@sapi@/conf.d
+CONFDIR=/etc/php/5.6/@sapi@/conf.d
 
 if [ -L $CONFDIR ]; then
     rm $CONFDIR
@@ -12,17 +12,17 @@ if [ -L $CONFDIR ]; then
 fi
 
 if [ "$1" = "configure" ]; then
-    phpini="/etc/php5/@sapi@/php.ini"
+    phpini="/etc/php/5.6/@sapi@/php.ini"
 
     if [ "@sapi@" = "cli" ]; then
-	ucf /usr/share/php5/php.ini-production.@sapi@ $phpini
+	ucf /usr/share/php5.6/php.ini-production.@sapi@ $phpini
     else
-	ucf /usr/share/php5/php.ini-production $phpini
+	ucf /usr/share/php5.6/php.ini-production $phpini
     fi
     ucfr @package@ $phpini
 
-    if [ -e /usr/share/php5/php5-maintscript-helper ]; then
-	. /usr/share/php5/php5-maintscript-helper
+    if [ -e /usr/share/php5.6/php5-maintscript-helper ]; then
+	. /usr/share/php5.6/php5-maintscript-helper
 	
 	mods=$(php5query -M)
 	for mod in $mods; do

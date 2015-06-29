@@ -1,4 +1,4 @@
-# php5-fpm - The PHP FastCGI Process Manager
+# php5.6-fpm - The PHP FastCGI Process Manager
 
 description "The PHP FastCGI Process Manager"
 author "Ondřej Surý <ondrej@debian.org>"
@@ -8,7 +8,7 @@ stop on runlevel [016]
 
 reload signal USR2
 
-pre-start exec /usr/lib/php5/php5-fpm-checkconf
+pre-start exec /usr/lib/php/5.6/php5.6-fpm-checkconf
 
 respawn
-exec /usr/sbin/php5-fpm --nodaemonize --fpm-config /etc/php5/fpm/php-fpm.conf
+exec /usr/sbin/php5.6-fpm --nodaemonize --fpm-config /etc/php/5.6/fpm/php-fpm.conf

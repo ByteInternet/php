@@ -1,4 +1,4 @@
 /etc/apache2/mods-available
-/etc/php5.6/apache2filter
-/etc/php5.6/apache2filter/conf.d
+/etc/php/5.6/apache2filter
+/etc/php/5.6/apache2filter/conf.d
 /usr/lib/apache2/modules

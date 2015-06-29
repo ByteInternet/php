@@ -5,20 +5,20 @@ set -e
 #EXTRA#
 
 if [ "$1" = "configure" ]; then
-    inidir=/etc/php5/mods-available
+    inidir=/etc/php/5.6/mods-available
 
-    if [ -e /usr/share/php5/php5-maintscript-helper ] ; then
-	. /usr/share/php5/php5-maintscript-helper
+    if [ -e /usr/share/php5.6/php5-maintscript-helper ] ; then
+	. /usr/share/php5.6/php5-maintscript-helper
 
 	for dsoname in @modules@; do
 	    inifile=${dsoname}.ini
 
 	    # Register new conffile with UCF
-	    ucf /usr/share/php5/@package@/${inifile} ${inidir}/${inifile}
-	    ucfr --force php5-@package@ ${inidir}/${inifile}
+	    ucf /usr/share/php5.6/@package@/${inifile} ${inidir}/${inifile}
+	    ucfr --force php5.6-@package@ ${inidir}/${inifile}
 
 	    # Move pre-extension manager conffile
-	    dpkg-maintscript-helper mv_conffile /etc/php5/conf.d/${inifile} ${inidir}/${inifile} 5.4.0~rc6-1 -- "$@";
+	    dpkg-maintscript-helper mv_conffile /etc/php/5.6/conf.d/${inifile} ${inidir}/${inifile} 5.4.0~rc6-1 -- "$@";
 
 	    if [ -f "${inidir}/${inifile}.dpkg-new" ]; then
 		md5sum="$(md5sum ${inidir}/${inifile}.dpkg-new | sed -e 's/ .*//')"
@@ -28,7 +28,7 @@ if [ "$1" = "configure" ]; then
 		fi
 	    fi
 	
-	    php5_invoke enmod ALL ${dsoname}
+	    php5.6_invoke enmod ALL ${dsoname}
 	done
     fi
 fi

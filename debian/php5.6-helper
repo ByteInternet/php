@@ -85,7 +85,7 @@ record_state() {
     local sapi=$2
     local modname=$3
 
-    local state_dir="/var/lib/php5/modules/${sapi}"
+    local state_dir="/var/lib/php5.6/modules/${sapi}"
     local admin_state="${state_dir}/${action}_by_admin/$modname"
     local maint_state="${state_dir}/${action}_by_maint/$modname"
 
@@ -126,7 +126,7 @@ get_priority() {
     local sapi=$1
     local modname=$2
 
-    local source_ini="/etc/php5/mods-available/${modname}.ini"
+    local source_ini="/etc/php/5.6/mods-available/${modname}.ini"
 
     module_ret=0
     module_exists $modname || module_ret=$?
@@ -145,7 +145,7 @@ get_live_link() {
     local sapi=$1
     local modname=$2
     local priority=$3
-    echo "/etc/php5/$sapi/conf.d/$priority-$modname.ini"
+    echo "/etc/php/5.6/$sapi/conf.d/$priority-$modname.ini"
 }
 
 get_live_link_content() {
@@ -157,7 +157,7 @@ get_live_link_content() {
 
 module_exists() {
     local modname=$1
-    local source_ini="/etc/php5/mods-available/${modname}.ini"
+    local source_ini="/etc/php/5.6/mods-available/${modname}.ini"
 
     if [ ! -r "${source_ini}" ]; then
 	return 1
@@ -170,24 +170,24 @@ module_cleanup() {
     local modname=$2
     local priority=$3
 
-    if [ -L "/etc/php5/conf.d/$priority-$modname.ini" ]; then
-	rm "/etc/php5/conf.d/$priority-$modname.ini";
+    if [ -L "/etc/php/5.6/conf.d/$priority-$modname.ini" ]; then
+	rm "/etc/php/5.6/conf.d/$priority-$modname.ini";
     fi
 }
 
 get_state_dir() {
     local sapi=$1
-    echo "/var/lib/php5/modules/$sapi"
+    echo "/var/lib/php5.6/modules/$sapi"
     return 0
 }
 
 get_registry_dir() {
-    echo "/var/lib/php5/modules/registry"
+    echo "/var/lib/php5.6/modules/registry"
     return 0
 }
 
 get_sapi_dir() {
-    echo "/usr/share/php5/sapi"
+    echo "/usr/share/php5.6/sapi"
     return 0
 }
 

@@ -1,1 +1,1 @@
-report-with: php5-common php5-cli libphp5-embed libapache2-mod-php5 libapache2-mod-php5filter php5-cgi php5-fpm
+report-with: php5.6-common php5.6-cli libphp5.6-embed libapache2-mod-php5.6 libapache2-mod-php5.6filter php5.6-cgi php5.6-fpm

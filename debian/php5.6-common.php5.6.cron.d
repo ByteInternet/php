@@ -1,4 +1,4 @@
-# /etc/cron.d/php5: crontab fragment for php5
+# /etc/cron.d/php5.6: crontab fragment for php5
 #  This purges session files in session.save_path older than X,
 #  where X is defined in seconds as the largest value of
 #  session.gc_maxlifetime from all your SAPI php.ini files
@@ -11,4 +11,4 @@
 #  sessions yourself.
 
 # Look for and purge old sessions every 30 minutes
-09,39 *     * * *     root   [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean
+09,39 *     * * *     root   [ -x /usr/lib/php/5.6/sessionclean ] && /usr/lib/php/5.6/sessionclean

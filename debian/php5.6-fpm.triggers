@@ -1,1 +1,1 @@
-interest-noawait /etc/php5/fpm/conf.d
+interest-noawait /etc/php/5.6/fpm/conf.d

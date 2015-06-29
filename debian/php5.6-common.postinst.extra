@@ -1,5 +1,5 @@
 for sapi in apache2 apache2filter cli cgi embed fpm; do
-    CONFDIR=/etc/php5/$sapi/conf.d
+    CONFDIR=/etc/php/5.6/$sapi/conf.d
 
     if [ -L $CONFDIR ]; then
 	rm $CONFDIR
@@ -7,6 +7,6 @@ for sapi in apache2 apache2filter cli cgi embed fpm; do
     fi
 done
 
-# Move the existing sessions to /var/lib/php5/sessions
+# Move the existing sessions to /var/lib/php5.6/sessions
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
-find "/var/lib/php5" -depth -mindepth 1 -maxdepth 1 -ignore_readdir_race -type f -execdir mv "{}" "/var/lib/php5/sessions" \;
+find "/var/lib/php5" "/var/lib/php5.6" -depth -mindepth 1 -maxdepth 1 -ignore_readdir_race -type f -execdir mv "{}" "/var/lib/php5.6/sessions" \;
