@@ -506,7 +506,7 @@ endif
 	done
 
 	# install CGI
-	cp cgi-build/sapi/cgi/cgi-bin.php5 debian/php$(PHP_NAME_VERSION)-cgi/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
+	cp cgi-build/sapi/cgi/cgi-bin.php$(PHP_NAME_VERSION) debian/php$(PHP_NAME_VERSION)-cgi/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
 	cp cgi-build/sapi/cgi/usr.bin.php$(PHP_NAME_VERSION)-cgi debian/php$(PHP_NAME_VERSION)-cgi/usr/bin/php$(PHP_NAME_VERSION)-cgi
 	cp cli-build/sapi/cli/php.1 debian/php$(PHP_NAME_VERSION)-cgi/usr/share/man/man1/php$(PHP_NAME_VERSION)-cgi.1
 

@@ -6,14 +6,14 @@ Subject: libtool2.2
  scripts/phpize.in | 11 +++++++++--
  1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/phpize.in b/scripts/phpize.in
-index 27e4f1d..24d6873 100644
---- a/scripts/phpize.in
-+++ b/scripts/phpize.in
+Index: php/scripts/phpize.in
+===================================================================
+--- php.orig/scripts/phpize.in
++++ php/scripts/phpize.in
 @@ -6,10 +6,16 @@ datarootdir='@datarootdir@'
  exec_prefix="`eval echo @exec_prefix@`"
- phpdir="$prefix/lib/php5/build"
- includedir="$prefix/include/php5"
+ phpdir="`eval echo @libdir@`/build"
+ includedir="$prefix/include/php5.5"
 +aclocaldir="$prefix/share/aclocal"
  builddir="`pwd`"
  SED="@SED@"
