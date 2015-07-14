@@ -29,8 +29,8 @@ if [ -e /usr/share/php5.5/php5.5-maintscript-helper ]; then
 
     mods=$(php5.5query -M)
     for mod in $mods; do
-	php5.5_invoke dismod @sapi@ $mod
-    done
+		php5_invoke dismod @sapi@ $mod
+	done
 fi
 
 #DEBHELPER#

@@ -4,14 +4,14 @@ set -e
 
 #EXTRA#
 
-php5.5_enable() { return 0; }
+php5_enable() { return 0; }
 
 if [ -e /usr/share/php5.5/php5.5-maintscript-helper ]; then
     . /usr/share/php5.5/php5.5-maintscript-helper
 
     mods=$(php5.5query -M)
     for mod in $mods; do
-	php5.5_invoke dismod @sapi@ $mod
+		php5_invoke dismod @sapi@ $mod
     done
 fi
 

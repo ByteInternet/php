@@ -211,6 +211,27 @@ dismod() {
     return 0
 }
 
+case $0 in
+	phpenmod)
+		ret_val=1
+		for i in /usr/sbin/php*.*enmod
+		do
+			"$i" "$@"
+			ret_val=$((ret_val && $?))
+		done
+		exit $ret_val
+	;;
+	phpdismod)
+		ret_val=1
+		for i in /usr/sbin/php*.*dismod
+		do
+			"$i" "$@"
+			ret_val=$((ret_val && $?))
+		done
+		exit $ret_val
+	;;
+esac
+
 sapis=
 register=no
 purge=no
@@ -250,10 +271,10 @@ fi
 [ -z "$mods" ] && usage
 
 case "${SCRIPT_NAME}" in
-    php5.5enmod)
+    php5*enmod)
 	enmods "$sapis" "$mods" "$register"
 	;;
-    php5.5dismod)
+    php5*dismod)
 	dismods "$sapis" "$mods" "$register" "$purge"
 	;;
     *)

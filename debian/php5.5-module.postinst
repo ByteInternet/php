@@ -28,7 +28,7 @@ if [ "$1" = "configure" ]; then
 		fi
 	    fi
 	
-	    php5.5_invoke enmod ALL ${dsoname}
+	    php5_invoke enmod ALL ${dsoname}
 	done
     fi
 fi

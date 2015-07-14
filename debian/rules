@@ -513,8 +513,8 @@ endif
 	# install CLI
 	cp cli-build/sapi/cli/php debian/php$(PHP_NAME_VERSION)-cli/usr/bin/php$(PHP_NAME_VERSION)
 	cp cli-build/sapi/cli/php.1 debian/php$(PHP_NAME_VERSION)-cli/usr/share/man/man1/php$(PHP_NAME_VERSION).1
-	cp cli-build/ext/phar/phar.phar debian/php$(PHP_NAME_VERSION)-cli/usr/bin/phar
-	cp cli-build/ext/phar/phar.1 debian/php$(PHP_NAME_VERSION)-cli/usr/share/man/man1/phar.1
+	cp cli-build/ext/phar/phar.phar debian/php$(PHP_NAME_VERSION)-cli/usr/bin/phar$(PHP_NAME_VERSION)
+	cp cli-build/ext/phar/phar.1 debian/php$(PHP_NAME_VERSION)-cli/usr/share/man/man1/phar$(PHP_NAME_VERSION).1
 
 	# install FPM
 	mkdir -p debian/php$(PHP_NAME_VERSION)-fpm/usr/sbin debian/php$(PHP_NAME_VERSION)-fpm/usr/share/man/man8/ debian/php$(PHP_NAME_VERSION)-fpm/etc/php/$(PHP_NAME_VERSION)/fpm/pool.d
@@ -572,8 +572,8 @@ endif
 	#install -m755 debian/php$(PHP_NAME_VERSION)query $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/sbin/php$(PHP_NAME_VERSION)query
 
 	# remove libtool files
-	rm $(CURDIR)/debian/libphp$(PHP_NAME_VERSION)-embed/usr/lib/php/$(PHP_NAME_VERSION)/libphp5.la
-	mv $(CURDIR)/debian/libphp$(PHP_NAME_VERSION)-embed/usr/lib/php/$(PHP_NAME_VERSION)/* $(CURDIR)/debian/libphp$(PHP_NAME_VERSION)-embed/usr/lib/
+	mv $(CURDIR)/debian/libphp$(PHP_NAME_VERSION)-embed/usr/lib/php/$(PHP_NAME_VERSION)/libphp$(PHP_MAJOR_VERSION).so $(CURDIR)/debian/libphp$(PHP_NAME_VERSION)-embed/usr/lib/libphp$(PHP_MAJOR_VERSION).so.$(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION).$(PHP_RELEASE_VERSION)
+	rm -r $(CURDIR)/debian/libphp$(PHP_NAME_VERSION)-embed/usr/lib/php/
 
 	# install lintian overrides
 	#cp debian/php$(PHP_NAME_VERSION)-common.lintian-overrides $(CURDIR)/debian/php$(PHP_NAME_VERSION)-common/usr/share/lintian/overrides/php$(PHP_NAME_VERSION)-common
@@ -621,18 +621,10 @@ endif
 override_dh_installdocs:
 	dh_installdocs --link-doc=php$(PHP_NAME_VERSION)-common
 
-override_dh_compress:
-	dh_compress -Xphp.ini
+override_dh_compress-indep:
+	dh_compress -i -Xphp.ini
 
-# Build architecture-dependent files here.
-binary-arch: build install
-	# Need this version of debhelper for DH_OPTIONS to work.
-	dh_testdir
-	dh_testroot
-	# Do this first so we don't overwrite any debhelper-generated files
-	#
-	# generate the config snippets for various php
-	# modules from the templates.
+override_dh_install-arch:
 	cat debian/modulelist debian/extramodulelist | while read package extname dsoname priority extension; do \
 		if [ -z "$${dsoname}" ]; then dsoname=$$package; fi; \
 		if [ -z "$${priority}" ]; then priority=20; fi; \
@@ -724,6 +716,11 @@ binary-arch: build install
 			cp debian/php$(PHP_NAME_VERSION)-sapi.bug.control debian/libapache2-mod-php$(PHP_NAME_VERSION)$$sapi/usr/share/bug/libapache2-mod-php$(PHP_NAME_VERSION)$$sapi/control; \
 	        done; \
 	done
+	mkdir -p $(CURDIR)/php5-common/usr/sbin
+	for i in enmod dismod query; do \
+		ln -s php$(PHP_NAME_VERSION)$$i $(CURDIR)/php5-common/usr/sbin/php5$$i; \
+	done
+	dh_install -a
 
 	#dh_installdocs -s
 
@@ -732,22 +729,22 @@ binary-arch: build install
 	#	ln -s php$(PHP_NAME_VERSION)-common debian/php5-$$package/usr/share/doc/php5-$$package; \
 	#done
 
-	dh_installdocs -s --link-doc=php$(PHP_NAME_VERSION)-common
-	dh_perl
+override_dh_installlogrotate:
 	dh_installlogrotate -pphp$(PHP_NAME_VERSION)-fpm
+override_dh_installcron:
 	dh_installcron -pphp$(PHP_NAME_VERSION)-common --name=php$(PHP_NAME_VERSION)
+override_dh_installchangelogs-arch:
 	dh_installchangelogs -pphp$(PHP_NAME_VERSION)-common NEWS
-	dh_systemd_enable
-	dh_installinit
-	dh_systemd_start
-	dh_link -s
-	dh_compress -s -Xphp.ini
-	dh_fixperms -s -X/var/lib/php$(PHP_NAME_VERSION)
-	dh_strip -s --dbg-package=php$(PHP_NAME_VERSION)-dbg
-	dh_makeshlibs -s -plibphp$(PHP_NAME_VERSION)-embed -V 'libphp$(PHP_NAME_VERSION)-embed (>= 5.5.0)'
-	dh_shlibdeps -s
-	dh_installdeb -s
+override_dh_compress-arch:
+	dh_compress -a -Xphp.ini
+override_dh_fixperms-arch:
+	dh_fixperms -a -X/var/lib/php$(PHP_NAME_VERSION)
+override_dh_strip-arch:
+	dh_strip -a --dbg-package=php$(PHP_NAME_VERSION)-dbg
+override_dh_makeshlibs-arch:
+	dh_makeshlibs -a -plibphp$(PHP_NAME_VERSION)-embed -V 'libphp$(PHP_NAME_VERSION)-embed (>= 5.5.0)'
 
+override_dh_gencontrol-arch:
 	phpapi=`./debian/php$(PHP_NAME_VERSION)-dev/usr/bin/php-config$(PHP_NAME_VERSION) --phpapi`; \
 	stored=`cat debian/phpapi`; \
 	if [ "$${phpapi}" != "$${stored}" ]; then echo "PHPAPI has changed, please modify debian/phpapi"; exit 1; fi; \
@@ -774,9 +771,7 @@ binary-arch: build install
 	done
 
 	echo "libtool:Conflicts=$(LIBTOOL_CONFLICTS)" >>debian/php$(PHP_NAME_VERSION)-dev.substvars
-	dh_gencontrol -s
-	dh_md5sums -s
-	dh_builddeb -s
+	dh_gencontrol -a
 
 #binary: binary-arch binary-indep
 #build-arch: build

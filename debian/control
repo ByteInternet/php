@@ -74,6 +74,17 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-php/php.git
 Homepage: http://www.php.net/
 XS-Testsuite: autopkgtest
 
+Package: php5-common
+Architecture: all
+Depends: php5.6-common (= ${binary:Version})                                
+Description: server-side, html-embedded scripting language (metapackage) 
+ This package is a metapackage that depends on the latest version of the 
+ PHP common package and sets it as the default.                             
+ .                                                                       
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
 Package: php5.5
 Architecture: all
 Depends: ${misc:Depends}, libapache2-mod-php5.5 (>= ${source:Version}~) | libapache2-mod-php5.5filter (>= ${source:Version}~) | php5.5-cgi (>= ${source:Version}~) | php5.5-fpm (>= ${source:Version}~), php5.5-common (>= ${source:Version}~)
@@ -95,7 +106,7 @@ Depends: ${misc:Depends},
 	 psmisc (>= 22.15-1~),
 	 lsof [!kfreebsd-any !hurd-any],
 	 ucf
-Provides: php5-mhash, ${php:Provides}
+Provides: php5.5-mhash, ${php:Provides}
 Conflicts: php5-mhash
 Suggests: php5-user-cache
 Breaks: php5-xdebug (<< 2.2.2),
