@@ -76,9 +76,22 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-php/php.git
 Homepage: http://www.php.net/
 XS-Testsuite: autopkgtest
 
+Package: php5-common
+Architecture: all
+Depends: php5.6-common (= ${binary:Version})
+Conflicts: php5-common
+Replaces: php5-common
+Description: server-side, html-embedded scripting language (metapackage)
+ This package is a metapackage that depends on the latest version of the
+ php-common package, and sets its maintainence commands as default.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
 Package: php5.6
 Architecture: all
-Depends: ${misc:Depends}, libapache2-mod-php5 (>= ${source:Version}~) | libapache2-mod-php5filter (>= ${source:Version}~) | php5-cgi (>= ${source:Version}~) | php5-fpm (>= ${source:Version}~), php5.6-common (>= ${source:Version}~)
+Depends: ${misc:Depends}, libapache2-mod-php5.6 (>= ${source:Version}~) | libapache2-mod-php5.6filter (>= ${source:Version}~) | php5.6-cgi (>= ${source:Version}~) | php5.6-fpm (>= ${source:Version}~), php5.6-common (>= ${source:Version}~)
 Description: server-side, HTML-embedded scripting language (metapackage)
  This package is a metapackage that, when installed, guarantees that you
  have at least one of the four server-side versions of the PHP5 interpreter
@@ -122,7 +135,7 @@ Depends: ${shlibs:Depends},
 	 apache2 (>= 2.4),
 	 mime-support,
 	 php5.6-common (= ${binary:Version}),
-	 php5-cli,
+	 php5.6-cli,
 	 php5-json,
 	 libmagic1,
 	 ucf,
@@ -151,7 +164,7 @@ Depends: ${shlibs:Depends},
 	 apache2 (>= 2.4),
 	 mime-support,
 	 php5.6-common (= ${binary:Version}),
-	 php5-cli,
+	 php5.6-cli,
 	 php5-json,
 	 libmagic1,
 	 ucf,
@@ -179,7 +192,7 @@ Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
 	 php5.6-common (= ${binary:Version}),
-	 php5-cli,
+	 php5.6-cli,
 	 php5-json,
 	libmagic1,
 	ucf,
@@ -250,7 +263,7 @@ Depends: ${shlibs:Depends},
 	 ${misc:Depends},
 	 mime-support,
 	 php5.6-common (= ${binary:Version}),
-	 php5-cli,
+	 php5.6-cli,
 	 php5-json,
 	 libmagic1,
 	 ucf,

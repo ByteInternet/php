@@ -106,7 +106,7 @@ enmod() {
     local modname=$2
 
     if ! module_exists $modname; then
-	warning "Module $modname ini file doesn't exist under /etc/php5/mods-available"
+	warning "Module $modname ini file doesn't exist under /etc/php/5.6/mods-available"
 	return 1
     fi
 
@@ -211,6 +211,27 @@ dismod() {
     return 0
 }
 
+case $0 in
+	phpenmod)
+		ret_val=1
+		for i in /usr/sbin/php*.*enmod
+		do
+			"$i" "$@"
+			ret_val=$((ret_val && $?))
+		done
+		exit $ret_val
+	;;
+	phpdismod)
+		ret_val=1
+		for i in /usr/sbin/php*.*dismod
+		do
+			"$i" "$@"
+			ret_val=$((ret_val && $?))
+		done
+		exit $ret_val
+	;;
+esac
+
 sapis=
 register=no
 purge=no
@@ -250,10 +271,10 @@ fi
 [ -z "$mods" ] && usage
 
 case "${SCRIPT_NAME}" in
-    php5enmod)
+    php5*enmod)
 	enmods "$sapis" "$mods" "$register"
 	;;
-    php5dismod)
+    php5*dismod)
 	dismods "$sapis" "$mods" "$register" "$purge"
 	;;
     *)

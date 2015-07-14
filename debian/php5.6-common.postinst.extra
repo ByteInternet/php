@@ -9,4 +9,4 @@ done
 
 # Move the existing sessions to /var/lib/php5.6/sessions
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
-find "/var/lib/php5" "/var/lib/php5.6" -depth -mindepth 1 -maxdepth 1 -ignore_readdir_race -type f -execdir mv "{}" "/var/lib/php5.6/sessions" \;
+find "/var/lib/php5.6" -depth -mindepth 1 -maxdepth 1 -ignore_readdir_race -type f -execdir mv "{}" "/var/lib/php5.6/sessions" \;
