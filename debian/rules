@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-# Uncomment this to turn on verbose mode. 
+# Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 
 #SHELL := /bin/sh -x
@@ -118,7 +118,7 @@ endif
 
 # specify some options to our patch system
 QUILT_DIFF_OPTS=-p
-QUILT_NO_DIFF_TIMESTAMPS=1 
+QUILT_NO_DIFF_TIMESTAMPS=1
 export QUILT_DIFF_OPTS QUILT_NO_DIFF_TIMESTAMPS
 
 PROG_SENDMAIL = /usr/sbin/sendmail
@@ -127,7 +127,7 @@ ifeq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 else
   CFLAGS += -O0
 endif
-CFLAGS += -Wall -fsigned-char -fno-strict-aliasing 
+CFLAGS += -Wall -fsigned-char -fno-strict-aliasing
 CFLAGS += $(shell getconf LFS_CFLAGS)
 
 # Enable IEEE-conformant floating point math on alphas (not the default)
@@ -609,18 +609,18 @@ override_dh_apache2:
 	dh_apache2 --conditional=php_enable
 
 override_dh_installdocs-indep:
-	dh_installdoc -p$(PHP_PHP) --link-doc=$(PHP_COMMON)
+	dh_installdocs -p$(PHP_PHP) --link-doc=$(PHP_COMMON)
 
 override_dh_installdocs-arch:
 
 	cat debian/modulelist | grep -v common | while read module extname dsoname priority; do \
 	    $(MODULE_PACKAGE) \
-	    dh_installdoc -p$${package} --link-doc=$(PHP_COMMON)
+	    dh_installdocs -p$${package} --link-doc=$(PHP_COMMON); \
 	done
 
-	for sapi in $(TARGETS); do
+	for sapi in $(TARGETS); do \
 	    $(SAPI_PACKAGE) \
-	    dh_installdoc -p$${package} --link-doc=$(PHP_COMMON)
+	    dh_installdocs -p$${package} --link-doc=$(PHP_COMMON); \
 	done
 
 	dh_installdocs -a --remaining-packages
@@ -649,7 +649,7 @@ override_dh_gencontrol-arch:
 	    exit 1; \
 	fi;
 
-	echo "php:Provides=phpapi-$${phpapi}" >> debian/$(PHP_COMMON).substvars;
+	echo "php:Provides=phpapi-$${phpapi}, php-json" >> debian/$(PHP_COMMON).substvars;
 
 	cat debian/modulelist | while module package extname dsoname priority; do \
 	    $(MODULE_PACKAGE) \
