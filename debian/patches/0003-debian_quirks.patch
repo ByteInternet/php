@@ -22,7 +22,7 @@ Index: php5/configure.in
  
  PHP_ARG_WITH(pear, [whether to install PEAR],
 -[  --with-pear=DIR         Install PEAR in DIR @<:@PREFIX/lib/php@:>@
-+[  --with-pear=DIR         Install PEAR in DIR @<:@PREFIX/lib/php/$PHP_MAJOR_VERSION.$PHP_MINOR_VERSION@:>@
++[  --with-pear=DIR         Install PEAR in DIR @<:@PREFIX/share/php@:>@
    --without-pear          Do not install PEAR], DEFAULT, yes)
  
  if test "$PHP_PEAR" != "no"; then
@@ -59,6 +59,14 @@ Index: php5/configure.in
  
  exec_prefix=$old_exec_prefix
  libdir=$old_libdir
+@@ -1523,6 +1523,7 @@ $php_shtool mkdir -p scripts/man1
+ ALL_OUTPUT_FILES="php5.spec main/build-defs.h \
+ scripts/phpize scripts/man1/phpize.1 \
+ scripts/php-config scripts/man1/php-config.1 \
++ext/ext_skel
+ $PHP_OUTPUT_FILES"
+ 
+ dnl
 Index: php5/ext/ext_skel
 ===================================================================
 --- php5.orig/ext/ext_skel
@@ -68,7 +76,7 @@ Index: php5/ext/ext_skel
  
  if test -z "$skel_dir"; then
 -  skel_dir="skeleton"
-+  skel_dir="/usr/lib/php/5.6/skeleton"
++  skel_dir="/usr/lib/php/@DEBIAN_PHP_API@/skeleton" #FIXME!!!
  fi
  
  ## convert skel_dir to full path
@@ -157,17 +165,17 @@ Index: php5/sapi/cli/php.1.in
  .SH FILES
  .TP 15
 -.B php\-cli.ini
-+.B /etc/php/5.6/cli/php.ini
++.B /etc/php/@PHP_MAJOR_VERSION@.@PHP_MINOR_VERSION/cli/php.ini
  The configuration file for the CLI version of PHP.
  .TP
 -.B php.ini
 -The standard configuration file will only be used when 
 -.B php\-cli.ini
 -cannot be found.
-+.B /etc/php/5.6/cgi/php.ini
++.B /etc/php/@PHP_MAJOR_VERSION@.@PHP_MINOR_VERSION/cgi/php.ini
 +The configuration file for the CGI version of PHP.
 +.TP
-+.B /etc/php/5.6/apache2/php.ini
++.B /etc/php/@PHP_MAJOR_VERSION@.@PHP_MINOR_VERSION/apache2/php.ini
 +The configuration file for the version of PHP that apache2 uses.
  .SH EXAMPLES
  .TP 5
@@ -182,8 +190,8 @@ Index: php5/scripts/Makefile.frag
  
 -phpincludedir = $(includedir)/php
 -phpbuilddir = $(libdir)/build
-+phpincludedir = $(includedir)/php5.6
-+phpbuilddir = $(prefix)/lib/php/5.6/build
++phpincludedir = $(includedir)/php/$(DEBIAN_PHP_API)
++phpbuilddir = $(prefix)/lib/php/$(DEBIAN_PHP_API)/build
  
  BUILD_FILES = \
  	scripts/phpize.m4 \
@@ -198,9 +206,9 @@ Index: php5/scripts/php-config.in
 -include_dir="@includedir@/php"
 -includes="-I$include_dir -I$include_dir/main -I$include_dir/TSRM -I$include_dir/Zend -I$include_dir/ext -I$include_dir/ext/date/lib"
 -ldflags="@PHP_LDFLAGS@"
-+include_dir="@includedir@/php@program_suffix@"
++include_dir="@includedir@/php/@DEBIAN_PHP_API@"
 +includes="-I$include_dir -I$include_dir/main -I$include_dir/TSRM -I$include_dir/Zend -I$include_dir/ext -I$include_dir/ext/date/lib $(getconf LFS_CFLAGS)"
-+ldflags="-L$prefix/lib/php/@program_suffix@ @PHP_LDFLAGS@"
++ldflags="-L$prefix/lib/php/@DEBIAN_PHP_API@ @PHP_LDFLAGS@"
  libs="@EXTRA_LIBS@"
  extension_dir='@EXTENSION_DIR@'
  man_dir=`eval echo @mandir@`
@@ -214,8 +222,8 @@ Index: php5/scripts/phpize.in
  exec_prefix="`eval echo @exec_prefix@`"
 -phpdir="`eval echo @libdir@`/build"
 -includedir="`eval echo @includedir@`/php"
-+phpdir="$prefix/lib/php/5.6/build"
-+includedir="$prefix/include/php5.6"
++phpdir="$prefix/lib/php/@DEBIAN_PHP_API@/build"
++includedir="$prefix/include/php@DEBIAN_PHP_API@"
  builddir="`pwd`"
  SED="@SED@"
  

@@ -1,0 +1,32 @@
+override_dh_install: install-pear
+
+install-pear:
+	# install PEAR
+	cp -a pear-build/* debian/php-pear/
+
+	# everything under usr/share/php/data except 'PEAR' is b0rken
+	# and actually needs to be fixed
+	[ ! -f debian/php-pear/usr/share/php/data/Structures_Graph/LICENSE ] || \
+		$(RM) debian/php-pear/usr/share/php/data/Structures_Graph/LICENSE
+	[ ! -f debian/php-pear/usr/share/php/doc/PEAR/INSTALL ] || \
+		$(RM) debian/php-pear/usr/share/php/doc/PEAR/INSTALL
+	[ ! -f debian/php-pear/usr/share/php/doc/Structures_Graph/docs/generate.sh ] || \
+		$(RM) debian/php-pear/usr/share/php/doc/Structures_Graph/docs/generate.sh
+	for f in Structures_Graph/publish.sh Structures_Graph/package.sh \
+		Structures_Graph/genpackage.xml.pl; do \
+		$(RM) debian/php-pear/usr/share/php/data/$$f; \
+	done
+	# we don't want test suites
+	$(RM) -r debian/php-pear/usr/share/php/test/
+	[ -d debian/php-pear/usr/share/php/doc ] && { \
+		mkdir -p debian/php-pear/usr/share/doc/$(PHP_COMMON)/PEAR; \
+		mv debian/php-pear/usr/share/php/doc/* \
+			debian/php-pear/usr/share/doc/$(PHP_COMMON)/PEAR/; \
+		$(RM) -r debian/php-pear/usr/share/php/doc; \
+		ln -s ../doc/php-pear/PEAR debian/php-pear/usr/share/php/doc; \
+		echo "Dummy placeholder to prevent the directory's deletion" > \
+			debian/php-pear/usr/share/doc/$(PHP_COMMON)/PEAR/.placeholder; \
+	}
+
+	# directories cleanup:
+	-find debian/php-pear -type d -exec rmdir --ignore-fail-on-non-empty -p '{}' \; >/dev/null 2>&1

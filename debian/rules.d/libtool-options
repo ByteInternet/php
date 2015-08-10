@@ -1,0 +1,27 @@
+# Set this flag to 'yes' if you want to disable all modifications breaking abi 
+# compatibility to upstream
+PHP5_COMPAT=no
+
+ifneq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),hurd-i386 m68k hppa ppc64))
+  CONFIGURE_APACHE_ARGS = --with-interbase=shared,/usr --with-pdo-firebird=shared,/usr
+else
+  CONFIGURE_APACHE_ARGS = --without-interbase --without-pdo-firebird
+endif
+
+# LFS support
+ifneq (yes,$(PHP5_COMPAT))
+  CFLAGS += $(shell getconf LFS_CFLAGS)
+endif
+
+# support new (>= 2.2) and older versions of libtool for backporting ease
+LIBTOOL_DIRS = /usr/share/libtool/config /usr/share/libtool
+LTMAIN = $(firstword $(wildcard $(foreach d,$(LIBTOOL_DIRS),$d/ltmain.sh)))
+LTMAIN_DIR = $(dir $(LTMAIN))
+
+ifeq ($(LTMAIN_DIR), /usr/share/libtool/)
+  LIBTOOL_CONFLICTS:=libtool (>= 2.2)
+else ifeq ($(LTMAIN_DIR), /usr/share/libtool/config/)
+  LIBTOOL_CONFLICTS:=libtool (<< 2.2)
+else
+  LIBTOOL_CONFLICTS:=$(error "could not resolve path to ltmain.sh")
+endif

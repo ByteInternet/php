@@ -1,0 +1,22 @@
+TARGETS += apache2filter
+
+PHP_APACHE2FILTER = libapache2-mod-php$(PHP_NAME_VERSION)filter
+
+apache2filter_config = \
+		--with-apxs2filter=/usr/bin/apxs2 \
+		--with-config-file-path=/etc/php/$(PHP_NAME_VERSION)/apache2filter \
+		--with-config-file-scan-dir=/etc/php/$(PHP_NAME_VERSION)/apache2filter/conf.d \
+		$(COMMON_CONFIG)
+
+export apache2_filter_config
+
+override_dh_auto_clean: apache2filter_clean
+
+apache2filter_clean:
+	rm -f configure-apache2filter-stamp build-apache2filter-stamp
+	rm -rf apache2filter-build
+
+prepare-files-stamp: apache2filter-prepare
+
+apach2filter-prepared:
+	-mv apache2filter-build/.libs/libphp5.so apache2filter-build/.libs/libphp$(PHP_NAME_VERSION)filter.so

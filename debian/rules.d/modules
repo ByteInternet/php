@@ -1,0 +1,23 @@
+override_dh_install: install-modules
+
+install-modules:
+	# install extensions
+	ext=`./debian/libapache2-mod-php$(PHP_NAME_VERSION)/usr/bin/php-config$(PHP_NAME_VERSION) --extension-dir`;\
+	for i in libapache2-mod-php$(PHP_NAME_VERSION) libapache2-mod-php$(PHP_NAME_VERSION)filter php$(PHP_NAME_VERSION)-cgi php$(PHP_NAME_VERSION)-cli libphp$(PHP_NAME_VERSION)-embed php$(PHP_NAME_VERSION)-fpm; do \
+		mkdir -p debian/$$i/$${ext}; \
+	done; \
+	cat debian/modulelist debian/extramodulelist | while read package extname dsoname priority; do \
+		if [ "$$package" = "mysqlnd" ]; then \
+			modulepath=cgi-build/modules; \
+		elif [ "$$package" = "readline" ]; then \
+			modulepath=cli-build/modules; \
+		else \
+			modulepath=debian/libapache2-mod-php$(PHP_NAME_VERSION)/$${ext}; \
+		fi; \
+		if [ -z "$$dsoname" ]; then dsoname=$$package; fi; \
+		mkdir -p debian/php$(PHP_NAME_VERSION)-$$package$${ext}; \
+		install -m 644 -o root -g root \
+			$${modulepath}/$$dsoname.so \
+			debian/php$(PHP_NAME_VERSION)-$$package$${ext}/$$dsoname.so; \
+		rm $${modulepath}/$$dsoname.so; \
+	done

@@ -4,13 +4,13 @@ set -e
 
 #EXTRA#
 
-php5_enable() { return 0; }
+php_enable() { return 0; }
 
 if [ "$1" = "purge" ]; then
-    phpini=/etc/php/5.6/@sapi@/php.ini
+    phpini=/etc/php/@PHP_VERSION@/@sapi@/php.ini
     # remove the flag to remember the original state
-    if [ -e /etc/php/5.6/@sapi@/.start ]; then
-	rm -f /etc/php/5.6/@sapi@/.start
+    if [ -e /etc/php/@PHP_VERSION@/@sapi@/.start ]; then
+	rm -f /etc/php/@PHP_VERSION@/@sapi@/.start
     fi
     for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist;  do
 	rm -f $phpini$ext
@@ -24,12 +24,12 @@ if [ "$1" = "purge" ]; then
     fi
 fi
 
-if [ -e /usr/share/php5.6/php5-maintscript-helper ]; then
-    . /usr/share/php5.6/php5-maintscript-helper
+if [ -e /usr/lib/php/php-maintscript-helper ]; then
+    . /usr/lib/php/php-maintscript-helper
 
-    mods=$(php5.6query -M)
+    mods=$(phpquery -M -v @PHP_VERSION@)
     for mod in $mods; do
-	php5_invoke dismod @sapi@ $mod
+	php_invoke dismod @PHP_VERSION@ @sapi@ $mod
     done
 fi
 

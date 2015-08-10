@@ -1,3 +1,0 @@
-mod apache2-build/.libs/libphp5.6.so
-mod debian/php5.6.load
-mod debian/php5.6.conf

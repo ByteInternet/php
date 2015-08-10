@@ -1,0 +1,91 @@
+COMMON_CONFIG += \
+		--with-regex=php \
+		--enable-calendar \
+		--enable-sysvsem \
+		--enable-sysvshm \
+		--enable-sysvmsg \
+		--enable-bcmath \
+		--with-bz2 \
+		--enable-ctype \
+		--with-db4 \
+		--with-qdbm=/usr \
+		--with-iconv \
+		--enable-exif \
+		--enable-ftp \
+		--with-gettext \
+		--enable-mbstring \
+		--with-onig=/usr \
+		--with-pcre-regex=/usr \
+		--enable-shmop \
+		--enable-sockets \
+		--enable-wddx \
+		--with-zlib \
+		--with-kerberos=/usr \
+		--with-openssl=/usr \
+		--enable-soap \
+		--enable-zip
+
+apache2_config += \
+		--with-curl=shared,/usr \
+		--with-enchant=shared,/usr \
+		--with-zlib-dir=/usr \
+		--with-gd=shared,/usr --enable-gd-native-ttf \
+		--with-gmp=shared,/usr \
+		--with-jpeg-dir=shared,/usr \
+		--with-xpm-dir=shared,/usr/X11R6 \
+		--with-png-dir=shared,/usr \
+		--with-freetype-dir=shared,/usr \
+	    --with-vpx-dir=shared,/usr \
+		--with-imap=shared,/usr \
+		--with-imap-ssl \
+		--enable-intl=shared \
+		--with-ldap=shared,/usr \
+		--with-ldap-sasl=/usr \
+		--with-mcrypt=shared,/usr \
+		--with-mysql=shared,/usr \
+		--with-mysqli=shared,/usr/bin/mysql_config \
+		--with-pspell=shared,/usr \
+		--with-unixODBC=shared,/usr \
+		--with-recode=shared,/usr \
+		--with-xsl=shared,/usr \
+		--with-snmp=shared,/usr \
+		--with-sqlite3=shared,/usr \
+		--with-mssql=shared,/usr \
+		--with-tidy=shared,/usr \
+		--with-xmlrpc=shared \
+		--with-pgsql=shared,/usr PGSQL_INCLUDE=`pg_config --includedir` \
+		--enable-pdo=shared \
+		--with-pdo-mysql=shared,/usr \
+		--with-pdo-odbc=shared,unixODBC,/usr \
+		--with-pdo-pgsql=shared,/usr/bin/pg_config \
+		--with-pdo-sqlite=shared,/usr \
+		--with-pdo-dblib=shared,/usr \
+		$(CONFIGURE_APACHE_ARGS)
+
+cgi_config += \
+		--enable-pdo=shared \
+		--enable-mysqlnd=shared \
+		--with-mysql=shared,mysqlnd \
+		--with-mysqli=shared,mysqlnd \
+		--with-pdo-mysql=shared,mysqlnd
+
+build-%-stamp: copy-zend-%
+
+copy-zend-%: configure-%-stamp
+	cd $*-build && \
+	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
+	   ../Zend/zend_ini_parser.h ../Zend/zend_language_parser.h \
+	   ../Zend/zend_ini_parser.c ../Zend/zend_language_parser.c \
+	   Zend/
+
+remove-files-stamp: remove-win32
+
+remove-win32:
+	# remove netware and win32 headers that we don't want
+	cd debian/libapache2-mod-php$(PHP_NAME_VERSION)/usr/include/php$(PHP_NAME_VERSION)/ && \
+		  $(RM) TSRM/readdir.h \
+			TSRM/tsrm_config.nw.h TSRM/tsrm_config.w32.h\
+			TSRM/tsrm_nw.h TSRM/tsrm_win32.h\
+			Zend/zend_config.nw.h Zend/zend_config.w32.h\
+			main/config.nw.h main/config.w32.h\
+			main/win95nt.h
