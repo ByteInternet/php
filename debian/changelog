@@ -1,3 +1,48 @@
+php5 (5.4.44-0+deb7u1) wheezy-security; urgency=medium
+
+  * New upstream version 5.4.44
+   - Core:
+    . Fixed bug #69793 (Remotely triggerable stack exhaustion via recursive
+      method calls).
+    . Fixed bug #69892 (Different arrays compare indentical due to integer key
+      truncation).
+    . Fixed bug #70121 (unserialize() could lead to unexpected methods execution
+      / NULL pointer deref).
+   - OpenSSL:
+    . Fixed bug #70014 (openssl_random_pseudo_bytes() is not cryptographically
+      secure).
+   - Phar:
+    . Improved fix for bug #69441.
+    . Fixed bug #70019 (Files extracted from archive may be placed outside of 
+      destination directory).
+   - SOAP:
+    . Fixed bug #70081 (SoapClient info leak / null pointer dereference via
+       multiple type confusions).
+   - SPL:
+    . Fixed bug #70068 (Dangling pointer in the unserialization of ArrayObject
+      items).
+    . Fixed bug #70166 (Use After Free Vulnerability in unserialize() with
+      SPLArrayObject).
+    . Fixed bug #70168 (Use After Free Vulnerability in unserialize() with
+      SplObjectStorage).
+    . Fixed bug #70169 (Use After Free Vulnerability in unserialize() with
+      SplDoublyLinkedList).
+  * New upstream version 5.4.43
+   - Core:
+    . Fixed bug #69768 (escapeshell*() doesn't cater to !).
+    . Fixed bug #69874 (Can't set empty additional_headers for mail()), regression
+      from fix to bug #68776.
+
+   - Mysqlnd:
+    . Fixed bug #69669 (mysqlnd is vulnerable to BACKRONYM) (CVE-2015-3152).
+   - Phar:
+    . Fixed bug #69958 (Segfault in Phar::convertToData on invalid file).
+    . Fixed bug #69923 (Buffer overflow and stack smashing error in 
+      phar_fix_filepath).
+  * Rebase patches on top of 5.4.44 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 16 Aug 2015 11:44:10 +0200
+
 php5 (5.4.42-0+deb7u1) wheezy-security; urgency=medium
 
   * New upstream version 5.4.42
