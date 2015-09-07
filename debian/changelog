@@ -1,3 +1,35 @@
+php5 (5.4.45-1) wheezy-security; urgency=medium
+
+  * New upstream version 5.4.45
+   - Core:
+    . Fixed bug #70172 (Use After Free Vulnerability in unserialize()).
+    . Fixed bug #70219 (Use after free vulnerability in session
+      deserializer).
+   - EXIF:
+    . Fixed bug #70385 (Buffer over-read in exif_read_data with TIFF IFD
+      tag byte value of 32 bytes).
+   - hash:
+    . Fixed bug #70312 (HAVAL gives wrong hashes in specific cases).
+   - PCRE:
+    . Fixed bug #70345 (Multiple vulnerabilities related to PCRE
+      functions).
+   - SOAP:
+    . Fixed bug #70388 (SOAP serialize_function_call() type confusion /
+      RCE).
+   - SPL:
+    . Fixed bug #70365 (Use-after-free vulnerability in unserialize() with
+      SplObjectStorage).
+    . Fixed bug #70366 (Use-after-free vulnerability in unserialize() with
+      SplDoublyLinkedList).
+   - XSLT:
+    . Fixed bug #69782 (NULL pointer dereference).
+   - ZIP:
+    . Fixed bug #70350 (ZipArchive::extractTo allows for directory
+      traversal when creating directories).
+  * Rebase patches on top of 5.4.45 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Sep 2015 13:44:03 +0200
+
 php5 (5.4.44-0+deb7u1) wheezy-security; urgency=medium
 
   * New upstream version 5.4.44
