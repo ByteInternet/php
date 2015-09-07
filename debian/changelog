@@ -1,4 +1,4 @@
-php5 (5.4.45-1) wheezy-security; urgency=medium
+php5 (5.4.45-0+deb7u1) wheezy-security; urgency=medium
 
   * New upstream version 5.4.45
    - Core:
