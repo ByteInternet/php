@@ -59,3 +59,4 @@
 0059-ads_odbc_exec.patch
 0060-check-libpq-lo_export-return-value.patch
 0061-Remove-warning-about-mysql-library-minor-version-mis.patch
+0062-Merge-security-updates-from-PHP-5.5.30-into-PHP-5.4..patch

@@ -1,0 +1,154 @@
+From: =?utf-8?q?Ond=C5=99ej_Sur=C3=BD?= <ondrej@sury.org>
+Date: Sun, 4 Oct 2015 17:02:59 +0200
+Subject: Merge security updates from PHP 5.5.30 into PHP 5.4.45
+
+---
+ ext/phar/dirstream.c         |  2 +-
+ ext/phar/tests/bug69720.phar |  0
+ ext/phar/tests/bug69720.phpt | 40 ++++++++++++++++++++++++++++++++++++++++
+ ext/phar/tests/bug70433.phpt | 23 +++++++++++++++++++++++
+ ext/phar/tests/bug70433.zip  |  0
+ ext/phar/util.c              |  9 +++++++--
+ ext/phar/zip.c               |  4 +++-
+ 7 files changed, 74 insertions(+), 4 deletions(-)
+ create mode 100644 ext/phar/tests/bug69720.phar
+ create mode 100644 ext/phar/tests/bug69720.phpt
+ create mode 100644 ext/phar/tests/bug70433.phpt
+ create mode 100644 ext/phar/tests/bug70433.zip
+
+diff --git a/ext/phar/dirstream.c b/ext/phar/dirstream.c
+index 1cbe522..b7ab3ce 100644
+--- a/ext/phar/dirstream.c
++++ b/ext/phar/dirstream.c
+@@ -207,7 +207,7 @@ static php_stream *phar_make_dirstream(char *dir, HashTable *manifest TSRMLS_DC)
+ 	zend_hash_internal_pointer_reset(manifest);
+ 
+ 	while (FAILURE != zend_hash_has_more_elements(manifest)) {
+-		if (HASH_KEY_NON_EXISTANT == zend_hash_get_current_key_ex(manifest, &key, &keylen, &unused, 0, NULL)) {
++		if (HASH_KEY_NON_EXISTENT == zend_hash_get_current_key_ex(manifest, &key, &keylen, &unused, 0, NULL)) {
+ 			break;
+ 		}
+ 
+diff --git a/ext/phar/tests/bug69720.phar b/ext/phar/tests/bug69720.phar
+new file mode 100644
+index 0000000..e69de29
+diff --git a/ext/phar/tests/bug69720.phpt b/ext/phar/tests/bug69720.phpt
+new file mode 100644
+index 0000000..43b701d
+--- /dev/null
++++ b/ext/phar/tests/bug69720.phpt
+@@ -0,0 +1,40 @@
++--TEST--
++Phar - bug #69720 - Null pointer dereference in phar_get_fp_offset()
++--SKIPIF--
++<?php if (!extension_loaded("phar")) die("skip"); ?>
++--FILE--
++<?php
++try {
++    // open an existing phar
++    $p = new Phar(__DIR__."/bug69720.phar",0);
++    // Phar extends SPL's DirectoryIterator class
++	echo $p->getMetadata();
++    foreach (new RecursiveIteratorIterator($p) as $file) {
++        // $file is a PharFileInfo class, and inherits from SplFileInfo
++	$temp="";
++        $temp= $file->getFileName() . "\n";
++        $temp.=file_get_contents($file->getPathName()) . "\n"; // display contents
++	var_dump($file->getMetadata());
++    }
++}
++ catch (Exception $e) {
++    echo 'Could not open Phar: ', $e;
++}
++?>
++--EXPECTF--
++
++MY_METADATA_NULL
++
++Warning: file_get_contents(phar:///%s): failed to open stream: phar error: "test.php" is not a file in phar "%s.phar" in %s.php on line %d
++array(1) {
++  ["whatever"]=>
++  int(123)
++}
++object(DateTime)#2 (3) {
++  ["date"]=>
++  string(26) "2000-01-01 00:00:00.000000"
++  ["timezone_type"]=>
++  int(3)
++  ["timezone"]=>
++  string(3) "UTC"
++}
+diff --git a/ext/phar/tests/bug70433.phpt b/ext/phar/tests/bug70433.phpt
+new file mode 100644
+index 0000000..cc8f438
+--- /dev/null
++++ b/ext/phar/tests/bug70433.phpt
+@@ -0,0 +1,23 @@
++--TEST--
++Phar - bug #70433 - Uninitialized pointer in phar_make_dirstream when zip entry filename is "/"
++--SKIPIF--
++<?php if (!extension_loaded("phar") || !extension_loaded("zlib")) die("skip"); ?>
++--FILE--
++<?php
++$phar = new PharData(__DIR__."/bug70433.zip");
++var_dump($phar);
++$meta = $phar->getMetadata();
++var_dump($meta);
++?>
++DONE
++--EXPECTF--
++object(PharData)#1 (3) {
++  ["pathName":"SplFileInfo":private]=>
++  string(0) ""
++  ["glob":"DirectoryIterator":private]=>
++  bool(false)
++  ["subPathName":"RecursiveDirectoryIterator":private]=>
++  string(0) ""
++}
++NULL
++DONE
+diff --git a/ext/phar/tests/bug70433.zip b/ext/phar/tests/bug70433.zip
+new file mode 100644
+index 0000000..e69de29
+diff --git a/ext/phar/util.c b/ext/phar/util.c
+index cd473ad..a824fa7 100644
+--- a/ext/phar/util.c
++++ b/ext/phar/util.c
+@@ -716,7 +716,12 @@ really_get_entry:
+ 	(*ret)->is_tar = entry->is_tar;
+ 	(*ret)->fp = phar_get_efp(entry, 1 TSRMLS_CC);
+ 	if (entry->link) {
+-		(*ret)->zero = phar_get_fp_offset(phar_get_link_source(entry TSRMLS_CC) TSRMLS_CC);
++		phar_entry_info *link = phar_get_link_source(entry TSRMLS_CC);
++		if(!link) {
++			efree(*ret);
++			return FAILURE;
++		}
++		(*ret)->zero = phar_get_fp_offset(link TSRMLS_CC);
+ 	} else {
+ 		(*ret)->zero = phar_get_fp_offset(entry TSRMLS_CC);
+ 	}
+@@ -2243,7 +2248,7 @@ void phar_add_virtual_dirs(phar_archive_data *phar, char *filename, int filename
+ 
+ 	while ((s = zend_memrchr(filename, '/', filename_len))) {
+ 		filename_len = s - filename;
+-		if (FAILURE == zend_hash_add_empty_element(&phar->virtual_dirs, filename, filename_len)) {
++		if (!filename_len || FAILURE == zend_hash_add_empty_element(&phar->virtual_dirs, filename, filename_len)) {
+ 			break;
+ 		}
+ 	}
+diff --git a/ext/phar/zip.c b/ext/phar/zip.c
+index 79203c8..b97e0c3 100644
+--- a/ext/phar/zip.c
++++ b/ext/phar/zip.c
+@@ -396,7 +396,9 @@ foundit:
+ 
+ 		if (entry.filename[entry.filename_len - 1] == '/') {
+ 			entry.is_dir = 1;
+-			entry.filename_len--;
++			if(entry.filename_len > 1) {
++				entry.filename_len--;
++			}
+ 			entry.flags |= PHAR_ENT_PERM_DEF_DIR;
+ 		} else {
+ 			entry.is_dir = 0;
