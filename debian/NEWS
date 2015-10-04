@@ -1,3 +1,13 @@
+php5 (5.4.45-0+deb7u2) wheezy-security; urgency=medium
+
+  * PHP 5.4 has reached end-of-life on 14 Sep 2015 and as a result there
+    will be no more new upstream releases.  The security support of PHP
+    5.4 in Debian will be best effort only and you are strongly advised
+    to upgrade to latest stable Debian release that includes PHP 5.6 that
+    will reach enf of security support on 28 Aug 2017.
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 04 Oct 2015 17:05:37 +0200
+
 php5 (5.4.4-14+deb7u9) stable; urgency=medium
 
   * The default PHP FPM socket permission has been changed from 0666
