@@ -3,32 +3,18 @@ Date: Sun, 4 Oct 2015 17:02:59 +0200
 Subject: Merge security updates from PHP 5.5.30 into PHP 5.4.45
 
 ---
- ext/phar/dirstream.c         |  2 +-
  ext/phar/tests/bug69720.phar |  0
  ext/phar/tests/bug69720.phpt | 40 ++++++++++++++++++++++++++++++++++++++++
  ext/phar/tests/bug70433.phpt | 23 +++++++++++++++++++++++
  ext/phar/tests/bug70433.zip  |  0
  ext/phar/util.c              |  9 +++++++--
  ext/phar/zip.c               |  4 +++-
- 7 files changed, 74 insertions(+), 4 deletions(-)
+ 6 files changed, 73 insertions(+), 3 deletions(-)
  create mode 100644 ext/phar/tests/bug69720.phar
  create mode 100644 ext/phar/tests/bug69720.phpt
  create mode 100644 ext/phar/tests/bug70433.phpt
  create mode 100644 ext/phar/tests/bug70433.zip
 
-diff --git a/ext/phar/dirstream.c b/ext/phar/dirstream.c
-index 1cbe522..b7ab3ce 100644
---- a/ext/phar/dirstream.c
-+++ b/ext/phar/dirstream.c
-@@ -207,7 +207,7 @@ static php_stream *phar_make_dirstream(char *dir, HashTable *manifest TSRMLS_DC)
- 	zend_hash_internal_pointer_reset(manifest);
- 
- 	while (FAILURE != zend_hash_has_more_elements(manifest)) {
--		if (HASH_KEY_NON_EXISTANT == zend_hash_get_current_key_ex(manifest, &key, &keylen, &unused, 0, NULL)) {
-+		if (HASH_KEY_NON_EXISTENT == zend_hash_get_current_key_ex(manifest, &key, &keylen, &unused, 0, NULL)) {
- 			break;
- 		}
- 
 diff --git a/ext/phar/tests/bug69720.phar b/ext/phar/tests/bug69720.phar
 new file mode 100644
 index 0000000..e69de29
