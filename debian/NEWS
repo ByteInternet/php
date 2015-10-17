@@ -4,7 +4,7 @@ php5 (5.4.45-0+deb7u2) wheezy-security; urgency=medium
     will be no more new upstream releases.  The security support of PHP
     5.4 in Debian will be best effort only and you are strongly advised
     to upgrade to latest stable Debian release that includes PHP 5.6 that
-    will reach enf of security support on 28 Aug 2017.
+    will reach end of security support on 28 Aug 2017.
 
  -- Ondřej Surý <ondrej@debian.org>  Sun, 04 Oct 2015 17:05:37 +0200
 
