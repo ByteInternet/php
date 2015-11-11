@@ -3,8 +3,10 @@ php5 (5.4.45-0+deb7u2) wheezy-security; urgency=high
   * Merge security updates from PHP 5.5.30 into PHP 5.4.45
    - Phar:
     . Fixed bug #69720 (Null pointer dereference in phar_get_fp_offset()).
+      (CVE-2015-7803)
     . Fixed bug #70433 (Uninitialized pointer in phar_make_dirstream when
       zip entry filename is "/").
+      (CVE-2015-7804)
   * Add a notice about PHP 5.4 EOL to d/NEWS
 
  -- Ondřej Surý <ondrej@debian.org>  Sun, 04 Oct 2015 17:12:28 +0200
