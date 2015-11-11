@@ -1,3 +1,29 @@
+php5 (5.6.15+dfsg-1) unstable; urgency=medium
+
+  * Imported Upstream version 5.6.15+dfsg
+   - Core:
+    . Fixed bug #70681 (Segfault when binding $this of internal instance
+      method to null).
+    . Fixed bug #70685 (Segfault for getClosure() internal method rebind
+      with invalid $this).
+   - Date:
+    . Fixed bug #70619 (DateTimeImmutable segfault).
+   - Mcrypt:
+    . Fixed bug #70625 (mcrypt_encrypt() won't return data when no IV was
+      specified under RC4).
+   - Mysqlnd:   
+    . Fixed bug #70384 (mysqli_real_query():Unknown type 245 sent by the
+      server).
+    . Fixed bug #70572 segfault in mysqlnd_connect.
+   - Opcache:
+    . Fixed bug #70632 (Third one of segfault in gc_remove_from_buffer).
+    . Fixed bug #70631 (Another Segfault in gc_remove_from_buffer()).
+    . Fixed bug #70601 (Segfault in gc_remove_from_buffer()).
+    . Fixed compatibility with Windows 10 (see also bug #70652).
+  * Rebase patches on top of 5.6.15+dfsg
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 11 Nov 2015 12:00:46 +0100
+
 php5 (5.6.14+dfsg-1) unstable; urgency=medium
 
   * Imported Upstream version 5.6.14+dfsg
