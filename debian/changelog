@@ -1,3 +1,27 @@
+php5 (5.6.16+dfsg-1) unstable; urgency=medium
+
+  * Imported Upstream version 5.6.16+dfsg
+   - Core:
+    . Fixed bug #70828 (php-fpm 5.6 with opcache crashes when referencing
+      a non-existent constant).
+    . Fixed bug #70748 (Segfault in ini_lex () at Zend/zend_ini_scanner.l).
+   - Mysqlnd:
+    . Fixed bug #68344 (MySQLi does not provide way to disable peer
+      certificate validation) by introducing
+      MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT connection flag.
+   - OCI8:
+    . Fixed bug #68298 (OCI int overflow).
+   - PDO_DBlib:
+    . Fixed bug #69757 (Segmentation fault on nextRowset).
+   - SOAP:
+    . Fixed bug #70875 (Segmentation fault if wsdl has no targetNamespace
+      attribute).
+   - SPL:
+   . Fixed bug #70852 (Segfault getting NULL offset of an ArrayObject).
+  * Rebase patches on top of 5.6.16+dfsg release
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 01 Dec 2015 13:21:11 +0100
+
 php5 (5.6.15+dfsg-1) unstable; urgency=medium
 
   * Imported Upstream version 5.6.15+dfsg
