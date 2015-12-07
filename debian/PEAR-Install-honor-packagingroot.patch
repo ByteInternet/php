@@ -1,0 +1,13 @@
+diff --git a/PEAR/Command/Install.php b/PEAR/Command/Install.php
+index 9d572ed..3b1fec9 100644
+--- a/PEAR/Command/Install.php
++++ b/PEAR/Command/Install.php
+@@ -848,7 +848,7 @@ Run post-installation scripts in package <package>, if any exist.
+             $pkg = &$instreg->getPackage($param->getPackage(), $param->getChannel());
+             // $pkg may be NULL if install is a 'fake' install via --packagingroot
+             if (is_object($pkg)) {
+-                $pkg->setConfig($this->config);
++                $pkg->setConfig($this->config, false);
+                 if ($list = $pkg->listPostinstallScripts()) {
+                     $pn = $reg->parsedPackageNameToString(array('channel' =>
+                        $param->getChannel(), 'package' => $param->getPackage()), true);
