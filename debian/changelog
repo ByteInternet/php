@@ -1,3 +1,15 @@
+php5 (5.6.16+dfsg-2) unstable; urgency=medium
+
+  [ Jan Wagner ]
+  * Adding 'PHP_INI_SCAN_DIR=/etc/php5/${conf_dir}/conf.d/' to session
+    cleanup script when calling php
+
+  [ Ondřej Surý ]
+  * Add patch to not reset packagingroot inside PEAR/Command/Install.php
+    (Closes: #805222)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Dec 2015 17:15:51 +0100
+
 php5 (5.6.16+dfsg-1) unstable; urgency=medium
 
   * Imported Upstream version 5.6.16+dfsg
