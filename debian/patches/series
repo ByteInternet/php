@@ -48,3 +48,4 @@
 0048-revert-f07b8f36ae8099e29d19fbe8806bc07b21dcd4ac.patch
 0049-Add-patch-to-remove-build-timestamps-from-generated-.patch
 0050-Remove-warning-about-mysql-library-minor-version-mis.patch
+0051-Revert-PEAR-version-to-last-working-version-from-PHP.patch
