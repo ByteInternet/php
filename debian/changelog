@@ -1,3 +1,10 @@
+php5 (5.6.16+dfsg-4) unstable; urgency=medium
+
+  * Make phar command versioned and use update-alternatives for 'phar'
+    name to allow src:php5 packages to be co-installed with src:php7.0
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 04 Jan 2016 15:21:55 +0100
+
 php5 (5.6.16+dfsg-3) unstable; urgency=medium
 
   * Remove invalid patch to not reset packagingroot inside
