@@ -57,3 +57,7 @@
 0057-ads_odbc_exec.patch
 0058-check-libpq-lo_export-return-value.patch
 0059-Merge-security-updates-from-PHP-5.5.30-into-PHP-5.4..patch
+0060-Fixed-bug-70661-Use-After-Free-Vulnerability-in-WDDX.patch
+0061-Fixed-70728.patch
+0062-Fixed-bug-70741-Session-WDDX-Packet-Deserialization-.patch
+0063-Fixed-bug-70755-fpm_log.c-memory-leak-and-buffer-ove.patch
