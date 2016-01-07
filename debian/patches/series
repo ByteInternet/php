@@ -60,3 +60,7 @@
 0060-check-libpq-lo_export-return-value.patch
 0061-Remove-warning-about-mysql-library-minor-version-mis.patch
 0062-Merge-security-updates-from-PHP-5.5.30-into-PHP-5.4..patch
+0063-Fixed-bug-70661-Use-After-Free-Vulnerability-in-WDDX.patch
+0064-Fixed-70728.patch
+0065-Fixed-bug-70741-Session-WDDX-Packet-Deserialization-.patch
+0066-Fixed-bug-70755-fpm_log.c-memory-leak-and-buffer-ove.patch
