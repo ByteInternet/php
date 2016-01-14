@@ -790,7 +790,7 @@ binary-arch: build install
 
 	# likewise, for the different sapi implementations
 	for tmpl in postrm prerm postinst; do \
-		for sapi in cgi cli fpm; do \
+		for sapi in cgi cli fpm phpdbg; do \
 			sed -e "s/@sapi@/$${sapi}/g; \
 	                        s/@package@/php5-$${sapi}/g; \
 	                         /#EXTRA#/ r debian/php5-$${sapi}.$${tmpl}.extra" \
