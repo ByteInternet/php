@@ -169,7 +169,7 @@ php5_msg()
 #		"enmod", "ensite", "disconf", "dismod", "dissite"
 #
 #       sapi - Either the specific SAPI (apache2, apache2filter, fpm,
-#              cgi, cli, embed) or ALL
+#              cgi, cli, embed, phpdbg) or ALL
 #
 #	arguments
 #		- A single argument (e.g. a module) which shall be
@@ -195,7 +195,7 @@ php5_invoke()
 
     sapi_list="$SAPI"
     case "$SAPI" in
-	apache2|apache2filter|fpm|cli|cgi|embed)
+	apache2|apache2filter|fpm|cli|cgi|embed|phpdbg)
 	    ;;
 	ALL)
 	    sapi_list=$(php5query -S)
