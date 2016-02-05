@@ -1,3 +1,43 @@
+php5 (5.6.18+dfsg-1) unstable; urgency=medium
+
+  * Imported Upstream version 5.6.18+dfsg
+   - Core:
+    . Fixed bug #71039 (exec functions ignore length but look for NULL
+      termination).
+    . Fixed bug #71089 (No check to duplicate zend_extension).
+    . Fixed bug #71201 (round() segfault on 64-bit builds).
+    . Added support for new HTTP 451 code.
+    . Fixed bug #71273 (A wrong ext directory setup in php.ini leads to
+      crash).
+    . Fixed bug #71323 (Output of stream_get_meta_data can be falsified by
+      its input).
+    . Fixed bug #71459 (Integer overflow in iptcembed()).
+   - Apache2handler:
+    . Fix >2G Content-Length headers in apache2handler.
+   - FTP:
+    . Implemented FR #55651 (Option to ignore the returned FTP PASV
+      address).
+   - Opcache:
+    . Fixed bug #71127 (Define in auto_prepend_file is overwrite).
+    . Fixed bug #71024 (Unable to use PHP 7.0 x64 side-by-side with
+      PHP 5.6 x32 on the same server).
+   - Phar:
+    . Fixed bug #71354 (Heap corruption in tar/zip/phar parser).
+    . Fixed bug #71391 (NULL Pointer Dereference in
+      phar_tar_setupmetadata()).
+    . Fixed bug #71488 (Stack overflow when decompressing tar archives).
+   - Session:
+    . Fixed bug #69111 (Crash in SessionHandler::read()).
+   - SOAP:
+    . Fixed bug #70979 (crash with bad soap request).
+   - SPL:
+    . Fixed bug #71204 (segfault if clean spl_autoload_funcs while
+      autoloading).
+   - WDDX:
+    . Fixed bug #71335 (Type Confusion in WDDX Packet Deserialization).
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 05 Feb 2016 10:25:45 +0100
+
 php5 (5.6.17+dfsg-3) unstable; urgency=medium
 
   * Fail gracefully when other PHP module is enabled in Apache2
