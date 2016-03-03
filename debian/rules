@@ -169,7 +169,7 @@ COMMON_CONFIG := \
 		--without-pear \
 		--enable-filter \
 		--with-openssl=yes \
-		--with-pcre-regex=/usr \
+		--with-pcre-regex \
 		--enable-hash \
 		  --with-mhash=/usr \
 		--enable-libxml \
