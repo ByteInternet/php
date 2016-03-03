@@ -5,7 +5,7 @@ Maintainer: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Uploaders: Ondřej Surý <ondrej@debian.org>,
            Thijs Kinkhorst <thijs@debian.org>,
            Lior Kaplan <kaplan@debian.org>
-Build-Depends: apache2-dev (>= 2.4),
+Build-Depends: apache2-prefork-dev (>= 2.2),
                autoconf (>= 2.63),
                automake (>= 1.11) | automake1.11,
                bison,
@@ -21,7 +21,7 @@ Build-Depends: apache2-dev (>= 2.4),
                libc-client-dev,
                libcurl4-openssl-dev | libcurl-dev,
                libdb-dev,
-               libedit-dev (>= 2.11-20080614-4),
+               libedit-dev (>= 2.11-20080614-3),
                libenchant-dev,
                libevent-dev (>= 1.4.11),
                libexpat1-dev (>= 1.95.2-2.1),
@@ -181,7 +181,7 @@ Description: server-side, HTML-embedded scripting language (CGI binary)
 
 Package: php7.0-cli
 Architecture: any
-Depends: libedit2 (>= 2.11-20080614-4),
+Depends: libedit2 (>= 2.11-20080614-3),
          libmagic1,
          mime-support,
          php7.0-common (= ${binary:Version}),
