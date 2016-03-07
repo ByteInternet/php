@@ -7,7 +7,7 @@ Subject: getallheaders for php-fpm #62596
  1 file changed, 84 insertions(+), 1 deletion(-)
 
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index f3c8ccc..832196c 100644
+index d12ac01..dbc8204 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
 @@ -115,6 +115,8 @@ struct sigaction act, old_term, old_quit, old_int;
@@ -19,7 +19,7 @@ index f3c8ccc..832196c 100644
  #ifndef PHP_WIN32
  /* these globals used for forking children on unix systems */
  
-@@ -1551,8 +1553,89 @@ PHP_FUNCTION(fastcgi_finish_request) /* {{{ */
+@@ -1575,8 +1577,89 @@ PHP_FUNCTION(fastcgi_finish_request) /* {{{ */
  }
  /* }}} */
  

@@ -56,10 +56,10 @@ index 40a41e5..7115720 100644
  					"(DEBUG GCOV)",
  #elif ZEND_DEBUG
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index 832196c..8fe6eee 100644
+index dbc8204..dce0cd0 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
-@@ -1836,9 +1836,9 @@ int main(int argc, char *argv[])
+@@ -1860,9 +1860,9 @@ int main(int argc, char *argv[])
  				SG(request_info).no_headers = 1;
  
  #if ZEND_DEBUG
