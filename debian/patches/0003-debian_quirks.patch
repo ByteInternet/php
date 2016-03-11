@@ -14,7 +14,7 @@ Subject: debian_quirks
  8 files changed, 21 insertions(+), 62 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index e7fdd74..a464226 100644
+index e7fdd74..f2cd9aa 100644
 --- a/configure.in
 +++ b/configure.in
 @@ -1085,7 +1085,7 @@ if test "$PHP_CLI" = "no"; then
@@ -55,7 +55,7 @@ index e7fdd74..a464226 100644
  EXPANDED_PHP_CONFIG_FILE_PATH=`eval echo "$PHP_CONFIG_FILE_PATH"`
  EXPANDED_PHP_CONFIG_FILE_SCAN_DIR=`eval echo "$PHP_CONFIG_FILE_SCAN_DIR"`
 -INCLUDE_PATH=.:$EXPANDED_PEAR_INSTALLDIR
-+INCLUDE_PATH=.:$EXPANDED_PEAR_INSTALLDIR:/usr/share/pear
++INCLUDE_PATH=.:/usr/share/php:/usr/share/pear:$EXPANDED_PEAR_INSTALLDIR
  
  exec_prefix=$old_exec_prefix
  libdir=$old_libdir
