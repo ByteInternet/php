@@ -17,6 +17,7 @@ php@PHP_VERSION@-dev.prerm
 php@PHP_VERSION@-fpm.conf
 php@PHP_VERSION@-fpm-checkconf
 php@PHP_VERSION@-fpm.init
+php@PHP_VERSION@-fpm.upstart
 php@PHP_VERSION@-fpm.logrotate
 php@PHP_VERSION@-fpm-reopenlogs
 php@PHP_VERSION@-fpm.service
