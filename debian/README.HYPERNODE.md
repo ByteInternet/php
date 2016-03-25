@@ -19,7 +19,7 @@ git-pbuilder update
 git clone git@github.com:ByteInternet/php.git
 cd php
 git checkout hypernode-7.0
-git-buildpackage --git-pbuilder --git-dist=precise --git-arch=amd64 --git-debian-branch=hypernode-7.0 -us -sa
+gbp buildpackage --git-pbuilder --git-dist=precise --git-arch=amd64 --git-debian-branch=hypernode-7.0 -us -sa
 ```
 
 
