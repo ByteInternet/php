@@ -1,3 +1,9 @@
+php7.0 (7.0.4-1byte1) UNRELEASED; urgency=low
+
+  * Add upstart script with infinite respawn 
+
+ -- Rick van de Loo <rick@byte.nl>  Fri, 25 Mar 2016 12:31:13 +0100
+
 php7.0 (7.0.4-1) unstable; urgency=medium
 
   * php7.0 7.0.3-14
