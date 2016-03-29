@@ -1,0 +1,15 @@
+# php7.0-fpm - The PHP FastCGI Process Manager
+
+description "The PHP FastCGI Process Manager"
+author "Hypernode <hypernode@byte.nl>"
+
+start on runlevel [2345]
+stop on runlevel [016]
+
+# you can uncomment this with recent upstart
+# reload signal USR2
+
+pre-start exec /usr/lib/php/php7.0-fpm-checkconf
+
+respawn
+exec /usr/sbin/php-fpm7.0 --nodaemonize --fpm-config /etc/php/7.0/fpm/php-fpm.conf
