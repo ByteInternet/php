@@ -1,3 +1,12 @@
+php5 (5.6.20+dfsg-1) unstable; urgency=medium
+
+  * Allow multiple whitespace in php5-fpm init script (Closes: #818102)
+  * Improve conffile parsing ini the init.d script
+  * Imported Upstream version 5.6.20+dfsg
+  * Rebase patches on top of 5.6.20+dfsg release
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 31 Mar 2016 16:51:18 +0200
+
 php5 (5.6.19+dfsg-2) unstable; urgency=medium
 
   * Return /usr/share/php to the default include_path that got dropped
