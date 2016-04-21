@@ -8,7 +8,7 @@ respawn
 respawn limit unlimited
 
 pre-start script
-  /usr/lib/php/php7.0-fpm-checkconf
+	/usr/lib/php/php7.0-fpm-checkconf
 	/bin/fuser --kill 9000/tcp --verbose || /bin/true
 end script
 
