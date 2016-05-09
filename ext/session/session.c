@@ -1483,7 +1483,7 @@ static void ppid2sid(zval *ppid) {
 PHPAPI void php_session_reset_id(void) /* {{{ */
 {
 	int module_number = PS(module_number);
-	zval *sid;
+	zval *sid, *data, *ppid;
 
 	if (!PS(id)) {
 		php_error_docref(NULL, E_WARNING, "Cannot set session ID - session ID is not initialized");
@@ -1523,13 +1523,20 @@ PHPAPI void php_session_reset_id(void) /* {{{ */
 		}
 	}
 
-	if (APPLY_TRANS_SID) {
-		/* FIXME: Resetting vars are required when
-		   session is stop/start/regenerated. However,
-		   php_url_scanner_reset_vars() resets all vars
-		   including other URL rewrites set by elsewhere. */
-		/* php_url_scanner_reset_vars(); */
-		php_url_scanner_add_var(PS(session_name), strlen(PS(session_name)), ZSTR_VAL(PS(id)), ZSTR_LEN(PS(id)), 1);
+	/* Apply trans sid if sid cookie is not set */
+	if (APPLY_TRANS_SID
+		&& (data = zend_hash_str_find(&EG(symbol_table), "_COOKIE", sizeof("_COOKIE") - 1))) {
+		ZVAL_DEREF(data);
+		if (Z_TYPE_P(data) == IS_ARRAY && (ppid = zend_hash_str_find(Z_ARRVAL_P(data), PS(session_name), strlen(PS(session_name))))) {
+			ZVAL_DEREF(ppid);
+		} else {
+			/* FIXME: Resetting vars are required when
+			   session is stop/start/regenerated. However,
+			   php_url_scanner_reset_vars() resets all vars
+			   including other URL rewrites set by elsewhere. */
+			/* php_url_scanner_reset_vars(); */
+			php_url_scanner_add_var(PS(session_name), strlen(PS(session_name)), ZSTR_VAL(PS(id)), ZSTR_LEN(PS(id)), 1);
+		}
 	}
 }
 /* }}} */
@@ -1611,6 +1618,7 @@ PHPAPI void php_session_start(void) /* {{{ */
 		 * '<session-name>=<session-id>' to allow URLs of the form
 		 * http://yoursite/<session-name>=<session-id>/script.php */
 		if (PS(define_sid) && !PS(id) &&
+			zend_is_auto_global_str("_SERVER", sizeof("_SERVER") - 1) == SUCCESS &&
 			(data = zend_hash_str_find(Z_ARRVAL(PG(http_globals)[TRACK_VARS_SERVER]), "REQUEST_URI", sizeof("REQUEST_URI") - 1)) &&
 			Z_TYPE_P(data) == IS_STRING &&
 			(p = strstr(Z_STRVAL_P(data), PS(session_name))) &&
@@ -3099,7 +3107,7 @@ zend_module_entry session_module_entry = {
 
 #ifdef COMPILE_DL_SESSION
 #ifdef ZTS
-ZEND_TSRMLS_CACHE_DEFINE();
+ZEND_TSRMLS_CACHE_DEFINE()
 #endif
 ZEND_GET_MODULE(session)
 #endif

@@ -371,7 +371,7 @@ zend_module_entry sockets_module_entry = {
 
 #ifdef COMPILE_DL_SOCKETS
 #ifdef ZTS
-	ZEND_TSRMLS_CACHE_DEFINE();
+	ZEND_TSRMLS_CACHE_DEFINE()
 #endif
 ZEND_GET_MODULE(sockets)
 #endif
@@ -425,9 +425,9 @@ static int php_open_listen_sock(php_socket **php_sock, int port, int backlog) /*
 	*php_sock = sock;
 
 #ifndef PHP_WIN32
-	if ((hp = gethostbyname("0.0.0.0")) == NULL) {
+	if ((hp = php_network_gethostbyname("0.0.0.0")) == NULL) {
 #else
-	if ((hp = gethostbyname("localhost")) == NULL) {
+	if ((hp = php_network_gethostbyname("localhost")) == NULL) {
 #endif
 		efree(sock);
 		return 0;

@@ -1,10 +1,10 @@
-libapache2-mod-php@PHP_VERSION@.lintian-overrides
 PEAR-Builder-print-info-about-php@PHP_VERSION@-dev.patch
 php@PHP_VERSION@.bug-control
 php@PHP_VERSION@-cgi.conf
 php@PHP_VERSION@-common.dirs.extra
 php@PHP_VERSION@-common.docs
-php@PHP_VERSION@-common.lintian-overrides
+php@PHP_VERSION@-common.lintian-overrides.extra
+php@PHP_VERSION@-common.preinst.extra
 php@PHP_VERSION@-common.README.Debian
 php@PHP_VERSION@.conf
 php@PHP_VERSION@dbg.1
@@ -22,6 +22,8 @@ php@PHP_VERSION@-fpm.logrotate
 php@PHP_VERSION@-fpm-reopenlogs
 php@PHP_VERSION@-fpm.service
 php@PHP_VERSION@-fpm.tmpfile
+php@PHP_VERSION@-fpm.upstart
 php@PHP_VERSION@.load
 php@PHP_VERSION@-xml.substvars.extra
 php@PHP_VERSION@-xml.postinst.extra
+php@PHP_VERSION@.maintscript

@@ -147,7 +147,7 @@ export DEB_CFLAGS_MAINT_APPEND
 export DEB_LDFLAGS_MAINT_APPEND
 
 # some other helpful (for readability at least) shorthand variables
-PHPIZE_BUILDDIR := debian/$(PHP_DEV)/usr/lib/php/$(PHP_ZEND_VERSION)/build
+PHPIZE_BUILDDIR := /usr/lib/php/$(PHP_ZEND_VERSION)/build/
 
 COMMON_CONFIG := \
 		--build=$(DEB_BUILD_GNU_TYPE) \
@@ -175,6 +175,8 @@ COMMON_CONFIG := \
 		--enable-libxml \
 		--enable-session \
 		--with-system-tzdata \
+		--with-zlib=/usr \
+		  --with-zlib-dir=/usr \
 		$(CONFIGURE_ZTS) \
 		$(CONFIGURE_DTRACE_ARGS)
 
@@ -364,7 +366,7 @@ prepare-files-stamp:
 	for file in $(PREPARE_FILES); do \
 	    versionless=$$(echo $$file | $(SED) -e 's/@PHP_VERSION@//g'); \
 	    versioned=$$(echo $$file | $(SED) -e 's/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
-	    package=$$(echo $$file | $(SED) -e 's/\..*$$//;s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
+	    package=$$(echo $$file | $(SED) -e 's,^debian/,,;s/\..*$$//;s/@PHP_VERSION@/$(PHP_NAME_VERSION)/g'); \
 	    < $${versionless} $(SED_REPLACEMENT) > $${versioned}; \
 	    if [ -x $${versionless} ]; then chmod +x $${versioned}; fi; \
 	done
@@ -385,7 +387,7 @@ prepare-files-stamp:
 	  package=php$(PHP_NAME_VERSION)-$${module}; \
 	  extensions=$$(eval echo \$${$${module}_EXTENSIONS}); \
 	  description=$$(eval echo \$${$${module}_DESCRIPTION}); \
-	  for tmpl in preinst postinst postrm prerm bug-script bug-control triggers dirs substvars; do \
+	  for tmpl in preinst postinst postrm prerm bug-script bug-control triggers dirs substvars lintian-overrides; do \
 	      < debian/php-module.$${tmpl}.in \
 		$(SED) -e "/\#EXTRA\#/ r debian/$${package}.$${tmpl}.extra" | \
 		$(SED) -e "s,@package@,$${package},g"		\
@@ -397,9 +399,9 @@ prepare-files-stamp:
 		$(SED) -e '/\#EXTRA\#/ d' \
 	      > debian/$${package}.$${tmpl}; \
 	  done; \
+	  provides=""; \
 	  for dsoname in $${extensions}; do \
 	    normalized=$$(echo $${dsoname} | sed -e 's/_/-/g'); \
-	    provides=""; \
 	    priority=$$(eval echo \$${$${dsoname}_PRIORITY}); \
 	    if [ -z "$${priority}" ]; then priority=20; fi; \
 	    extension=$$(eval echo \$${$${dsoname}_EXTENSION}); \
@@ -419,11 +421,6 @@ prepare-files-stamp:
 	  echo "php-$${module}:Provides=$${provides}" >> debian/$${package}.substvars; \
 	done
 	touch prepare-files-stamp
-
-rename-files-stamp: rename-phar-stamp
-	mv -u debian/tmp/usr/lib/apache2/modules/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/apache2/modules/libphp$(PHP_NAME_VERSION).so
-	mv -u debian/tmp/usr/lib/php/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/libphp$(PHP_NAME_VERSION).so
-	touch rename-files-stamp
 
 remove-files-stamp:
 	# get rid of dreaded libtool files
@@ -459,10 +456,27 @@ remove-files-stamp:
 override_dh_installdirs: prepare-files-stamp
 	dh_installdirs
 
-override_dh_install: rename-files-stamp remove-files-stamp prepare-fpm-pools
-	# install extra CGI-BIN
+override_dh_install-arch: remove-files-stamp prepare-fpm-pools
+# Rename Apache2 SAPI
+	mv -u debian/tmp/usr/lib/apache2/modules/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/apache2/modules/libphp$(PHP_NAME_VERSION).so
+# Rename embed SAPI
+	mv -u debian/tmp/usr/lib/php/libphp$(PHP_MAJOR_VERSION).so debian/tmp/usr/lib/libphp$(PHP_NAME_VERSION).so
+# Rename phar binaries
+	mv -u debian/tmp/usr/bin/phar.phar debian/tmp/usr/bin/phar.phar$(PHP_NAME_VERSION)
+	rm debian/tmp/usr/bin/phar
+	ln -s phar.phar$(PHP_NAME_VERSION) debian/tmp/usr/bin/phar$(PHP_NAME_VERSION)
+	mv -u debian/tmp/usr/share/man/man1/phar.phar.1 debian/tmp/usr/share/man/man1/phar.phar$(PHP_NAME_VERSION).1
+	mv -u debian/tmp/usr/share/man/man1/phar.1 debian/tmp/usr/share/man/man1/phar$(PHP_NAME_VERSION).1
+# Install extra CGI-BIN
 	install -d -m 755 debian/tmp/usr/lib/cgi-bin/
 	ln debian/tmp/usr/bin/php-cgi$(PHP_NAME_VERSION) debian/tmp/usr/lib/cgi-bin/php$(PHP_NAME_VERSION)
+
+	dh_install --fail-missing
+
+# Install a helper script for checking PHP FPM configuration
+	mkdir -p debian/$(PHP_FPM)/usr/lib/php/
+	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
+	install -m 755 debian/$(PHP_FPM)-reopenlogs debian/$(PHP_FPM)/usr/lib/php/
 
 	# sanitize php.ini files
 	mkdir -p debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/
@@ -482,27 +496,24 @@ override_dh_install: rename-files-stamp remove-files-stamp prepare-fpm-pools
 	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
 	  > debian/$(PHP_COMMON)/usr/lib/php/$(PHP_NAME_VERSION)/php.ini-development
 
-# install a helper script for checking PHP FPM configuration
-	mkdir -p debian/$(PHP_FPM)/usr/lib/php/
-	install -m 755 debian/$(PHP_FPM)-checkconf debian/$(PHP_FPM)/usr/lib/php/
-	install -m 755 debian/$(PHP_FPM)-reopenlogs debian/$(PHP_FPM)/usr/lib/php/
-
-	dh_install --fail-missing
-
 ifeq (yes,$(RUN_TESTS))
+	mkdir -p debian/$(PHP_COMMON)/usr/share/doc/$(PHP_COMMON)/
 	cp test-results.txt debian/$(PHP_COMMON)/usr/share/doc/$(PHP_COMMON)/
 endif
 
+
+override_dh_link:
 # shipping duplicate files from other packages is hell for security audits
-	ln -sf /usr/share/misc/config.guess $(PHPIZE_BUILDDIR)/config.guess
-	ln -sf /usr/share/misc/config.sub $(PHPIZE_BUILDDIR)/config.sub
-	ln -sf /usr/share/aclocal/libtool.m4 $(PHPIZE_BUILDDIR)/libtool.m4
+	echo "/usr/share/misc/config.guess $(PHPIZE_BUILDDIR)/config.guess" >> $(PHP_DEV).links
+	echo "/usr/share/misc/config.sub $(PHPIZE_BUILDDIR)/config.sub" >> $(PHP_DEV).links
+	echo "/usr/share/aclocal/libtool.m4 $(PHPIZE_BUILDDIR)/libtool.m4" >> $(PHP_DEV).links
 	if dpkg --compare-versions $(LIBTOOL_VERSION) ge 2.4.6-0.1~; then \
-	    ln -sf /usr/share/libtool/build-aux/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh; \
+	    echo "/usr/share/libtool/build-aux/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh" >> $(PHP_DEV).links; \
 	else \
-	    ln -sf /usr/share/libtool/config/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh; \
+	    echo "/usr/share/libtool/config/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh" >> $(PHP_DEV).links; \
 	fi	
-	ln -sf /usr/bin/shtool $(PHPIZE_BUILDDIR)/shtool
+	echo "/usr/bin/shtool $(PHPIZE_BUILDDIR)/shtool" >> $(PHP_DEV).links
+	dh_link
 
 override_dh_apache2:
 	for sapi in apache2 cgi fpm; do \
@@ -512,17 +523,20 @@ override_dh_apache2:
 	dh_apache2 --conditional=php_enable
 
 override_dh_installdocs-indep:
-	dh_installdocs -p$(PHP_COMMON)
-	dh_installdocs -i --remaining-packages --link-doc=$(PHP_COMMON)
+	dh_installdocs -i
 
 override_dh_installdocs-arch:
-	dh_installdocs -a --link-doc=$(PHP_COMMON)
+	dh_installdocs -p$(PHP_COMMON)
+	dh_installdocs -a --remaining-packages --link-doc=$(PHP_COMMON)
 
 override_dh_compress:
 	dh_compress -Xphp.ini
 
-override_dh_installchangelogs:
-	dh_installchangelogs -p$(PHP_COMMON) NEWS
+override_dh_installchangelogs-arch:
+	dh_installchangelogs -a -p$(PHP_COMMON) NEWS
+
+override_dh_installchangelogs-indep:
+	dh_installchangelogs -i NEWS
 
 override_dh_strip:
 	dh_strip --dbgsym-migration='php$(PHP_NAME_VERSION)-dbg' || dh_strip
@@ -532,7 +546,7 @@ override_dh_makeshlibs-arch:
 
 override_dh_gencontrol-arch:
 	# Bail-out if PHPAPI has changed
-	stored=$$(cat debian/phpapi)$(ZTS); \
+	stored=$$(cat debian/phpapi); \
 	for sapi in $(REAL_TARGETS); do \
 	    $(SAPI_PACKAGE) \
 	    $${sapi}-build/sapi/cli/php -n -r '$(BUILTIN_EXTENSION_CHECK)' \

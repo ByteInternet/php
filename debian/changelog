@@ -1,3 +1,119 @@
+php7.0 (7.0.6-1) unstable; urgency=medium
+
+  * Imported Upstream version 7.0.6
+  * Rebase patches on top of 7.0.6 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 29 Apr 2016 12:14:25 +0200
+
+php7.0 (7.0.5-4) unstable; urgency=medium
+
+  [ Mathieu Parent ]
+  * Fix lintian warnings:
+    - Remove XS-Testsuite in control file
+    - binary-control-field-duplicates-source field "priority" in package
+      libphp7.0-embed
+    - Use secure Vcs-* fields and move from gitweb to cgit
+    - Copyright: fix timezone-database.patch name
+    - Add documentation to php-fpm.service
+
+  [ Ondřej Surý ]
+  * Remove repack scripts, they are not needed for PHP 7.0 anymore
+  * Install changelogs to indep packages
+  * Debian PHPAPI stays same with ZTS and non-ZTS build
+  * Instead of conflicting with old php5 packages, use dpkg-divert to move
+    /usr/bin/phar away
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 27 Apr 2016 20:37:29 +0200
+
+php7.0 (7.0.5-3) unstable; urgency=medium
+
+  * Make phpX.Y binNMUable and kill the doc symlink (Closes: #821007)
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 14 Apr 2016 16:07:15 +0200
+
+php7.0 (7.0.5-2) unstable; urgency=medium
+
+  * Restore php.ini templates since phpX.Y-common is arch:any
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 31 Mar 2016 18:57:55 +0200
+
+php7.0 (7.0.5-1) unstable; urgency=medium
+
+  [ Svante Signell ]
+  * Fix ext/date/lib/parse_tz PATH_MAX HURD FTBFS (Closes:  #819627)
+
+  [ Ondřej Surý ]
+  * Split override_dh_install to indep and arch rules to allow sourceonly
+    uploads (Closes: #819240)
+  * Imported Upstream version 7.0.5
+  * Rebase patches on top of 7.0.5
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 31 Mar 2016 14:52:48 +0200
+
+php7.0 (7.0.4-7) unstable; urgency=medium
+
+  * Add upstart init script for backport reasons
+  * Add do_tmpfiles() call to php-fpm-checkconf to get consistent
+    behaviour in all init systems
+  * Fix use of UNDEF instead of NULL in read_dimension
+    (Courtesy of Nikita Popov)
+  * libphp-embed 'update-alternatives --remove' call needs to be in prerm
+    script
+  * Override maintainer-script-empty prerm in PHP extension packages
+  * apache2-module-depends-on-real-apache2-package lintian-override needs
+    to go in php-sapi.lintian-overrides to have any effect
+  * Move embedded library fileinfo lintian-override to
+    php-common.lintian-overrides.extra
+  * Add missing #EXTRA# to php-module.lintian-overrides template
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 25 Mar 2016 17:25:41 +0100
+
+php7.0 (7.0.4-6) unstable; urgency=medium
+
+  * Add patch to fix segmentation fault in pcre running twig tests
+  * Register libphp@PHP_MAJOR@.so with update-alternatives, so there's no
+    dangling symbol in the piuparts
+  * Really expand $libdir and $datadir before AC_SUBST to allow passing
+    ${prefix} as part of --with-libdir
+  * Don't reset module provides at every dsoname, but at every module name
+  * Set PEAR_INSTALL_DIR manually to /usr/share/php even if we are not
+    building PEAR, so PEAR have correct paths
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 14 Mar 2016 16:11:21 +0100
+
+php7.0 (7.0.4-5) unstable; urgency=medium
+
+  * Apply patch to make opcache lockfile path configurable
+    (Courtesy of Gandi)
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 09 Mar 2016 12:27:40 +0100
+
+php7.0 (7.0.4-4) unstable; urgency=medium
+
+  * Also kill old /etc/php/mods-available/zlib.ini
+    (Closes: #817205, #817202)
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 09 Mar 2016 10:08:25 +0100
+
+php7.0 (7.0.4-3) unstable; urgency=medium
+
+  * We need php_enable() in prerm script (Closes: #816763)
+  * Force ucf and ucfr de-registration of old config files
+  * ZLIB needs to be builtin module to support IMAGETYPE_SWC
+  * Remove zlib extension from the list of extensions
+  * php-common.preinst.extra was missing from d/prepare-files
+  * Remove debian/ prefix from @package@ in prepared-files
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 07 Mar 2016 16:12:42 +0100
+
+php7.0 (7.0.4-2) unstable; urgency=medium
+
+  * Replace libvpx-dev with libwebp-dev in ext-gd.mk
+  * zlib extension needs to be enable as a module for all SAPIs to support
+    IMAGETYPE_SWC
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 03 Mar 2016 20:52:13 +0100
+
 php7.0 (7.0.4-1byte1) UNRELEASED; urgency=low
 
   * Add upstart script with infinite respawn 
@@ -6,7 +122,6 @@ php7.0 (7.0.4-1byte1) UNRELEASED; urgency=low
 
 php7.0 (7.0.4-1) unstable; urgency=medium
 
-  * php7.0 7.0.3-14
   * Imported Upstream version 7.0.4
   * Remove two patches already present in upstream
   * Rebase patches on top of 7.0.4 release
@@ -16,7 +131,7 @@ php7.0 (7.0.4-1) unstable; urgency=medium
     (Closes: #816465)
   * Reorder SAPI cleanup scripts to properly disable PHP extensions
 
- -- Ondřej Surý <ondrej@debian.org>  Thu, 03 Mar 2016 10:32:54 +0100
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 03 Mar 2016 11:41:57 +0100
 
 php7.0 (7.0.3-13) unstable; urgency=medium
 
