@@ -41,7 +41,6 @@ Build-Depends: apache2-prefork-dev (>= 2.2),
 	       libnss-myhostname,
                libonig-dev,
                libpam0g-dev,
-               libpcre3-dev (>= 8.20),
                libpng-dev,
                libpq-dev,
                libpspell-dev,
@@ -59,7 +58,7 @@ Build-Depends: apache2-prefork-dev (>= 2.2),
                libxmlrpc-epi-dev,
                libxmltok1-dev,
                libxslt1-dev (>= 1.0.18),
-               libzip-dev (>= 1.0.0),
+               libzip-dev,
                locales-all | language-pack-de,
                mysql-server | virtual-mysql-server,
                netbase,
@@ -80,7 +79,6 @@ Package: libapache2-mod-php7.0
 Section: httpd
 Architecture: any
 Depends: libmagic1,
-         libpcre3 (>= 1:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -108,7 +106,6 @@ Description: server-side, HTML-embedded scripting language (Apache 2 module)
 Package: libphp7.0-embed
 Architecture: any
 Depends: libmagic1,
-         libpcre3 (>= 1:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -154,7 +151,6 @@ Description: server-side, HTML-embedded scripting language (metapackage)
 Package: php7.0-cgi
 Architecture: any
 Depends: libmagic1,
-         libpcre3 (>= 1:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -183,7 +179,6 @@ Package: php7.0-cli
 Architecture: any
 Depends: libedit2 (>= 2.11-20080614-3),
          libmagic1,
-         libpcre3 (>= 1:8.20),
          mime-support,
          php7.0-common (= ${binary:Version}),
          php7.0-json,
@@ -209,7 +204,6 @@ Description: command-line interpreter for the PHP scripting language
 Package: php7.0-dev
 Depends: autoconf (>= 2.63),
          automake (>= 1.11),
-         libpcre3-dev (>= 1:8.20),
          libssl-dev,
          php7.0-cli (>= ${binary:Version}),
          php7.0-common (= ${binary:Version}),
@@ -232,7 +226,6 @@ Description: Files for PHP7.0 module development
 Package: php7.0-fpm
 Architecture: any
 Depends: libmagic1,
-         libpcre3 (>= 1:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -260,7 +253,6 @@ Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
 Package: php7.0-phpdbg
 Architecture: any
 Depends: libmagic1,
-         libpcre3 (>= 1:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
