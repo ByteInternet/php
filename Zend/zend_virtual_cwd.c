@@ -915,6 +915,7 @@ static int tsrm_realpath_r(char *path, int start, int len, int *ll, time_t *t, i
 
 			pbuffer = (REPARSE_DATA_BUFFER *)do_alloca(MAXIMUM_REPARSE_DATA_BUFFER_SIZE, use_heap_large);
 			if (pbuffer == NULL) {
+				CloseHandle(hLink);
 				return -1;
 			}
 			if(!DeviceIoControl(hLink, FSCTL_GET_REPARSE_POINT, NULL, 0, pbuffer,  MAXIMUM_REPARSE_DATA_BUFFER_SIZE, &retlength, NULL)) {
@@ -1186,7 +1187,7 @@ CWD_API int virtual_file_ex(cwd_state *state, const char *path, verify_path_func
 	int add_slash;
 	void *tmp;
 
-	if (path_length == 0 || path_length >= MAXPATHLEN-1) {
+	if (path_length <= 0 || path_length >= MAXPATHLEN-1) {
 #ifdef ZEND_WIN32
 		_set_errno(EINVAL);
 #else

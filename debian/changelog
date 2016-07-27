@@ -1,3 +1,85 @@
+php7.0 (7.0.9-1) unstable; urgency=medium
+
+  * Imported Upstream version 7.0.9
+  * Rebase patches on top of PHP-7.0.9
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 21 Jul 2016 14:32:48 +0200
+
+php7.0 (7.0.8-5) unstable; urgency=medium
+
+  * Run tests only on arch builds (Closes: #830800)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 11 Jul 2016 20:38:54 +0200
+
+php7.0 (7.0.8-4) unstable; urgency=medium
+
+  * phpX.Y-snmp needs to depend on snmp to avoid 'Cannot adopt OID in *'
+    failures
+  * Use correct libpcre3 (>= 1:8.20) instead of libpcre3 (>= 2:8.20)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 11 Jul 2016 12:01:03 +0200
+
+php7.0 (7.0.8-3) unstable; urgency=medium
+
+  [ Ondřej Surý ]
+  * Improve libapache2-mod-php script to switch MPM only on fresh installs
+  * libapache2-mod-phpX.Y now recommends apache2 package (as this is what
+    most people want anyway)
+
+  [ Marc Deslauriers ]
+  * Re-enable test suite
+
+  [ Ondřej Surý ]
+  * Update d/setup-mysql.sh to support MySQL 5.5, 5.6 and 5.7 and
+    build-depend on libnss-myhostname so mysql_install_db --force option
+    is not needed
+
+ -- Ondřej Surý <ondrej@debian.org>  Wed, 29 Jun 2016 11:11:39 +0200
+
+php7.0 (7.0.8-2) unstable; urgency=medium
+
+  [ Thomas Häber ]
+  * fix typo in Tighten depends on pcre3 to workaround symbols brokeness
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 24 Jun 2016 13:41:57 +0200
+
+php7.0 (7.0.8-1) unstable; urgency=medium
+
+  * Tighten depends on pcre3 to workaround symbols brokeness
+  * Imported Upstream version 7.0.8
+  * Rebase patches on top of 7.0.8 release
+  * Adjust tidy extension for tidy-html5
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 24 Jun 2016 08:22:40 +0200
+
+php7.0 (7.0.7-5) unstable; urgency=medium
+
+  * Add Breaks: gforge-common (<< 6) to php7.0-common (Closes: #827413)
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 16 Jun 2016 09:00:25 +0200
+
+php7.0 (7.0.7-4) unstable; urgency=medium
+
+  * Don't break apache2 configuration if setenvif_module is not enabled
+    (Closes: #825933)
+  * Add notice about apache2 notices when apache2 package is installed
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 03 Jun 2016 13:22:25 +0200
+
+php7.0 (7.0.7-3) unstable; urgency=medium
+
+  * The alternative base-files dependency to *systemd* deps is also
+    required only on linux-any
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 27 May 2016 13:21:07 +0200
+
+php7.0 (7.0.7-2) unstable; urgency=medium
+
+  * Drop ProtectSystem=full, PrivateTmp=full and PrivateDevices=true
+    because it breaks some systems (Closes: #825499)
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 27 May 2016 12:22:05 +0200
+
 php7.0 (7.0.7-1) unstable; urgency=medium
 
   * Depend on json also in the embed and phpdbg SAPIs

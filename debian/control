@@ -38,9 +38,10 @@ Build-Depends: apache2-prefork-dev (>= 2.2),
                libmcrypt-dev,
                libmhash-dev (>= 0.8.8),
                libmysqlclient-dev | libmysqlclient15-dev,
+	       libnss-myhostname,
                libonig-dev,
                libpam0g-dev,
-               libpcre3-dev (>= 6.6),
+               libpcre3-dev (>= 8.20),
                libpng-dev,
                libpq-dev,
                libpspell-dev,
@@ -58,7 +59,7 @@ Build-Depends: apache2-prefork-dev (>= 2.2),
                libxmlrpc-epi-dev,
                libxmltok1-dev,
                libxslt1-dev (>= 1.0.18),
-               libzip-dev,
+               libzip-dev (>= 1.0.0),
                locales-all | language-pack-de,
                mysql-server | virtual-mysql-server,
                netbase,
@@ -79,6 +80,7 @@ Package: libapache2-mod-php7.0
 Section: httpd
 Architecture: any
 Depends: libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -90,6 +92,7 @@ Depends: libmagic1,
          ${shlibs:Depends}
 Provides: libapache2-mod-php,
           ${php:Provides}
+Recommends: apache2
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (Apache 2 module)
  This package provides the PHP module for the Apache 2 webserver (as
@@ -105,8 +108,12 @@ Description: server-side, HTML-embedded scripting language (Apache 2 module)
 Package: libphp7.0-embed
 Architecture: any
 Depends: libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
+         php7.0-cli,
          php7.0-common (= ${binary:Version}),
+         php7.0-json,
+         php7.0-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -130,7 +137,7 @@ Description: HTML-embedded scripting language (Embedded SAPI library)
 
 Package: php7.0
 Architecture: all
-Depends: php7.0-fpm | libapache2-mod-php7.0 | php7.0-cgi,
+Depends: libapache2-mod-php7.0 | php7.0-fpm | php7.0-cgi,
          php7.0-common,
          ${misc:Depends}
 Provides: php
@@ -147,6 +154,7 @@ Description: server-side, HTML-embedded scripting language (metapackage)
 Package: php7.0-cgi
 Architecture: any
 Depends: libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -175,6 +183,7 @@ Package: php7.0-cli
 Architecture: any
 Depends: libedit2 (>= 2.11-20080614-3),
          libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
          php7.0-common (= ${binary:Version}),
          php7.0-json,
@@ -200,7 +209,7 @@ Description: command-line interpreter for the PHP scripting language
 Package: php7.0-dev
 Depends: autoconf (>= 2.63),
          automake (>= 1.11),
-         libpcre3-dev,
+         libpcre3-dev (>= 1:8.20),
          libssl-dev,
          php7.0-cli (>= ${binary:Version}),
          php7.0-common (= ${binary:Version}),
@@ -223,6 +232,7 @@ Description: Files for PHP7.0 module development
 Package: php7.0-fpm
 Architecture: any
 Depends: libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
          php7.0-cli,
          php7.0-common (= ${binary:Version}),
@@ -250,8 +260,12 @@ Description: server-side, HTML-embedded scripting language (FPM-CGI binary)
 Package: php7.0-phpdbg
 Architecture: any
 Depends: libmagic1,
+         libpcre3 (>= 1:8.20),
          mime-support,
+         php7.0-cli,
          php7.0-common (= ${binary:Version}),
+         php7.0-json,
+         php7.0-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
@@ -718,28 +732,6 @@ Description: Enchant module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: php7.0-imap
-Architecture: any
-Depends: php-common (>= 1:35),
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-	 ${php-imap:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends},
-	     ${php-imap:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Replaces: ${php-imap:Replaces}
-Breaks: ${php-imap:Breaks}
-Conflicts: ${php-imap:Conflicts}
-Provides: ${php-imap:Provides}
-Description: IMAP module for PHP
- This package provides the IMAP module(s) for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
 Package: php7.0-opcache
 Architecture: any
 Depends: php-common (>= 1:35),
@@ -757,6 +749,28 @@ Conflicts: ${php-opcache:Conflicts}
 Provides: ${php-opcache:Provides}
 Description: Zend OpCache module for PHP
  This package provides the Zend OpCache module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php7.0-imap
+Architecture: any
+Depends: php-common (>= 1:35),
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-imap:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-imap:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-imap:Replaces}
+Breaks: ${php-imap:Breaks}
+Conflicts: ${php-imap:Conflicts}
+Provides: ${php-imap:Provides}
+Description: IMAP module for PHP
+ This package provides the IMAP module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
@@ -823,6 +837,28 @@ Conflicts: ${php-soap:Conflicts}
 Provides: ${php-soap:Provides}
 Description: SOAP module for PHP
  This package provides the SOAP module(s) for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: php7.0-dba
+Architecture: any
+Depends: php-common (>= 1:35),
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+	 ${php-dba:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends},
+	     ${php-dba:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Replaces: ${php-dba:Replaces}
+Breaks: ${php-dba:Breaks}
+Conflicts: ${php-dba:Conflicts}
+Provides: ${php-dba:Provides}
+Description: DBA module for PHP
+ This package provides the DBA module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited

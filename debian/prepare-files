@@ -6,6 +6,7 @@ php@PHP_VERSION@-common.docs
 php@PHP_VERSION@-common.lintian-overrides.extra
 php@PHP_VERSION@-common.preinst.extra
 php@PHP_VERSION@-common.README.Debian
+php@PHP_VERSION@-common.substvars.extra
 php@PHP_VERSION@.conf
 php@PHP_VERSION@dbg.1
 php@PHP_VERSION@-dev.dirs
@@ -15,7 +16,6 @@ php@PHP_VERSION@-dev.lintian-overrides
 php@PHP_VERSION@-dev.postinst
 php@PHP_VERSION@-dev.prerm
 php@PHP_VERSION@-fpm.conf
-php@PHP_VERSION@-fpm-checkconf
 php@PHP_VERSION@-fpm.init
 php@PHP_VERSION@-fpm.upstart
 php@PHP_VERSION@-fpm.logrotate
@@ -26,4 +26,4 @@ php@PHP_VERSION@-fpm.upstart
 php@PHP_VERSION@.load
 php@PHP_VERSION@-xml.substvars.extra
 php@PHP_VERSION@-xml.postinst.extra
-php@PHP_VERSION@.maintscript
+php-snmp.substvars.extra

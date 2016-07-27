@@ -4617,7 +4617,7 @@ PHP_FUNCTION(imagecropauto)
 			break;
 
 		case GD_CROP_THRESHOLD:
-			if (color < 0) {
+			if (color < 0 || (!gdImageTrueColor(im) && color >= gdImageColorsTotal(im))) {
 				php_error_docref(NULL, E_WARNING, "Color argument missing with threshold mode");
 				RETURN_FALSE;
 			}
@@ -4665,6 +4665,10 @@ PHP_FUNCTION(imagescale)
 		if (src_x) {
 			tmp_h = tmp_w * src_y / src_x;
 		}
+	}
+
+	if (tmp_h <= 0 || tmp_w <= 0) {
+		RETURN_FALSE;
 	}
 
 	new_width = tmp_w;

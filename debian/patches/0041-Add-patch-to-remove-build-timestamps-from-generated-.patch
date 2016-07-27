@@ -82,7 +82,7 @@ index 978c8b3..3ee61a4 100644
  					"ZTS "
  #else
 diff --git a/sapi/fpm/fpm/fpm_main.c b/sapi/fpm/fpm/fpm_main.c
-index 940d6c7..2757833 100644
+index 5adeb63..5e60255 100644
 --- a/sapi/fpm/fpm/fpm_main.c
 +++ b/sapi/fpm/fpm/fpm_main.c
 @@ -1757,9 +1757,9 @@ int main(int argc, char *argv[])
@@ -114,10 +114,10 @@ index b0ea105..4feb8f3 100644
  #ifdef PHP_OUTPUT_NEWAPI
                      php_output_end_all();
 diff --git a/sapi/phpdbg/phpdbg.c b/sapi/phpdbg/phpdbg.c
-index 68a164c..82565d8 100644
+index 9b7993d..a30f2e4 100644
 --- a/sapi/phpdbg/phpdbg.c
 +++ b/sapi/phpdbg/phpdbg.c
-@@ -1520,10 +1520,8 @@ phpdbg_main:
+@@ -1521,10 +1521,8 @@ phpdbg_main:
  				sapi_startup(phpdbg);
  				phpdbg->startup(phpdbg);
  				printf(

@@ -4106,6 +4106,12 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_YIELD_FROM_SPEC_CONST_HANDLER(
 	SAVE_OPLINE();
 	val = EX_CONSTANT(opline->op1);
 
+	if (UNEXPECTED(generator->flags & ZEND_GENERATOR_FORCED_CLOSE)) {
+		zend_throw_error(NULL, "Cannot use \"yield from\" in a force-closed generator");
+
+		HANDLE_EXCEPTION();
+	}
+
 	if (Z_TYPE_P(val) == IS_ARRAY) {
 		ZVAL_COPY_VALUE(&generator->values, val);
 		if (IS_CONST != IS_TMP_VAR && Z_OPT_REFCOUNTED_P(val)) {
@@ -12502,6 +12508,12 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_YIELD_FROM_SPEC_TMP_HANDLER(ZE
 	SAVE_OPLINE();
 	val = _get_zval_ptr_tmp(opline->op1.var, execute_data, &free_op1);
 
+	if (UNEXPECTED(generator->flags & ZEND_GENERATOR_FORCED_CLOSE)) {
+		zend_throw_error(NULL, "Cannot use \"yield from\" in a force-closed generator");
+		zval_ptr_dtor_nogc(free_op1);
+		HANDLE_EXCEPTION();
+	}
+
 	if (Z_TYPE_P(val) == IS_ARRAY) {
 		ZVAL_COPY_VALUE(&generator->values, val);
 		if (IS_TMP_VAR != IS_TMP_VAR && Z_OPT_REFCOUNTED_P(val)) {
@@ -15346,32 +15358,27 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_SEND_USER_SPEC_VAR_HANDLER(ZEN
 	arg = _get_zval_ptr_var(opline->op1.var, execute_data, &free_op1);
 	param = ZEND_CALL_VAR(EX(call), opline->result.var);
 
-	if (ARG_SHOULD_BE_SENT_BY_REF(EX(call)->func, opline->op2.num)) {
-		if (UNEXPECTED(!Z_ISREF_P(arg))) {
-			if (!ARG_MAY_BE_SENT_BY_REF(EX(call)->func, opline->op2.num)) {
+	if (UNEXPECTED(ARG_MUST_BE_SENT_BY_REF(EX(call)->func, opline->op2.num))) {
+		zend_error(E_WARNING, "Parameter %d to %s%s%s() expected to be a reference, value given",
+			opline->op2.num,
+			EX(call)->func->common.scope ? ZSTR_VAL(EX(call)->func->common.scope->name) : "",
+			EX(call)->func->common.scope ? "::" : "",
+			ZSTR_VAL(EX(call)->func->common.function_name));
 
-				zend_error(E_WARNING, "Parameter %d to %s%s%s() expected to be a reference, value given",
-					opline->op2.num,
-					EX(call)->func->common.scope ? ZSTR_VAL(EX(call)->func->common.scope->name) : "",
-					EX(call)->func->common.scope ? "::" : "",
-					ZSTR_VAL(EX(call)->func->common.function_name));
-
-				if (ZEND_CALL_INFO(EX(call)) & ZEND_CALL_CLOSURE) {
-					OBJ_RELEASE((zend_object*)EX(call)->func->common.prototype);
-				}
-				if (Z_OBJ(EX(call)->This)) {
-					OBJ_RELEASE(Z_OBJ(EX(call)->This));
-				}
-				ZVAL_UNDEF(param);
-				EX(call)->func = (zend_function*)&zend_pass_function;
-				EX(call)->called_scope = NULL;
-				Z_OBJ(EX(call)->This) = NULL;
-				ZEND_SET_CALL_INFO(EX(call), ZEND_CALL_INFO(EX(call)) & ~ZEND_CALL_RELEASE_THIS);
-
-				zval_ptr_dtor_nogc(free_op1);
-				ZEND_VM_NEXT_OPCODE_CHECK_EXCEPTION();
-			}
+		if (ZEND_CALL_INFO(EX(call)) & ZEND_CALL_CLOSURE) {
+			OBJ_RELEASE((zend_object*)EX(call)->func->common.prototype);
 		}
+		if (Z_OBJ(EX(call)->This)) {
+			OBJ_RELEASE(Z_OBJ(EX(call)->This));
+		}
+		ZVAL_UNDEF(param);
+		EX(call)->func = (zend_function*)&zend_pass_function;
+		EX(call)->called_scope = NULL;
+		Z_OBJ(EX(call)->This) = NULL;
+		ZEND_SET_CALL_INFO(EX(call), ZEND_CALL_INFO(EX(call)) & ~ZEND_CALL_RELEASE_THIS);
+
+		zval_ptr_dtor_nogc(free_op1);
+		ZEND_VM_NEXT_OPCODE_CHECK_EXCEPTION();
 	} else {
 		if (Z_ISREF_P(arg) &&
 		    !(EX(call)->func->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE)) {
@@ -16319,6 +16326,12 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_YIELD_FROM_SPEC_VAR_HANDLER(ZE
 
 	SAVE_OPLINE();
 	val = _get_zval_ptr_var_deref(opline->op1.var, execute_data, &free_op1);
+
+	if (UNEXPECTED(generator->flags & ZEND_GENERATOR_FORCED_CLOSE)) {
+		zend_throw_error(NULL, "Cannot use \"yield from\" in a force-closed generator");
+		zval_ptr_dtor_nogc(free_op1);
+		HANDLE_EXCEPTION();
+	}
 
 	if (Z_TYPE_P(val) == IS_ARRAY) {
 		ZVAL_COPY_VALUE(&generator->values, val);
@@ -28962,31 +28975,26 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_SEND_USER_SPEC_CV_HANDLER(ZEND
 	arg = _get_zval_ptr_cv_BP_VAR_R(execute_data, opline->op1.var);
 	param = ZEND_CALL_VAR(EX(call), opline->result.var);
 
-	if (ARG_SHOULD_BE_SENT_BY_REF(EX(call)->func, opline->op2.num)) {
-		if (UNEXPECTED(!Z_ISREF_P(arg))) {
-			if (!ARG_MAY_BE_SENT_BY_REF(EX(call)->func, opline->op2.num)) {
+	if (UNEXPECTED(ARG_MUST_BE_SENT_BY_REF(EX(call)->func, opline->op2.num))) {
+		zend_error(E_WARNING, "Parameter %d to %s%s%s() expected to be a reference, value given",
+			opline->op2.num,
+			EX(call)->func->common.scope ? ZSTR_VAL(EX(call)->func->common.scope->name) : "",
+			EX(call)->func->common.scope ? "::" : "",
+			ZSTR_VAL(EX(call)->func->common.function_name));
 
-				zend_error(E_WARNING, "Parameter %d to %s%s%s() expected to be a reference, value given",
-					opline->op2.num,
-					EX(call)->func->common.scope ? ZSTR_VAL(EX(call)->func->common.scope->name) : "",
-					EX(call)->func->common.scope ? "::" : "",
-					ZSTR_VAL(EX(call)->func->common.function_name));
-
-				if (ZEND_CALL_INFO(EX(call)) & ZEND_CALL_CLOSURE) {
-					OBJ_RELEASE((zend_object*)EX(call)->func->common.prototype);
-				}
-				if (Z_OBJ(EX(call)->This)) {
-					OBJ_RELEASE(Z_OBJ(EX(call)->This));
-				}
-				ZVAL_UNDEF(param);
-				EX(call)->func = (zend_function*)&zend_pass_function;
-				EX(call)->called_scope = NULL;
-				Z_OBJ(EX(call)->This) = NULL;
-				ZEND_SET_CALL_INFO(EX(call), ZEND_CALL_INFO(EX(call)) & ~ZEND_CALL_RELEASE_THIS);
-
-				ZEND_VM_NEXT_OPCODE_CHECK_EXCEPTION();
-			}
+		if (ZEND_CALL_INFO(EX(call)) & ZEND_CALL_CLOSURE) {
+			OBJ_RELEASE((zend_object*)EX(call)->func->common.prototype);
 		}
+		if (Z_OBJ(EX(call)->This)) {
+			OBJ_RELEASE(Z_OBJ(EX(call)->This));
+		}
+		ZVAL_UNDEF(param);
+		EX(call)->func = (zend_function*)&zend_pass_function;
+		EX(call)->called_scope = NULL;
+		Z_OBJ(EX(call)->This) = NULL;
+		ZEND_SET_CALL_INFO(EX(call), ZEND_CALL_INFO(EX(call)) & ~ZEND_CALL_RELEASE_THIS);
+
+		ZEND_VM_NEXT_OPCODE_CHECK_EXCEPTION();
 	} else {
 		if (Z_ISREF_P(arg) &&
 		    !(EX(call)->func->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE)) {
@@ -29758,6 +29766,12 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_YIELD_FROM_SPEC_CV_HANDLER(ZEN
 
 	SAVE_OPLINE();
 	val = _get_zval_ptr_cv_deref_BP_VAR_R(execute_data, opline->op1.var);
+
+	if (UNEXPECTED(generator->flags & ZEND_GENERATOR_FORCED_CLOSE)) {
+		zend_throw_error(NULL, "Cannot use \"yield from\" in a force-closed generator");
+
+		HANDLE_EXCEPTION();
+	}
 
 	if (Z_TYPE_P(val) == IS_ARRAY) {
 		ZVAL_COPY_VALUE(&generator->values, val);
