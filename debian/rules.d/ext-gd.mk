@@ -2,7 +2,7 @@ ext_PACKAGES   += gd
 gd_DESCRIPTION := GD
 gd_EXTENSIONS  := gd
 gd_config      := \
-	--with-gd=shared,/usr \
+	--with-gd=shared \
 	--enable-gd-native-ttf \
 	--with-jpeg-dir=/usr \
 	--with-xpm-dir=/usr/X11R6 \
