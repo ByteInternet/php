@@ -2,6 +2,13 @@
 
 set -e
 
+while getopts "s:" opt; do
+    case "$opt" in
+        s)
+            skip_push="$OPTARG" ;;
+    esac
+done
+
 GIT="chronic git"
 HYPERNODE_BRANCH="hypernode-7.0"
 MAINTAINER_BRANCHES="master-7.0 upstream-7.0 pristine-tar"
@@ -35,7 +42,9 @@ for branch in $MAINTAINER_BRANCHES; do
     
     $GIT clean -fd
     $GIT reset --hard pkg-php/$branch
-    $GIT push byte $branch
+    if ! $skip_push; then
+        $GIT push byte $branch
+    fi
 done
     
 $GIT checkout hypernode-7.0
