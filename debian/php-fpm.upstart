@@ -8,7 +8,7 @@ respawn
 respawn limit unlimited
 
 pre-start script
-	/bin/fuser --kill 9000/tcp --verbose || /bin/true
+	/bin/fuser -9 --kill 9000/tcp --verbose || /bin/true
 end script
 
 exec /usr/sbin/php-fpm7.0 --nodaemonize --fpm-config /etc/php/7.0/fpm/php-fpm.conf
