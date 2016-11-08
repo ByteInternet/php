@@ -1515,17 +1515,11 @@ ZEND_METHOD(reflection, export)
 	int result;
 	zend_bool return_output = 0;
 
-#ifndef FAST_ZPP
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "O|b", &object, reflector_ptr, &return_output) == FAILURE) {
-		return;
-	}
-#else
 	ZEND_PARSE_PARAMETERS_START(1, 2)
 		Z_PARAM_OBJECT_OF_CLASS(object, reflector_ptr)
 		Z_PARAM_OPTIONAL
 		Z_PARAM_BOOL(return_output)
 	ZEND_PARSE_PARAMETERS_END();
-#endif
 
 	/* Invoke the __toString() method */
 	ZVAL_STRINGL(&fname, "__tostring", sizeof("__tostring") - 1);
@@ -4407,6 +4401,7 @@ ZEND_METHOD(reflection_class, getConstants)
 	GET_REFLECTION_OBJECT_PTR(ce);
 	array_init(return_value);
 	ZEND_HASH_FOREACH_VAL(&ce->constants_table, val) {
+		ZVAL_DEREF(val);
 		if (UNEXPECTED(zval_update_constant_ex(val, 1, ce) != SUCCESS)) {
 			return;
 		}
@@ -4431,6 +4426,7 @@ ZEND_METHOD(reflection_class, getConstant)
 
 	GET_REFLECTION_OBJECT_PTR(ce);
 	ZEND_HASH_FOREACH_VAL(&ce->constants_table, value) {
+		ZVAL_DEREF(value);
 		if (UNEXPECTED(zval_update_constant_ex(value, 1, ce) != SUCCESS)) {
 			return;
 		}
