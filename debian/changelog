@@ -1,3 +1,21 @@
+php7.0 (7.0.13-2) unstable; urgency=medium
+
+  * Build-Depend on default-libmysqlclient-dev (Closes: #845891)
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 27 Nov 2016 15:47:50 +0100
+
+php7.0 (7.0.13-1) unstable; urgency=medium
+
+  [ Thijs Kinkhorst ]
+  * Remove self from uploaders.
+
+  [ Ondřej Surý ]
+  * Really remove Thijs from Uploaders
+  * Imported Upstream version 7.0.13
+  * Rebase patches on top of 7.0.13
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 14 Nov 2016 04:28:10 +0100
+
 php7.0 (7.0.12-2) unstable; urgency=medium
 
   * Merge OpenSSL 1.1.0 support from PHP 7.1 (Closes: #828499)
